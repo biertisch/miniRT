@@ -9,6 +9,7 @@
 # include "vec3.h"
 # include "color.h"
 # include "parser.h"
+# include "controls.h"
 
 # define WIDTH 400
 # define HEIGHT 600

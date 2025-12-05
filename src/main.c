@@ -113,7 +113,7 @@ void	scene_1_checker_ground(t_world *wld)
 
 
 	wld->camera.aspect_ratio = 16.0 / 9.0;
-	
+
 	wld->camera.image_width = 200;
 	wld->camera.samples_per_pixel = 5;//default 100
 	wld->camera.max_depth = 5;//default 50
@@ -148,7 +148,7 @@ void	scene_2(t_world *wld)
 	// // add_object(&wld, &sphere3);
 
 	wld->camera.aspect_ratio = 16.0 / 9.0;
-	
+
 	wld->camera.image_width = 400;
 	wld->camera.samples_per_pixel = 10;//default 100
 	wld->camera.max_depth = 5;//default 50
@@ -353,7 +353,7 @@ int main(void)
 
 	// scene_1_checker_ground(&wld);           // Original scene with spheres
 	// scene_with_plane_and_cylinder(&wld);  // New scene with planes and cylinders
-	
+
 	switch (7)
 	{
 		case 1:
@@ -397,6 +397,7 @@ int main(void)
 	reg_hook(&wld);
 	printf("Starting render...\n");
 	camera_render(&(wld.camera), &wld);
+	setup_controls(&wld);
 	mlx_loop(wld.mlx);
 	return (0);
 }
