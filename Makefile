@@ -30,7 +30,7 @@ $(NAME): $(OBJ) $(MLX) $(LIBFT_A)
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CCFLAGS) -I/usr/include -Iincludes -Ilibft -Imlx_linux -O3 -c $< -o $@
+	$(CC) $(CCFLAGS) -g -I/usr/include -Iincludes -Ilibft -Imlx_linux -O3 -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)

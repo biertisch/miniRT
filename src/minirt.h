@@ -356,6 +356,7 @@ typedef struct s_world
 	t_camera	camera;
 	t_color		background;
 	t_object	lights;
+	t_panel		*panel;
 }	t_world;
 
 //vec3.c;
