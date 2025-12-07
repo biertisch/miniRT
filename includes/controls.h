@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/06 15:54:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/07 19:05:43 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,22 @@
 
 # define BUFF_SIZE	16
 
+typedef enum s_sliders
+{
+	TRANSL_X,
+	TRANSL_Y,
+	TRANSL_Z,
+	ROTATE_X,
+	ROTATE_Y,
+	ROTATE_Z,
+	RESIZE_D,
+	RESIZE_H,
+	SLIDER_COUNT
+}	t_sliders;
+
 typedef struct s_data t_data;
 typedef struct s_world t_world;
+typedef struct s_object t_object;
 
 typedef struct s_rect
 {
@@ -65,19 +79,34 @@ typedef struct s_rect
 	int	height;
 }	t_rect;
 
+typedef struct s_slider
+{
+	double	base_value;
+	double	knob_pos;
+	int		x;
+	int		y;
+}	t_slider;
+
 typedef struct s_panel
 {
-	void	*win;
-	int		width;
-	int		height;
-	t_data	*buffer;
-	int		curr_obj;
-	int 	curr_slider;
-	int		scroll_offset;
-	int		visible_objs;
+	void		*win;
+	t_data		*buffer;
+	int			width;
+	int			height;
+	int			active_obj;
+	int			scroll_offset;
+	int			visible_objs;
+	int 		active_slider;
+	int			dragging;
+	int			drag_start_x;
+	double		drag_start_norm;
+	t_slider	**sliders;
 }	t_panel;
 
 int		setup_controls(t_world *scene);
 void	render_controls(t_panel *panel, t_world *scene);
+void	init_panel(t_panel *panel, int object_count);
+int		slider_to_axis(int slider);
+t_vec3	*get_object_position(t_object *obj);
 
 #endif

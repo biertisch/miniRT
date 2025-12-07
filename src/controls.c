@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/06 16:38:38 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/07 19:08:53 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,8 @@ static void	draw_string(t_data *img, const char *s, int x, int y, int color)
 {
 	int	i;
 
+	if (!s || !img)
+		return ;
 	i = 0;
 	while (s[i])
 	{
@@ -224,7 +226,123 @@ static t_rect	rectangle(int x, int y, int width, int height)
 	return ((t_rect){x, y, width, height});
 }
 
-//hooks
+//transformations
+static void	transform_objects(t_slider **sliders, t_world *scene)
+{
+	double	*pos;
+	int		i;
+	int		j;
+	int		axis;
+
+	i = 0;
+	while (i < scene->num_objects)
+	{
+		j = 0;
+		while (j < SLIDER_COUNT)
+		{
+			axis = slider_to_axis(j);
+			pos = (double *)get_object_position(scene->objects[i]);
+			if (j < 3)
+				pos[axis] = sliders[i][j].base_value + (sliders[i][j].knob_pos - 0.5) * 200;
+			j++;
+		}
+		i++;
+	}
+}
+
+
+static void	transform_camera(t_slider *sliders, t_camera *camera)
+{
+	int	i;
+	int	axis;
+
+	i = 0;
+	while (i < 6)
+	{
+		axis = slider_to_axis(i);
+		if (i < 3)
+			((double *)&camera->center)[axis] = sliders[i].base_value + (sliders[i].knob_pos - 0.5) * 200;
+
+		i++;
+	}
+}
+
+static void	render_scene(t_panel *panel, t_world *scene)
+{
+	transform_camera(panel->sliders[0], &scene->camera);
+	//transform light
+	transform_objects(panel->sliders + 2, scene);
+	camera_render(&scene->camera, scene);
+	init_panel(panel, scene->num_objects);
+}
+
+//sliders
+static void	move_knob(t_panel *panel, t_world *scene, int x)
+{
+	double	delta;
+	double	pos;
+
+	if (panel->active_obj < 0 || panel->active_slider < 0)
+		return ;
+	delta = (double)(x - panel->drag_start_x) / (SLIDER_W - KNOB_W - 4);
+	pos = panel->drag_start_norm + delta;
+	if (pos < 0)
+		pos = 0;
+	else if (pos > 1)
+		pos = 1;
+	panel->sliders[panel->active_obj][panel->active_slider].knob_pos = pos;
+	render_controls(panel, scene);
+}
+
+static void	detect_active_slider(t_panel *panel, int x, int y)
+{
+	int	i;
+
+	if (panel->active_obj < 0)
+		return ;
+	i = 0;
+	while (i < SLIDER_COUNT)
+	{
+		if (x >= panel->sliders[panel->active_obj][i].x
+			&& x <= panel->sliders[panel->active_obj][i].x + SLIDER_W
+			&& y >= panel->sliders[panel->active_obj][i].y
+			&& y < panel->sliders[panel->active_obj][i].y + SLIDER_H)
+		{
+			panel->active_slider = i;
+			return ;
+		}
+		i++;
+	}
+	panel->active_slider = -1;
+}
+
+static int	hit_knob(t_panel *panel, int x, int y)
+{
+	int	i;
+	int	j;
+	int	knob_x;
+
+	i = panel->active_obj;
+	j = panel->active_slider;
+	if (i < 0 || j < 0 || j >= SLIDER_COUNT)
+		return (0);
+	knob_x = panel->sliders[i][j].x + 2 + panel->sliders[i][j].knob_pos * (SLIDER_W - KNOB_W - 4);
+	return ((x >= knob_x
+		&& x <= knob_x + KNOB_W
+		&& y >= panel->sliders[i][j].y + 2
+		&& y <= panel->sliders[i][j].y + 2 + KNOB_H));
+}
+
+static void	begin_drag(t_panel *panel, int x)
+{
+	if (panel->active_obj < 0 || panel->active_slider < 0)
+		return ;
+	panel->dragging = 1;
+	panel->drag_start_x = x;
+	panel->drag_start_norm = panel->sliders[panel->active_obj][panel->active_slider].knob_pos;
+}
+
+//scroll & select
 static void	scroll_down(t_panel *panel, int object_count)
 {
 	int	max_offset;
@@ -257,7 +375,32 @@ static void	select_object(t_panel *panel, int object_count, int y)
 	index = panel->scroll_offset + row;
 	if (index >= object_count + 2)
 		return ;
-	panel->curr_obj = index;
+	panel->active_obj = index;
+}
+
+//hooks
+static int	mouse_release_hook(int button, int x, int y, void *param)
+{
+	t_panel	*panel;
+
+	panel = (t_panel *)param;
+	if (button == 1)
+	{
+		panel->dragging = 0;
+		panel->active_slider = -1;
+	}
+	return (0);
+}
+
+static int	mouse_move_hook(int x, int y, void *param)
+{
+	t_world	*scene;
+
+	scene = (t_world *)param;
+	detect_active_slider(scene->panel, x, y);
+	if (scene->panel->dragging)
+		move_knob(scene->panel, scene, x);
+	return (0);
 }
 
 static int	mouse_hook(int button, int x, int y, void *param)
@@ -265,20 +408,30 @@ static int	mouse_hook(int button, int x, int y, void *param)
 	t_world	*scene;
 
 	scene = (t_world *)param;
-	(void)x;
-	if (y < OBJ_Y || y > TRANSF_Y || (button != 1 && button != 4 && button != 5))
-		return (0);
 	if (button == 1)
-		select_object(scene->panel, scene->num_objects, y);
-	else if (button == 4)
+	{
+		detect_active_slider(scene->panel, x, y);
+		if (scene->panel->active_obj != -1 && scene->panel->active_slider != -1 && hit_knob(scene->panel, x, y))
+			begin_drag(scene->panel, x);
+		else if (y >= OBJ_Y && y < TRANSF_Y)
+			select_object(scene->panel, scene->num_objects, y);
+		else if (y >= BUTTON_Y + PADD_Y && y < BUTTON_Y + PADD_Y + BUTTON_H)
+		{
+			if (x >= PADD_X && x < PADD_X + BUTTON_W)
+				render_scene(scene->panel, scene);
+			else if (x >= PANEL_W - PADD_X - BUTTON_W && x < PANEL_W - PADD_X)
+				init_panel(scene->panel, scene->num_objects);
+		}
+	}
+	else if (button == 4 && (y >= OBJ_Y && y < TRANSF_Y))
 		scroll_up(scene->panel);
-	else if (button == 5)
+	else if (button == 5 && (y >= OBJ_Y && y < TRANSF_Y))
 		scroll_down(scene->panel, scene->num_objects);
 	render_controls(scene->panel, scene);
 	return (0);
 }
 
-//movable parts
+//object_list
 static char	*get_type_name(t_geo_type type)
 {
 	static char	*type_names[] = {
@@ -335,20 +488,238 @@ static void	render_object_list(t_panel *panel, t_world *scene)
 		if (obj_index >= scene->num_objects + 2) // camera + 1 light
 			break ;
 		y = OBJ_Y + PADD_Y + ROW_H + row * ROW_H;
-		if (obj_index == panel->curr_obj)
+		if (obj_index == panel->active_obj)
 			draw_highlight(panel, row, y);
 		draw_object_row(panel, scene, obj_index, y);
 		row++;
 	}
 }
 
-//fixed parts
+//sliders
+int	slider_to_axis(int slider)
+{
+	if (slider == TRANSL_X || slider == ROTATE_X)
+		return (0);
+	if (slider == TRANSL_Y || slider == ROTATE_Y)
+		return (1);
+	if (slider == TRANSL_Z || slider == ROTATE_Z)
+		return (2);
+	return (-1);
+}
+
+t_vec3	*get_object_position(t_object *obj)
+{
+	if (obj->type == PLANE)
+		return (&obj->geo.plane.point);
+	if (obj->type == SPHERE)
+		return (&obj->geo.sphere.center);
+	if (obj->type == CYLINDER)
+		return (&obj->geo.cylinder.center);
+	return (NULL);
+}
+
+static double	get_object_value(t_object *obj, int slider)
+{
+	t_vec3	*pos;
+	int		axis;
+
+	axis = slider_to_axis(slider);
+	if (axis != -1)
+	{
+		pos = get_object_position(obj);
+		if (!pos)
+			return (0);
+		return (((double *)pos)[axis]);
+	}
+	if (slider == RESIZE_D)
+	{
+		if (obj->type == SPHERE)
+			return (obj->geo.sphere.radius * 2);
+		if (obj->type == CYLINDER)
+			return (obj->geo.cylinder.radius * 2);
+	}
+	if (slider == RESIZE_H && obj->type == CYLINDER)
+		return (obj->geo.cylinder.height);
+	return (0);
+}
+
+static double	get_light_value(t_world *scene, int slider)
+{
+	int	axis;
+
+	axis = slider_to_axis(slider);
+	if (axis == -1)
+		return (0);
+	return (0); // update when light struct is updated
+}
+
+static double	get_camera_value(t_world *scene, int slider)
+{
+	int	axis;
+
+	axis = slider_to_axis(slider);
+	if (axis == -1)
+		return (0);
+	return (((double *)&scene->camera.center)[axis]);
+}
+
+static double	get_base_value(t_world *scene, int index, int slider)
+{
+	if (index < 0)
+		return (0);
+	if (index == 0)
+		return (get_camera_value(scene, slider));
+	if (index == 1)
+		return round(get_light_value(scene, slider));
+	return (get_object_value(scene->objects[index - 2], slider));
+	return (0);
+}
+
+static void draw_value(t_panel *panel, int value, int y, int pos)
+{
+	char	*str;
+	int		x;
+
+	str = ft_itoa(value);
+	if (!str) // issue warning?
+		return ;
+	if (pos == 0)
+		x = PANEL_W / 2 - (ft_strlen(str) * CHAR_W) / 2;
+	else if (pos == -1)
+		x = PADD_X;
+	else
+		x = PANEL_W - PADD_X - ft_strlen(str) * CHAR_W;
+	draw_string(panel->buffer, str, x, y, WHITE);
+	free(str);
+}
+
+static void	render_values(t_panel *panel, t_world *scene, int slider, int y)
+{
+	int		curr;
+	int		max;
+	int		min;
+
+	panel->sliders[panel->active_obj][slider].base_value = get_base_value(scene, panel->active_obj, slider);
+	curr = round(panel->sliders[panel->active_obj][slider].base_value);
+	max = curr + 100;
+	min = curr - 100;
+	if ((slider == RESIZE_D || slider == RESIZE_H) && min < 0)
+		min = 0;
+	if (slider == ROTATE_X || slider == ROTATE_Y || slider == ROTATE_Z)
+	{
+		max = 90;
+		min = -90;
+	}
+	y += SLIDER_H + 3;
+	draw_value(panel, min, y, -1);
+	draw_value(panel, curr, y, 0);
+	draw_value(panel, max, y, 1);
+}
+
+static void	render_resizing(t_panel *panel, t_world *scene, int x, int y)
+{
+	int	obj;
+	int	type;
+	int	i;
+	int	count;
+
+	obj = panel->active_obj;
+	type = scene->objects[obj - 2]->type;
+	if (type == CYLINDER)
+	{
+		draw_string(panel->buffer, RESIZE, x, y, LIGHT_GRAY);
+		count = SLIDER_COUNT;
+	}
+	else
+	{
+		draw_string(panel->buffer, RESIZE2, x, y, LIGHT_GRAY);
+		count = SLIDER_COUNT - 1;
+	}
+	i = 6;
+	while (i < count)
+	{
+		x = panel->sliders[obj][i].x;
+		y = panel->sliders[obj][i].y;
+		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
+		x += 2 + panel->sliders[obj][i].knob_pos * (SLIDER_W - KNOB_W - 4);
+		fill_rectangle(panel, rectangle(x, y + 2, KNOB_W, KNOB_H), BLACK);
+		render_values(panel, scene, i, y);
+		i++;
+	}
+}
+
+static void	render_rotation(t_panel *panel, t_world *scene, int x, int y)
+{
+	int	i;
+	int	obj;
+
+	draw_string(panel->buffer, ROTATE, x, y, LIGHT_GRAY);
+	obj = panel->active_obj;
+	i = 3;
+	while (i < 6)
+	{
+		x = panel->sliders[obj][i].x;
+		y = panel->sliders[obj][i].y;
+		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
+		x += 2 + panel->sliders[obj][i].knob_pos * (SLIDER_W - KNOB_W - 4);
+		fill_rectangle(panel, rectangle(x, y + 2, KNOB_W, KNOB_H), BLACK);
+		render_values(panel, scene, i, y);
+		i++;
+	}
+}
+
+static void	render_translation(t_panel *panel, t_world *scene, int x, int y)
+{
+	int	i;
+	int	obj;
+
+	draw_string(panel->buffer, TRANSLATE, x,  y, LIGHT_GRAY);
+	obj = panel->active_obj;
+	i = 0;
+	while (i < 3)
+	{
+		x = panel->sliders[obj][i].x;
+		y = panel->sliders[obj][i].y;
+		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
+		x += 2 + panel->sliders[obj][i].knob_pos * (SLIDER_W - KNOB_W - 4);
+		fill_rectangle(panel, rectangle(x, y + 2, KNOB_W, KNOB_H), BLACK);
+		render_values(panel, scene, i, y);
+		i++;
+	}
+}
+
+static void	render_sliders(t_panel *panel, t_world *scene)
+{
+	int	obj;
+	int	type;
+	int	x;
+	int	y;
+
+	obj = panel->active_obj;
+	if (obj < 0 || obj >= scene->num_objects + 2)
+		return ;
+	type = -1;
+	if (obj >= 2)
+		type = scene->objects[obj - 2]->type;
+	x = PADD_X;
+	y = TRANSF_Y + PADD_Y + ROW_H;
+	render_translation(panel, scene, x, y);
+	y += ROW_H + 3 * (SLIDER_H + ROW_H) + 5;
+	render_rotation(panel, scene, x, y);
+	if (type != -1 && (type == CYLINDER || type == SPHERE))
+	{
+		y += ROW_H + 3 * (SLIDER_H + ROW_H) + 5;
+		render_resizing(panel, scene, x, y);
+	}
+}
+
+//fixed: sections and buttons
 static void	render_buttons(t_panel *panel)
 {
 	int	x;
 	int	y;
 
-	y = BUTTON_Y + 15;
+	y = BUTTON_Y + PADD_Y;
 	x = PADD_X;
 	fill_rectangle(panel, rectangle(x, y, BUTTON_W, BUTTON_H), LIGHT_GRAY);
 	x = panel->width - PADD_X - BUTTON_W;
@@ -358,26 +729,6 @@ static void	render_buttons(t_panel *panel)
 	draw_string(panel->buffer, RENDER, x, y, BLACK);
 	x = panel->width - PADD_X - BUTTON_W + (BUTTON_W / 2 - (ft_strlen(RESET) * CHAR_W) / 2);
 	draw_string(panel->buffer, RESET, x, y, BLACK);
-}
-
-static void	render_sliders(t_panel *panel)
-{
-	int	x;
-	int	y;
-	int	i;
-
-	x = (PANEL_W - SLIDER_W) / 2;
-	y = TRANSF_Y + 2 * ROW_H + PADD_Y;
-	i = 0;
-	while (i < 8)
-	{
-		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
-		fill_rectangle(panel, rectangle(panel->width / 2, y + 2, KNOB_W, KNOB_H), BLACK);
-		y += SLIDER_H + ROW_H;
-		if (i == 2 || i == 5)
-			y += ROW_H;
-		i++;
-	}
 }
 
 static void	render_sections(t_panel *panel)
@@ -397,13 +748,6 @@ static void	render_sections(t_panel *panel)
 	x = panel->width / 2 - (ft_strlen(TRANSFORM) * CHAR_W) / 2;
 	y = TRANSF_Y + PADD_Y;
 	draw_string(panel->buffer, TRANSFORM, x, y, WHITE);
-	x = PADD_X;
-	y += ROW_H;
-	draw_string(panel->buffer, TRANSLATE, x, y, LIGHT_GRAY);
-	y += ROW_H + 3 * (SLIDER_H + ROW_H);
-	draw_string(panel->buffer, ROTATE, x, y, LIGHT_GRAY);
-	y += ROW_H + 3 * (SLIDER_H + ROW_H);
-	draw_string(panel->buffer, RESIZE, x, y, LIGHT_GRAY);
 }
 
 //controls
@@ -413,7 +757,7 @@ void	render_controls(t_panel *panel, t_world *scene)
 	render_sections(panel);
 	render_buttons(panel);
 	render_object_list(panel, scene);
-	render_sliders(panel);
+	render_sliders(panel, scene);
 	mlx_put_image_to_window(scene->mlx, panel->win, panel->buffer->img, 0, 0);
 }
 
@@ -440,20 +784,86 @@ static int	create_buffer(t_panel *panel, t_world *scene)
 	return (1);
 }
 
-static int	init_panel(t_world *scene)
+static int	free_sliders(t_slider **sliders, int size)
 {
+	int	i;
+
+	i = 0;
+	while (i < size)
+	{
+		free(sliders[i]);
+		i++;
+	}
+	free(sliders);
+	return (0);
+}
+
+static void	init_sliders(t_slider **sliders, int object_count)
+{
+	int	i;
+	int	j;
+	int	y;
+
+	i = 0;
+	while (i < object_count)
+	{
+		y = TRANSF_Y + 2 * ROW_H + PADD_Y;
+		j = 0;
+		while (j < SLIDER_COUNT)
+		{
+			sliders[i][j].x = (PANEL_W - SLIDER_W) / 2;
+			sliders[i][j].y = y;
+			sliders[i][j].knob_pos = 0.5;
+			y += SLIDER_H + ROW_H;
+			if (j == TRANSL_Z || j == ROTATE_Z)
+				y += ROW_H + 5;
+			j++;
+		}
+		i++;
+	}
+}
+
+void	init_panel(t_panel *panel, int object_count)
+{
+	panel->width = PANEL_W;
+	panel->height = PANEL_H;
+	panel->active_obj = -1;
+	panel->scroll_offset = 0;
+	panel->visible_objs = (TRANSF_Y - OBJ_Y - ROW_H - PADD_Y) / ROW_H;
+	panel->active_slider = -1;
+	panel->dragging = 0;
+	panel->drag_start_x = PANEL_W / 2;
+	panel->drag_start_norm = 0.5;
+	init_sliders(panel->sliders, object_count);
+}
+
+int	allocate_panel(t_world *scene)
+{
+	int	i;
+
 	scene->panel = malloc(sizeof(*(scene->panel)));
 	if (!scene->panel)
 	{
 		perror("Error\nmalloc");
 		return (0);
 	}
-	scene->panel->width = PANEL_W;
-	scene->panel->height = PANEL_H;
-	scene->panel->curr_obj = -1;
-	scene->panel->curr_slider = -1;
-	scene->panel->scroll_offset = 0;
-	scene->panel->visible_objs = (TRANSF_Y - OBJ_Y - ROW_H - PADD_Y) / ROW_H;
+	scene->panel->sliders = malloc(sizeof(t_slider *) * scene->num_objects);
+	if (!scene->panel->sliders)
+	{
+		perror("Error\nmalloc");
+		return (0);
+	}
+	i = 0;
+	while (i < scene->num_objects)
+	{
+		scene->panel->sliders[i] = malloc(sizeof(t_slider) * SLIDER_COUNT);
+		if (!scene->panel->sliders[i])
+		{
+			perror("Error\nmalloc");
+			return (free_sliders(scene->panel->sliders, i));
+		}
+		i++;
+	}
 	return (1);
 }
 
@@ -461,8 +871,9 @@ int	setup_controls(t_world *scene)
 {
 	t_panel	*panel;
 
-	if (!init_panel(scene))
+	if (!allocate_panel(scene))
 		return (0);
+	init_panel(scene->panel, scene->num_objects);
 	panel = scene->panel;
 	panel->win = mlx_new_window(scene->mlx, panel->width, panel->height, "Control Panel");
 	if (!panel->win)
@@ -476,6 +887,8 @@ int	setup_controls(t_world *scene)
 		return (0);
 	}
 	render_controls(panel, scene);
+	mlx_hook(panel->win, 6, 1L << 6, mouse_move_hook, scene);
+	mlx_hook(panel->win, 5, 1L << 3, mouse_release_hook, panel);
 	mlx_mouse_hook(panel->win, mouse_hook, scene);
 	return (1);
 }
