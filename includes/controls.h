@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/07 19:05:43 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:02:29 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@
 # define RESIZE2	"Resizing (diameter)"
 # define RENDER		"Render"
 # define RESET		"Reset"
+
+// transformation ranges
+# define TL_RANGE	20
+# define RT_RANGE	90
+# define RS_RANGE	20
 
 # define BUFF_SIZE	16
 

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/07 19:08:53 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:52:25 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,53 +227,73 @@ static t_rect	rectangle(int x, int y, int width, int height)
 }
 
 //transformations
-static void	transform_objects(t_slider **sliders, t_world *scene)
+static double	commit_slider(t_slider *slider, int range)
 {
-	double	*pos;
-	int		i;
-	int		j;
-	int		axis;
+	double	value;
+
+	value = slider->base_value + (slider->knob_pos - 0.5) * range;
+	slider->base_value = value;
+	slider->knob_pos = 0.5;
+	return (value);
+}
+
+static void	transform_objects(t_slider **sliders, t_object **objects, int object_count)
+{
+	int	i;
 
 	i = 0;
-	while (i < scene->num_objects)
+	while (i < object_count)
 	{
-		j = 0;
-		while (j < SLIDER_COUNT)
+		if (objects[i]->type == CYLINDER)
 		{
-			axis = slider_to_axis(j);
-			pos = (double *)get_object_position(scene->objects[i]);
-			if (j < 3)
-				pos[axis] = sliders[i][j].base_value + (sliders[i][j].knob_pos - 0.5) * 200;
-			j++;
+			objects[i]->geo.cylinder.center.x = commit_slider(&sliders[i][TRANSL_X], TL_RANGE);
+			objects[i]->geo.cylinder.center.y = commit_slider(&sliders[i][TRANSL_Y], TL_RANGE);
+			objects[i]->geo.cylinder.center.z = commit_slider(&sliders[i][TRANSL_Z], TL_RANGE);
+			// add rotation
+			objects[i]->geo.cylinder.radius = commit_slider(&sliders[i][RESIZE_D], RS_RANGE) / 2;
+			objects[i]->geo.cylinder.height = commit_slider(&sliders[i][RESIZE_H], RS_RANGE);
+		}
+		else if (objects[i]->type == SPHERE)
+		{
+			objects[i]->geo.sphere.center.x = commit_slider(&sliders[i][TRANSL_X], TL_RANGE);
+			objects[i]->geo.sphere.center.y = commit_slider(&sliders[i][TRANSL_Y], TL_RANGE);
+			objects[i]->geo.sphere.center.z = commit_slider(&sliders[i][TRANSL_Z], TL_RANGE);
+			// add rotation
+			objects[i]->geo.sphere.radius = commit_slider(&sliders[i][RESIZE_D], RS_RANGE) / 2;
+		}
+		else if (objects[i]->type == PLANE)
+		{
+			objects[i]->geo.plane.point.x = commit_slider(&sliders[i][TRANSL_X], TL_RANGE);
+			objects[i]->geo.plane.point.y = commit_slider(&sliders[i][TRANSL_Y], TL_RANGE);
+			objects[i]->geo.plane.point.z = commit_slider(&sliders[i][TRANSL_Z], TL_RANGE);
+			// add rotation
 		}
 		i++;
 	}
 }
 
-
 static void	transform_camera(t_slider *sliders, t_camera *camera)
 {
-	int	i;
-	int	axis;
-
-	i = 0;
-	while (i < 6)
-	{
-		axis = slider_to_axis(i);
-		if (i < 3)
-			((double *)&camera->center)[axis] = sliders[i].base_value + (sliders[i].knob_pos - 0.5) * 200;
-
-		i++;
-	}
+	camera->center.x = sliders[TRANSL_X].base_value + (sliders[TRANSL_X].knob_pos - 0.5) * TL_RANGE;
+	camera->center.y = sliders[TRANSL_Y].base_value + (sliders[TRANSL_Y].knob_pos - 0.5) * TL_RANGE;
+	camera->center.z = sliders[TRANSL_Z].base_value + (sliders[TRANSL_Z].knob_pos - 0.5) * TL_RANGE;
+	sliders[TRANSL_X].base_value = camera->center.x;
+	sliders[TRANSL_X].knob_pos = 0.5;
+	sliders[TRANSL_Y].base_value = camera->center.y;
+	sliders[TRANSL_Y].knob_pos = 0.5;
+	sliders[TRANSL_Z].base_value = camera->center.z;
+	sliders[TRANSL_Z].knob_pos = 0.5;
+	// add rotation
+	// do I need camera_initialize?
 }
 
 static void	render_scene(t_panel *panel, t_world *scene)
 {
 	transform_camera(panel->sliders[0], &scene->camera);
 	//transform light
-	transform_objects(panel->sliders + 2, scene);
+	transform_objects(panel->sliders + 2, scene->objects, scene->num_objects);
 	camera_render(&scene->camera, scene);
-	init_panel(panel, scene->num_objects);
+	render_controls(panel, scene);
 }
 
 //sliders
@@ -601,14 +621,14 @@ static void	render_values(t_panel *panel, t_world *scene, int slider, int y)
 
 	panel->sliders[panel->active_obj][slider].base_value = get_base_value(scene, panel->active_obj, slider);
 	curr = round(panel->sliders[panel->active_obj][slider].base_value);
-	max = curr + 100;
-	min = curr - 100;
+	max = curr + TL_RANGE / 2;
+	min = curr - TL_RANGE / 2;
 	if ((slider == RESIZE_D || slider == RESIZE_H) && min < 0)
 		min = 0;
 	if (slider == ROTATE_X || slider == ROTATE_Y || slider == ROTATE_Z)
 	{
-		max = 90;
-		min = -90;
+		max = curr + RT_RANGE / 2;
+		min = curr - RT_RANGE / 2;
 	}
 	y += SLIDER_H + 3;
 	draw_value(panel, min, y, -1);
