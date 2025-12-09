@@ -10,6 +10,72 @@ t_color	blend_colors(t_color c1, t_color c2, double t)
 	return (blended);
 }
 
+double compute_attenuation(double d)
+{
+    double constant = 1.0;
+    double linear = 0.1;
+    double quadratic = 0.01;
+
+    return 1.0 / (constant + linear * d + quadratic * d * d);
+}
+
+t_color ray_color_new(t_ray *ray, int depth, t_world *world)
+{
+	t_hit_record	rec;
+	t_hit_record	temp_rec;
+	t_ray			scattered;
+	t_ray			r_2light;
+	t_color			ambient;
+	t_color			color_from_emission;
+	double			cos_nl;
+	t_color			diffuse;
+
+	if (depth <= 0)
+		return (get_color(0.0, 0.0, 0.0));
+
+	ambient = color_multiply_number(world->ambient, world->ambient_ratio);
+	ambient = color_multiply_vector(ambient, world->spot_light.light_color);
+
+	if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	{
+		color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
+		// printf("Emitted color: R=%f, G=%f, B=%f\n", color_from_emission.r, color_from_emission.g, color_from_emission.b);
+		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
+		
+		
+		if (world_hit(world->bvh_root, &r_2light, new_interval(0.001, RT_INFINITY), &temp_rec))
+		{
+			// if (rec.mat.type == METAL || rec.mat.type == DIELECTRIC)
+			// 	return (color_multiply_vector(color_from_emission, ray_color_new(&scattered, depth - 1, world)));
+			// else
+				return color_multiply_vector(world->ambient,color_multiply_number(color_from_emission, world->ambient_ratio));
+		}
+		else
+		{
+			cos_nl = vec3_dot(rec.normal,vec3_normalize(r_2light.direction));
+			if (cos_nl < 0)
+				cos_nl = 0;
+			
+			diffuse = color_multiply_vector(color_from_emission, world->spot_light.light_color);
+			diffuse = color_multiply_number(diffuse, (1 + world->ambient_ratio));
+			// if (rec.mat.type == METAL || rec.mat.type == DIELECTRIC)
+			// 	return (color_multiply_vector(color_from_emission, ray_color_new(&scattered, depth - 1, world)));
+			// else
+			// diffuse = color_multiply_number(diffuse, compute_attenuation(vec3_length(vec3_subtract(world->spot_light.position, rec.p))));
+				return color_add(diffuse,color_multiply_vector(world->ambient,color_multiply_number(color_from_emission, world->ambient_ratio)));
+			// diffuse = color_multiply_number(diffuse, cos_nl * compute_attenuation(vec3_length(vec3_subtract(world->spot_light.position, rec.p))));
+			// // printf("Diffuse color: R=%f, G=%f, B=%f\n", diffuse.r, diffuse.g, diffuse.b);
+			// return (color_add(ambient, diffuse));
+			// if (cos_nl < 0)
+			// 	return (ambient);
+			// else
+			// 	return (color_add(color_from_emission, color_multiply_number(world->spot_light.light_color, cos_nl * world->spot_light.brightness)));
+		}
+	}
+	else
+		return (ambient);
+}
+
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 {
 	t_hit_record	rec;
@@ -64,7 +130,7 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
 	{
 		// printf("No hit, return background color(r:%f,g:%f,b:%f)\n",world->background.r,world->background.g,world->background.b);
-		return (world->background);
+		return (world->ambient);
 	}
 	color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 	if (rec.mat.type == LAMBERTIAN && !lambertian_scatter(ray, &rec, &attenuation, &scattered, &pdf_value))
@@ -114,6 +180,8 @@ color_from_scatter = color_multiply_number(color_from_scatter, 4);
 
 	return (color_add(color_from_emission, color_from_scatter));
 }
+
+
 
 void	camera_initialize(t_camera *camera)
 {
@@ -212,7 +280,9 @@ void	camera_render(t_camera *camera, t_world *wld)
 				{
 					t_ray	r;
 					r = get_ray(i, j, s_i, s_j, camera);
-					pixel_color = color_add(pixel_color, ray_color(&r, camera->max_depth, wld, wld->lights));
+					pixel_color = color_add(pixel_color, ray_color_new(&r, camera->max_depth, wld));
+					// printf("Pixel color: R=%f, G=%f, B=%f\n", pixel_color.r,pixel_color.g,pixel_color.b);
+					// pixel_color = color_add(pixel_color, ray_color(&r, camera->max_depth, wld, wld->lights));
 				}
 			}
 			write_color(&img, i, j, color_multiply_number(pixel_color, camera->pixel_samples_scale));

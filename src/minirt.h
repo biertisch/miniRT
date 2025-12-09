@@ -345,6 +345,13 @@ struct s_object
 	struct s_object	*next;
 };
 
+typedef struct s_spot_light
+{
+	t_vec3		position;
+	double		brightness;
+	t_color		light_color;
+}	t_s_light;
+
 typedef struct s_world
 {
 	void		*mlx;
@@ -353,7 +360,9 @@ typedef struct s_world
 	t_object	*bvh_root;
 	int			num_objects;
 	t_camera	camera;
-	t_color		background;
+	t_color		ambient;
+	double		ambient_ratio;
+	t_s_light	spot_light;
 	t_object	lights;
 }	t_world;
 
@@ -374,6 +383,7 @@ int		vec3_near_zero(t_vec3 vec);
 t_vec3	vec3_reflect(t_vec3 v, t_vec3 n);
 t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
 t_vec3	random_cosine_direction();
+t_vec3	vec3_clamp(t_vec3 v, double min, double max);
 
 
 // t_camera	*new_camera(t_vec3 *origin, t_vec3 *direction, double fovy, t_film *film);
@@ -394,6 +404,7 @@ void	write_color(t_data *img, int x, int y, t_color color);
 t_color	color_add(t_color a, t_color b);
 t_color	color_multiply_number(t_color color, double scalar);
 t_color	color_multiply_vector(t_color a, t_color b);
+t_color color_clamp(t_color v, double min, double max);
 
 //ray.c
 t_ray	rt_ray(t_vec3 origin, t_vec3 direction);
@@ -459,6 +470,7 @@ t_interval	aabb_axis_interval(t_aabb *aabb, int axis_index);
 t_aabb	get_aabb_surrounding(t_aabb *a, t_aabb *b);
 int	aabb_longest_axis(t_aabb *aabb);
 t_aabb	aabb_empty(void);
+t_aabb	aabb_universal(void);
 
 //bvh_node.c
 t_object	*bvh_from_objects(t_object **objects, int start, int end);

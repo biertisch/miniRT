@@ -14,9 +14,13 @@ void	write_color(t_data *img, int x, int y, t_color color)
 	int	b;
 	t_interval	intensity;
 
-	r= linear_to_gamma(color.r);
-	g= linear_to_gamma(color.g);
-	b= linear_to_gamma(color.b);
+	// r= linear_to_gamma(color.r);
+	// g= linear_to_gamma(color.g);
+	// b= linear_to_gamma(color.b);
+
+	color.r = linear_to_gamma(color.r);
+	color.g = linear_to_gamma(color.g);
+	color.b = linear_to_gamma(color.b);
 
 	intensity = (t_interval){0.0, 0.999};
 	r = (int)(256 * interval_clamp(&intensity, color.r));
@@ -61,4 +65,21 @@ t_color	color_multiply_vector(t_color a, t_color b)
 	result.g = a.g * b.g;
 	result.b = a.b * b.b;
 	return (result);
+}
+
+t_color color_clamp(t_color v, double min, double max)
+{
+	if (v.r < min)
+		v.r = min;
+	if (v.r > max)
+		v.r = max;
+	if (v.g < min)
+		v.g = min;
+	if (v.g > max)
+		v.g = max;
+	if (v.b < min)
+		v.b = min;
+	if (v.b > max)
+		v.b = max;
+	return v;
 }
