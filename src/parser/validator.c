@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 20:41:51 by bliu              #+#    #+#             */
-/*   Updated: 2025/11/07 21:32:27 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/09 16:09:55 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -387,6 +387,12 @@ static int	check_geometry_keywords(const char *p, char *key)
         ft_strlcpy(key, "cy", 4);
         return (1);
     }
+	//added bea
+	else if (ft_memcmp(p, "co ", 3) == 0)
+	{
+		ft_strlcpy(key, "co", 4);
+		return (1);
+	}
     return (0);
 }
 

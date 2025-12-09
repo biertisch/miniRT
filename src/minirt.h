@@ -9,7 +9,8 @@
 # include "vec3.h"
 # include "color.h"
 # include "parser.h"
-# include "controls.h"
+# include "controls.h" //added
+# include "cone.h" //added
 
 # define WIDTH 400
 # define HEIGHT 600
@@ -225,7 +226,8 @@ typedef enum e_geometry_type
 	PLANE,
 	CYLINDER,
 	BVH_NODE,
-	QUAD
+	QUAD,
+	CONE //added bea
 } t_geo_type;
 
 typedef struct s_quad
@@ -281,6 +283,7 @@ typedef union u_geo_data
 	t_cylinder	cylinder;
 	t_bvh_node	bvh_node;
 	t_quad		quad;
+	t_cone		cone; //added bea
 }	t_geo_data;
 
 
@@ -356,7 +359,7 @@ typedef struct s_world
 	t_camera	camera;
 	t_color		background;
 	t_object	lights;
-	t_panel		*panel;
+	t_panel		*panel; //added bea
 }	t_world;
 
 //vec3.c;

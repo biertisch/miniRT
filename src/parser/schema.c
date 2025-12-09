@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   schema.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 18:44:12 by bliu              #+#    #+#             */
-/*   Updated: 2025/11/07 19:14:07 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/09 16:09:27 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 /*
-// static t_field_rule g_ambient_fields[] = 
+// static t_field_rule g_ambient_fields[] =
 // {
 // 	{"ratio", FIELD_FLOAT, 0.0, 1.0},
 // 	{"color", FIELD_COLOR, 0, 255}
@@ -125,6 +125,20 @@ static t_field_rule	*get_cylinder_fields(void)
 	return (fields);
 }
 
+//added bea
+static t_field_rule	*get_cone_fields(void)
+{
+	static t_field_rule	fields[] = {
+	{"apex", FIELD_VEC3, 0, 0},
+	{"axis", FIELD_VEC3, -1, 1},
+	{"radius", FIELD_FLOAT, 0.0001, 1e6},
+	{"height", FIELD_FLOAT, 0.0001, 1e6},
+	{"color", FIELD_COLOR, 0, 255}
+	};
+
+	return (fields);
+}
+
 t_object_rule	*initialize_object_rule(t_object_rule *rule, const char *keyword,
 	t_field_rule *fields, int field_count)
 {
@@ -150,5 +164,8 @@ t_object_rule	*find_rule(const char *keyword)
 		return (initialize_object_rule(&rule, "pl", get_plane_fields(), 3));
 	else if (strcmp(keyword, "cy") == 0)
 		return (initialize_object_rule(&rule, "cy", get_cylinder_fields(), 5));
+	//added bea
+	else if (strcmp(keyword, "co") == 0)
+		return (initialize_object_rule(&rule, "co", get_cone_fields(), 5));
 	return (NULL);
 }
