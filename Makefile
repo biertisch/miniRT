@@ -8,8 +8,8 @@ LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
 CC = gcc
-#CCFLAGS = -Wextra -Wall -Werror -MMD
-CCFLAGS = -Werror -MMD
+#CCFLAGS = -Wextra -Wall -Werror -MMD --std=gnu11
+CCFLAGS = -Werror -MMD --std=gnu11
 
 D ?= 0
 

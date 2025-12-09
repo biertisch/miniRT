@@ -388,6 +388,45 @@ void	base_scene1(t_world *wld)
 	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 }
 
+void	base_plane_sphere_scene(t_world *wld)
+{
+	// Implement the mandatory base scene setup here
+	t_material	red = get_material(LAMBERTIAN, get_color(0, 0.35, 0.35), 0.0);
+
+	t_material	c_sphere = get_material(LAMBERTIAN, get_color(0.7, 0.9, 1), 0.0);
+
+	t_sphere	sphere1 = new_sphere(new_vec3(0, 0, 0), 1, c_sphere);
+	add_object_to_world(wld, SPHERE, &sphere1);
+	
+	// t_sphere	light_sphere = new_sphere(new_vec3(3, 2, -5), 0.1, red);
+	// add_object_to_world(wld, SPHERE, &light_sphere);
+
+
+	// Ground plane
+	t_material	mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
+	t_plane		ground_plane = new_plane(new_vec3(0, -1, 0), new_vec3(0, 1, 0), mat_ground);
+	add_object_to_world(wld, PLANE, &ground_plane);
+
+	wld->camera.aspect_ratio = 1;
+	wld->camera.image_width = 600;
+	wld->camera.samples_per_pixel = 1;//default 100
+	wld->camera.max_depth = 5;//default 50
+	wld->camera.vfov = 20;
+	wld->camera.lookfrom = new_vec3(0,0,-10);
+	wld->camera.lookat = new_vec3(0,0,1);
+	wld->camera.vup = new_vec3(0,1,0);
+
+	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+
+
+	wld->spot_light.position = new_vec3(3, 1, -5);
+	wld->spot_light.brightness = 0.5;
+	wld->spot_light.light_color = get_color(1, 150/255, 20/255);
+
+	wld->ambient = get_color(0.6, 0.8, 0.9);
+	wld->ambient_ratio = 0.6;
+}
+
 int main(void)
 {
 	t_world		wld;
@@ -395,14 +434,12 @@ int main(void)
 	t_object	light_obj;
 
 	memset(&wld, 0, sizeof(t_world));
-	wld.ambient = get_color(0.2, 0.5, 0.8); // Light blue background
-	wld.ambient_ratio = .2;
 	// wld.background = get_color(0, 0, 0); // Black background
 
 	// scene_1_checker_ground(&wld);           // Original scene with spheres
 	// scene_with_plane_and_cylinder(&wld);  // New scene with planes and cylinders
 	
-	switch (8)
+	switch (9)
 	{
 		case 1:
 			scene_1_checker_ground(&wld);
@@ -441,6 +478,9 @@ int main(void)
 			wld.spot_light.brightness = 1;
 			wld.spot_light.light_color = get_color(1.0, 1.0, 1.0);
 
+			break;
+		case 9:
+			base_plane_sphere_scene(&wld);
 			break;
 		default:
 			scene_1_checker_ground(&wld);
