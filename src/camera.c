@@ -50,13 +50,15 @@ t_color ray_color_new(t_ray *ray, int depth, t_world *world)
 			cos_nl = vec3_dot(rec.normal,vec3_normalize(r_2light.direction));
 			if (cos_nl < 0)
 				cos_nl = 0;
-			brightness = world->spot_light.brightness * cos_nl / vec3_length(vec3_subtract(world->spot_light.position, rec.p));
+			brightness = world->spot_light.brightness * cos_nl / vec3_length(r_2light.direction);
 
-			diffuse = color_multiply_number(world->spot_light.light_color, brightness * compute_attenuation(vec3_length(vec3_subtract(world->spot_light.position, rec.p))));
+// printf("Brightness: %f\n", brightness * compute_attenuation(vec3_length(r_2light.direction)));
+
+			diffuse = color_multiply_number(world->spot_light.light_color, brightness * compute_attenuation(vec3_length(r_2light.direction)));
 			diffuse = color_add(diffuse, color_multiply_number(ambient, 2.2));
 
 			// return color_multiply_vector(diffuse, color_from_emission);
-			return color_clamp(color_add(color_from_emission,color_multiply_vector(diffuse, color_from_emission)),0.0,1.0);
+			return color_clamp(color_add(color_from_emission, color_multiply_vector(diffuse, color_from_emission)),0.0,1.0);
 		}
 	}
 	else

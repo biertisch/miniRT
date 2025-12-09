@@ -391,13 +391,18 @@ void	base_scene1(t_world *wld)
 void	base_plane_sphere_scene(t_world *wld)
 {
 	// Implement the mandatory base scene setup here
+	t_material	metal = get_material(METAL, get_color(0.8, 0, 0), 0.0);
 	t_material	red = get_material(LAMBERTIAN, get_color(0, 0.35, 0.35), 0.0);
 
-	t_material	c_sphere = get_material(LAMBERTIAN, get_color(0.7, 0.9, 1), 0.0);
+	t_material	c_sphere = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
 
 	t_sphere	sphere1 = new_sphere(new_vec3(0, 0, 0), 1, c_sphere);
 	add_object_to_world(wld, SPHERE, &sphere1);
 	
+
+	t_sphere	sphere2 = new_sphere(new_vec3(5, 0, 1), 1, metal);
+	add_object_to_world(wld, SPHERE, &sphere2);
+
 	// t_sphere	light_sphere = new_sphere(new_vec3(3, 2, -5), 0.1, red);
 	// add_object_to_world(wld, SPHERE, &light_sphere);
 
@@ -419,12 +424,12 @@ void	base_plane_sphere_scene(t_world *wld)
 	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
 
-	wld->spot_light.position = new_vec3(3, 1, -5);
-	wld->spot_light.brightness = 0.5;
-	wld->spot_light.light_color = get_color(1, 150/255, 20/255);
+	wld->spot_light.position = new_vec3(2, 2, -3);
+	wld->spot_light.brightness = 0.8;
+	wld->spot_light.light_color = get_color(1, 150/255, 200/255);
 
-	wld->ambient = get_color(0.6, 0.8, 0.9);
-	wld->ambient_ratio = 0.6;
+	wld->ambient = get_color(1, 1, 1);
+	wld->ambient_ratio = 0.3;
 }
 
 int main(void)
