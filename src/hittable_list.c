@@ -59,7 +59,33 @@ void	add_object_to_world(t_world *world, t_geo_type geo_type, void *geo)
 	world->num_objects++;
 }
 
-int	world_hit(t_object *objects, t_ray *ray, t_interval ray_t, t_hit_record *rec)
+int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
+{
+	t_hit_record	temp_rec;
+	int				hit_anything;
+	double			closest_so_far;
+	t_object		*current;
+
+	hit_anything = 0;
+	closest_so_far = ray_t.max;
+	int i = 0;
+	while (i < world->num_objects)
+	{
+		current = world->objects[i];
+		ray_t.max = closest_so_far;
+		
+		if (current->hit && current->hit(ray, ray_t, *current, &temp_rec))
+		{
+			hit_anything = 1;
+			closest_so_far = temp_rec.t;
+			*rec = temp_rec;
+		}
+		i++;
+	}
+	return (hit_anything);
+}
+
+int	world_hit_old(t_object *objects, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 {
 	t_hit_record	temp_rec;
 	int				hit_anything;

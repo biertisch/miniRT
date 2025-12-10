@@ -412,7 +412,8 @@ t_vec3	ray_at(t_ray *ray, double t);
 
 //hittable_list.c
 void	add_object_to_world(t_world *world, t_geo_type geo_type, void *sphere);
-int		world_hit(t_object *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
+// int		world_hit(t_object *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
+int		world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
 
 //quad.c
 t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
@@ -473,8 +474,8 @@ t_aabb	aabb_empty(void);
 t_aabb	aabb_universal(void);
 
 //bvh_node.c
-t_object	*bvh_from_objects(t_object **objects, int start, int end);
-int		bvh_node_hit(t_ray *ray, t_interval ray_t, t_object obj,  t_hit_record *record);
+// t_object	*bvh_from_objects(t_object **objects, int start, int end);
+// int		bvh_node_hit(t_ray *ray, t_interval ray_t, t_object obj,  t_hit_record *record);
 
 //texture_solid_color.c
 t_solid_color_tex	solid_color_texture(t_color color);

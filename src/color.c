@@ -9,19 +9,14 @@ double	linear_to_gamma(double linear_component)
 
 void	write_color(t_data *img, int x, int y, t_color color)
 {
-	int	r;
-	int	g;
-	int	b;
+	int			r;
+	int			g;
+	int			b;
 	t_interval	intensity;
 
-	// r= linear_to_gamma(color.r);
-	// g= linear_to_gamma(color.g);
-	// b= linear_to_gamma(color.b);
-
-	// color.r = linear_to_gamma(color.r);
-	// color.g = linear_to_gamma(color.g);
-	// color.b = linear_to_gamma(color.b);
-
+	color.r = linear_to_gamma(color.r);
+	color.g = linear_to_gamma(color.g);
+	color.b = linear_to_gamma(color.b);
 	intensity = (t_interval){0.0, 0.999};
 	r = (int)(256 * interval_clamp(&intensity, color.r));
 	g = (int)(256 * interval_clamp(&intensity, color.g));

@@ -29,10 +29,10 @@ t_checker_texture	*checker_texture_colors(double scale, t_color even_color, t_co
 
 t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p)
 {
-	int	xInt;
-	int	yInt;
-	int	zInt;
-	int	isEven;
+	int					xInt;
+	int					yInt;
+	int					zInt;
+	int					isEven;
 	t_checker_texture	*checker_tex;
 
 	checker_tex = (t_checker_texture *)texture;

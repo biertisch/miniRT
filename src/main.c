@@ -78,7 +78,7 @@ void	checkered_spheres(t_world *wld)
 	wld->camera.lookat = new_vec3(0,0,0);
 	wld->camera.vup = new_vec3(0,1,0);
 
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
 	wld->ambient = get_color(1, 1, 1);
 	wld->ambient_ratio = 0.3;
@@ -143,7 +143,7 @@ void	cornel_box_scene(t_world *wld)
 	wld->camera.lookat = new_vec3(278,278,0);
 	wld->camera.vup = new_vec3(0,1,0);
 
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
 	wld->ambient = get_color(1, 1, 1);
 	wld->ambient_ratio = 0.4;
@@ -162,7 +162,6 @@ void	base_scene1(t_world *wld)
 	t_material	blue = get_material(METAL, get_color(0.0, 0.0, 0.9), 0.0);
 	t_material	light = get_material(DIFFUSE_LIGHT, get_color(15, 15, 15), 0.0);
 
-
 	t_cylinder	cyl1 = new_cylinder(new_vec3(443, 100, 432), new_vec3(0,1,0), 80, 200, red);
 	t_cylinder	cyl2 = new_cylinder(new_vec3(143, 200, 232), new_vec3(0,1,0), 80, 400, green);
 	t_cylinder	cyl3 = new_cylinder(new_vec3(243, 250, 532), new_vec3(0,1,0), 80, 150, blue);
@@ -178,8 +177,10 @@ void	base_scene1(t_world *wld)
 
 
 	// Ground plane
+	t_checker_texture *checker_tex = checker_texture_colors(0.011, get_color(0.2,0.3,0.1), get_color(0.9,0.9,0.9));
+	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
 	t_material	mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
-	t_plane		ground_plane = new_plane(new_vec3(0, -2, 0), new_vec3(0, 1, 0), metal);
+	t_plane		ground_plane = new_plane(new_vec3(0, -2, 0), new_vec3(0, 1, 0), material_checker);
 	add_object_to_world(wld, PLANE, &ground_plane);
 
 	wld->camera.aspect_ratio = 1;
@@ -191,7 +192,7 @@ void	base_scene1(t_world *wld)
 	wld->camera.lookat = new_vec3(278,278,0);
 	wld->camera.vup = new_vec3(0,1,0);
 
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
 	wld->ambient = get_color(1, 1, 1);
 	wld->ambient_ratio = 0.4;
@@ -205,40 +206,36 @@ void	base_plane_sphere_scene(t_world *wld)
 
 	t_material	c_sphere = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
 
-	t_sphere	sphere1 = new_sphere(new_vec3(0, 0, 0), 1, c_sphere);
+	t_sphere	sphere1 = new_sphere(new_vec3(0, 1, 0), 1, c_sphere);
 	add_object_to_world(wld, SPHERE, &sphere1);
 	
-
-	t_sphere	sphere2 = new_sphere(new_vec3(5, 0, 1), 1, metal);
+	t_sphere	sphere2 = new_sphere(new_vec3(5, 1, 0), 1, metal);
 	add_object_to_world(wld, SPHERE, &sphere2);
 
+	t_cylinder	cyl = new_cylinder(new_vec3(-5, 1, 0), new_vec3(1, 1, 0), 1, 1, red);
+	add_object_to_world(wld, CYLINDER, &cyl);
 
-
+	// Ground plane
 	t_checker_texture *checker_tex = checker_texture_colors(0.99, get_color(0.2,0.3,0.1), get_color(0.9,0.9,0.9));
 	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
 
-	// t_sphere	light_sphere = new_sphere(new_vec3(3, 2, -5), 0.1, red);
-	// add_object_to_world(wld, SPHERE, &light_sphere);
-
-
-	// Ground plane
 	t_material	mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
-	t_plane		ground_plane = new_plane(new_vec3(0, -1, 0), new_vec3(0, 1, 0), material_checker);
+	t_plane		ground_plane = new_plane(new_vec3(0, 0, 0), new_vec3(0, 1, 0), material_checker);
 	add_object_to_world(wld, PLANE, &ground_plane);
 
 	wld->camera.aspect_ratio = 1;
 	wld->camera.image_width = 600;
 	wld->camera.samples_per_pixel = 1;//default 100
 	wld->camera.max_depth = 5;//default 50
-	wld->camera.vfov = 20;
-	wld->camera.lookfrom = new_vec3(0,0,-10);
+	wld->camera.vfov = 50;
+	wld->camera.lookfrom = new_vec3(0,2,-10);
 	wld->camera.lookat = new_vec3(0,0,1);
 	wld->camera.vup = new_vec3(0,1,0);
 
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
 
-	wld->spot_light.position = new_vec3(2, 2, -3);
+	wld->spot_light.position = new_vec3(2, 4, -3);
 	wld->spot_light.brightness = 0.8;
 	wld->spot_light.light_color = get_color(1, 150/255, 200/255);
 

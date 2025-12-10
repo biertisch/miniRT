@@ -35,13 +35,15 @@ t_color ray_color_new(t_ray *ray, int depth, t_world *world)
 		return (get_color(0.0, 0.0, 0.0));
 
 	ambient = color_multiply_number(world->ambient, world->ambient_ratio);
-	if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	// if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 	{
 		color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 		// printf("Emitted color: R=%f, G=%f, B=%f\n", color_from_emission.r, color_from_emission.g, color_from_emission.b);
 		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
 		
-		if (world_hit(world->bvh_root, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
+		// if (world_hit(world->bvh_root, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
+		if (world_hit(world, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
 		{
 			return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number( ambient, 2.2)), 0.0, 1.0);
 		}
@@ -116,7 +118,8 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	return (blend_colors((t_color){1.0, 1.0, 1.0}, (t_color){0.5, 0.7, 1.0}, a));
 	*/
 
-	if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	// if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 	{
 		// printf("No hit, return background color(r:%f,g:%f,b:%f)\n",world->background.r,world->background.g,world->background.b);
 		return (world->ambient);
@@ -169,8 +172,6 @@ color_from_scatter = color_multiply_number(color_from_scatter, 4);
 
 	return (color_add(color_from_emission, color_from_scatter));
 }
-
-
 
 void	camera_initialize(t_camera *camera)
 {
