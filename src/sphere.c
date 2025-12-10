@@ -72,31 +72,3 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	record->mat = sphere->mat;
 	return (1);
 }
-
-
-/*
-int sphere_intersect(t_camera *cam, t_vec3 *ray, t_sphere *sphere)
-{
-	double	b;
-	double	c;
-	double	discr;
-	double	dist_1;
-	double	dist_2;
-	t_vec3	*cam_sphere;
-
-	dist_1 = 0;
-	dist_2 = 0;
-	cam_sphere = vec3_subtract(cam->origin, sphere->center);
-	b = 2.0 * vec3_dot(cam_sphere, ray);
-	c = vec3_dot(cam_sphere, cam_sphere) - (sphere->radius * sphere->radius);
-	discr = b * b - 4.0 * c;
-	free(cam_sphere);
-	if (discr < 0)
-		return (0);
-	dist_1 = (-b - sqrt(discr)) / 2.0;
-	dist_2 = (-b + sqrt(discr)) / 2.0;
-	(void)dist_2;
-	if (dist_1 > 0)
-		return (1);
-	return (0);
-}*/

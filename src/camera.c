@@ -271,7 +271,6 @@ void	camera_render(t_camera *camera, t_world *wld)
 					t_ray	r;
 					r = get_ray(i, j, s_i, s_j, camera);
 					pixel_color = color_add(pixel_color, ray_color_new(&r, camera->max_depth, wld));
-					// printf("Pixel color: R=%f, G=%f, B=%f\n", pixel_color.r,pixel_color.g,pixel_color.b);
 					// pixel_color = color_add(pixel_color, ray_color(&r, camera->max_depth, wld, wld->lights));
 				}
 			}
