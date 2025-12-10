@@ -7,10 +7,6 @@ t_sphere	new_sphere(t_vec3 center, double radius, t_material mat)
 	sphere.center = center;
 	sphere.radius = radius;
 	sphere.mat = mat;
-	// sphere.bbox = get_aabb(
-	// 	vec3_subtract(center, (t_vec3){radius, radius, radius}),
-	// 	vec3_add(center, (t_vec3){radius, radius, radius})
-	// );
 	return (sphere);
 }
 
