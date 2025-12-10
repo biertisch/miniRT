@@ -43,7 +43,7 @@ t_color ray_color_new(t_ray *ray, int depth, t_world *world)
 		
 		if (world_hit(world->bvh_root, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
 		{
-			return color_clamp(color_multiply_vector(color_from_emission, ambient),0.0,1.0);
+			return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number( ambient, 2.2)), 0.0, 1.0);
 		}
 		else
 		{
