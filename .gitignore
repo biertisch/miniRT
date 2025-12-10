@@ -1,0 +1,5 @@
+*.o
+libft/*.o
+libft/*.d
+objs/
+miniRT
