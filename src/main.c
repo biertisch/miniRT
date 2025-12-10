@@ -265,11 +265,9 @@ int main(void)
 			light_obj.hit = quad_hit;
 			light_obj.pdf_value = quad_pdf_value;
 			light_obj.random = quad_random;
-			// light_obj.bbox = lights.bbox;
 			wld.lights = light_obj;
 			break;
 		case 8:
-			// code fit mandatory scene
 			base_scene1(&wld);
 			wld.spot_light.position = new_vec3(440, 800, 400);
 			wld.spot_light.brightness = 1;
