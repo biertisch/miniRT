@@ -7,7 +7,7 @@ t_plane	new_plane(t_vec3 point, t_vec3 normal, t_material mat)
 	plane.point = point;
 	plane.normal = vec3_normalize(normal);
 	plane.mat = mat;
-	plane.bbox = aabb_universal();
+	// plane.bbox = aabb_universal();
 	return (plane);
 }
 

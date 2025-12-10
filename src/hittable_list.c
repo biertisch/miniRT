@@ -33,22 +33,22 @@ void	add_object_to_world(t_world *world, t_geo_type geo_type, void *geo)
 		case SPHERE:
 			new_object->geo.sphere = *(t_sphere *)geo;
 			new_object->hit = sphere_hit;
-			new_object->bbox = new_object->geo.sphere.bbox;
+			// new_object->bbox = new_object->geo.sphere.bbox;
 			break;
 		case PLANE:
 			new_object->geo.plane = *(t_plane *)geo;
 			new_object->hit = plane_hit;
-			new_object->bbox = new_object->geo.plane.bbox;
+			// new_object->bbox = new_object->geo.plane.bbox;
 			break;
 		case CYLINDER:
 			new_object->geo.cylinder = *(t_cylinder *)geo;
 			new_object->hit = cylinder_hit;
-			new_object->bbox = new_object->geo.cylinder.bbox;
+			// new_object->bbox = new_object->geo.cylinder.bbox;
 			break;
 		case QUAD:
 			new_object->geo.quad = *(t_quad *)geo;
 			new_object->hit = quad_hit;
-			new_object->bbox = new_object->geo.quad.bbox;
+			// new_object->bbox = new_object->geo.quad.bbox;
 			break;
 		default:
 			free(new_object);
@@ -84,7 +84,7 @@ int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 	}
 	return (hit_anything);
 }
-
+/*
 int	world_hit_old(t_object *objects, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 {
 	t_hit_record	temp_rec;
@@ -108,4 +108,4 @@ int	world_hit_old(t_object *objects, t_ray *ray, t_interval ray_t, t_hit_record 
 		current = current->next;
 	}
 	return (hit_anything);
-}
+}*/

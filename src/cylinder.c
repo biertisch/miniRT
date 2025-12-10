@@ -17,32 +17,32 @@
 //     return box;
 // }
 
-t_aabb	cylinder_compute_bbox(t_cylinder *cy)
-{
-	t_vec3	p1;
-	t_vec3	p2;
-	t_vec3	half_axis;
-	t_aabb	bbox;
+// t_aabb	cylinder_compute_bbox(t_cylinder *cy)
+// {
+// 	t_vec3	p1;
+// 	t_vec3	p2;
+// 	t_vec3	half_axis;
+// 	t_aabb	bbox;
 
-	// 半高方向向量
-	half_axis = vec3_multiply(cy->axis, cy->height / 2.0);
-	// 上下端点
-	p1 = vec3_subtract(cy->center, half_axis);
-	p2 = vec3_add(cy->center, half_axis);
+// 	// 半高方向向量
+// 	half_axis = vec3_multiply(cy->axis, cy->height / 2.0);
+// 	// 上下端点
+// 	p1 = vec3_subtract(cy->center, half_axis);
+// 	p2 = vec3_add(cy->center, half_axis);
 
-	// X 轴范围
-	bbox.x.min = fmin(p1.x, p2.x) - cy->radius;
-	bbox.x.max = fmax(p1.x, p2.x) + cy->radius;
+// 	// X 轴范围
+// 	bbox.x.min = fmin(p1.x, p2.x) - cy->radius;
+// 	bbox.x.max = fmax(p1.x, p2.x) + cy->radius;
 
-	// Y 轴范围
-	bbox.y.min = fmin(p1.y, p2.y) - cy->radius;
-	bbox.y.max = fmax(p1.y, p2.y) + cy->radius;
+// 	// Y 轴范围
+// 	bbox.y.min = fmin(p1.y, p2.y) - cy->radius;
+// 	bbox.y.max = fmax(p1.y, p2.y) + cy->radius;
 
-	// Z 轴范围
-	bbox.z.min = fmin(p1.z, p2.z) - cy->radius;
-	bbox.z.max = fmax(p1.z, p2.z) + cy->radius;
-	return (bbox);
-}
+// 	// Z 轴范围
+// 	bbox.z.min = fmin(p1.z, p2.z) - cy->radius;
+// 	bbox.z.max = fmax(p1.z, p2.z) + cy->radius;
+// 	return (bbox);
+// }
 
 t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height, t_material mat)
 {
@@ -53,7 +53,7 @@ t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height
 	cylinder.radius = radius;
 	cylinder.height = height;
 	cylinder.mat = mat;
-	cylinder.bbox = cylinder_compute_bbox(&cylinder);
+	// cylinder.bbox = cylinder_compute_bbox(&cylinder);
 	return (cylinder);
 }
 /*

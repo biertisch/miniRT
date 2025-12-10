@@ -184,8 +184,6 @@ void	camera_initialize(t_camera *camera)
 	camera->sqrt_spp = (int)sqrt(camera->samples_per_pixel);
 	camera->pixel_samples_scale = 1.0 / (camera->sqrt_spp * camera->sqrt_spp);
 	camera->recip_sqrt_spp = 1.0 / camera->sqrt_spp;
-	
-	camera->center = camera->lookfrom;
 
 	// double	focal_length = vec3_length(vec3_subtract(camera->lookfrom, camera->lookat));
 	double	focal_length = 10.0;
@@ -205,7 +203,7 @@ void	camera_initialize(t_camera *camera)
 	t_vec3	pixel_delta_u = vec3_multiply(viewport_u, 1.0 / (double)camera->image_width);
 	t_vec3	pixel_delta_v = vec3_multiply(viewport_v, 1.0 / (double)camera->image_height);
 
-	t_vec3	viewport_upper_left = vec3_subtract(camera->center,vec3_multiply(camera->w, focal_length));
+	t_vec3	viewport_upper_left = vec3_subtract(camera->lookfrom,vec3_multiply(camera->w, focal_length));
 	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_u, 0.5));
 	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_v, 0.5));
 
@@ -246,8 +244,8 @@ t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 	pixel_sample = vec3_add(camera->pixel00_loc,
 					vec3_add(vec3_multiply(camera->pixel_delta_u, pixel_x + offset.x),
 							 vec3_multiply(camera->pixel_delta_v, pixel_y + offset.y)));
-	ray_direction = vec3_subtract(pixel_sample, camera->center);
-	return (rt_ray(camera->center, ray_direction));
+	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
+	return (rt_ray(camera->lookfrom, ray_direction));
 }
 
 void	camera_render(t_camera *camera, t_world *wld)

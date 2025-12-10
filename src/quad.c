@@ -33,8 +33,8 @@ t_vec3	quad_random(t_object obj, t_vec3 origin)
 t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat)
 {
 	t_quad	quad;
-	t_aabb	bbox1;
-	t_aabb	bbox2;
+	// t_aabb	bbox1;
+	// t_aabb	bbox2;
 	t_vec3	n;
 
 	quad.Q = Q;
@@ -48,9 +48,9 @@ t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat)
 
 	quad.area = vec3_length(n);
 
-	bbox1 = get_aabb(Q, vec3_add(vec3_add(Q, u), v));
-	bbox2 = get_aabb(vec3_add(Q, u), vec3_add(Q, v));
-	quad.bbox = get_aabb_surrounding(&bbox1, &bbox2);
+	// bbox1 = get_aabb(Q, vec3_add(vec3_add(Q, u), v));
+	// bbox2 = get_aabb(vec3_add(Q, u), vec3_add(Q, v));
+	// quad.bbox = get_aabb_surrounding(&bbox1, &bbox2);
 	return (quad);
 }
 
