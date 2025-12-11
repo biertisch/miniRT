@@ -7,7 +7,7 @@ CFLAGS = -Wall -Wextra -Werror
 LIBFT_DIR = ../../libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
-SRCS = parser_main.c validator.c schema.c parse_utils.c parse_line.c parser.c
+SRCS = parser.c
 OBJS = $(SRCS:.c=.o)
 
 INC = -I../../includes

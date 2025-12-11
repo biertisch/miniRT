@@ -1,19 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validator.c                                        :+:      :+:    :+:   */
+/*   deprecated-validator.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 20:41:51 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/09 16:09:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/11 12:31:06 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-#include <ctype.h>
-#include <fcntl.h>
-#include <errno.h>
+
 
 static void	skip_spaces_local(const char **s)
 {
@@ -474,18 +472,11 @@ static int	process_single_line(char *line_str, int line_num, t_color *rgb_acl,
 
 int	validate_config_file_full(const char *filename)
 {
-    int		fd;
     char	*line_str;
     int		line;
     t_color	rgb_acl;
     int		errors;
 
-    fd = open(filename, O_RDONLY);
-    if (fd < 0)
-    {
-        perror("Error\nfopen");
-        return (0);
-    }
     rgb_acl = (t_color){0, 0, 0};
     errors = 0;
     line = 0;

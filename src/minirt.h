@@ -9,8 +9,8 @@
 # include "vec3.h"
 # include "color.h"
 # include "parser.h"
-# include "controls.h" //added
-# include "cone.h" //added
+# include "controls.h"
+# include "cone.h"
 
 # define WIDTH 400
 # define HEIGHT 600
@@ -92,7 +92,7 @@ typedef enum e_material_type
 	DIFFUSE_LIGHT
 } t_mat_type;
 
-typedef struct s_mat_limb
+typedef struct s_mat_lamb
 {
 	t_texture	*tex;
 }	t_mat_lamb;
@@ -177,7 +177,7 @@ typedef enum e_geometry_type
 	CYLINDER,
 	BVH_NODE,
 	QUAD,
-	CONE //added bea
+	CONE
 } t_geo_type;
 
 typedef struct s_quad
@@ -221,7 +221,7 @@ typedef union u_geo_data
 	t_plane		plane;
 	t_cylinder	cylinder;
 	t_quad		quad;
-	t_cone		cone; //added bea
+	t_cone		cone;
 }	t_geo_data;
 
 
@@ -294,7 +294,7 @@ typedef struct s_world
 	double		ambient_ratio;
 	t_s_light	spot_light;
 	t_object	lights;
-	t_panel		*panel; //added bea
+	t_panel		*panel;
 }	t_world;
 
 //vec3.c;

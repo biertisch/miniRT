@@ -308,7 +308,7 @@ void	base_scene1(t_world *wld)
 
 	t_sphere	sphere1 = new_sphere(new_vec3(290, 50, 190), 50, metal);
 	add_object_to_world(wld, SPHERE, &sphere1);
-	
+
 	t_sphere	light_sphere = new_sphere(new_vec3(440, 500, 400), 10, light);
 	add_object_to_world(wld, SPHERE, &light_sphere);
 
@@ -345,7 +345,7 @@ void	base_plane_sphere_scene(t_world *wld)
 
 	t_sphere	sphere1 = new_sphere(new_vec3(0, 1, 0), 1, c_sphere);
 	add_object_to_world(wld, SPHERE, &sphere1);
-	
+
 	t_sphere	sphere2 = new_sphere(new_vec3(5, 1, 0), 1, metal);
 	add_object_to_world(wld, SPHERE, &sphere2);
 
@@ -386,20 +386,18 @@ int main(void)
 	t_quad		lights;
 	t_object	light_obj;
 
-<<<<<<< HEAD
-	memset(&wld, 0, sizeof(t_world));
-	// wld.background = get_color(0.70, 0.80, 1.00); // Light blue background
-	wld.background = get_color(0, 0, 0); // Black background
+	// if (argc != 2)
+	// {
+	// 	ft_putstr_fd("Usage: miniRT xxx.rt\n", STDERR_FILENO);
+	// 	return (1);
+	// }
 
-	// scene_1_checker_ground(&wld);           // Original scene with spheres
-	// scene_with_plane_and_cylinder(&wld);  // New scene with planes and cylinders
-
-	switch (7)
-=======
 	ft_memset(&wld, 0, sizeof(t_world));
-	
+
+	// if (!parser(&wld, argv[1]))
+	// 	return (1);
+
 	switch (9)
->>>>>>> main
 	{
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres
