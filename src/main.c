@@ -313,7 +313,7 @@ int main(void)
 
 	ft_memset(&wld, 0, sizeof(t_world));
 	
-	switch (9)
+	switch (8)
 	{
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres
