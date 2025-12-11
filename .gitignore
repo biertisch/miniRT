@@ -1,6 +1,7 @@
-*.pdf
 *.o
-*.d
-*.a
-objs
+libft/*.o
+libft/*.d
+libft/*.a
+objs/
 miniRT
+*.pdf

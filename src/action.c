@@ -76,13 +76,13 @@ static void	do_action(int keycode, t_world *wld)
 		printf("⬇️\n");
 	}
 	else if (keycode == 'w')
-		camera_action(camera_move_forward, wld, +30.3f);
+		camera_action(camera_move_forward, wld, +3.3f);
 	else if (keycode == 's')
-		camera_action(camera_move_forward, wld, -30.3f);
+		camera_action(camera_move_forward, wld, -3.3f);
 	else if (keycode == 'a')
-		camera_action(camera_move_right, wld, -10.3f);
+		camera_action(camera_move_right, wld, -3.3f);
 	else if (keycode == 'd')
-		camera_action(camera_move_right, wld, +10.3f);
+		camera_action(camera_move_right, wld, +3.3f);
 	else if (keycode == 'p')
 	{
 		printf("📷 Print Info:\n");

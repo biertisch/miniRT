@@ -190,3 +190,19 @@ t_vec3	random_cosine_direction()
     return new_vec3(x, y, z);
 }
 
+t_vec3 vec3_clamp(t_vec3 v, double min, double max)
+{
+	if (v.x < min)
+		v.x = min;
+	if (v.x > max)
+		v.x = max;
+	if (v.y < min)
+		v.y = min;
+	if (v.y > max)
+		v.y = max;
+	if (v.z < min)
+		v.z = min;
+	if (v.z > max)
+		v.z = max;
+	return v;
+}

@@ -10,6 +10,63 @@ t_color	blend_colors(t_color c1, t_color c2, double t)
 	return (blended);
 }
 
+double compute_attenuation(double d)
+{
+    double constant = 1.0;
+    double linear = 0.1;
+    double quadratic = 0.01;
+
+    return 1.0 / (constant + linear * d + quadratic * d * d);
+}
+
+t_color ray_color_new(t_ray *ray, int depth, t_world *world)
+{
+	t_hit_record	rec;
+	t_hit_record	temp_rec;
+	t_ray			scattered;
+	t_ray			r_2light;
+	t_color			ambient;
+	t_color			color_from_emission;
+	double			cos_nl;
+	double			brightness;
+	t_color			diffuse;
+
+	if (depth <= 0)
+		return (get_color(0.0, 0.0, 0.0));
+
+	ambient = color_multiply_number(world->ambient, world->ambient_ratio);
+	// if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
+	{
+		color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
+		// printf("Emitted color: R=%f, G=%f, B=%f\n", color_from_emission.r, color_from_emission.g, color_from_emission.b);
+		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
+		
+		// if (world_hit(world->bvh_root, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
+		if (world_hit(world, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
+		{
+			return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number( ambient, 2.2)), 0.0, 1.0);
+		}
+		else
+		{
+			cos_nl = vec3_dot(rec.normal,vec3_normalize(r_2light.direction));
+			if (cos_nl < 0)
+				cos_nl = 0;
+			brightness = world->spot_light.brightness * cos_nl / vec3_length(r_2light.direction);
+
+// printf("Brightness: %f\n", brightness * compute_attenuation(vec3_length(r_2light.direction)));
+
+			diffuse = color_multiply_number(world->spot_light.light_color, brightness * compute_attenuation(vec3_length(r_2light.direction)));
+			diffuse = color_add(diffuse, color_multiply_number(ambient, 2.2));
+
+			// return color_multiply_vector(diffuse, color_from_emission);
+			return color_clamp(color_add(color_from_emission, color_multiply_vector(diffuse, color_from_emission)),0.0,1.0);
+		}
+	}
+	else
+		return (ambient);
+}
+
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 {
 	t_hit_record	rec;
@@ -61,10 +118,11 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	return (blend_colors((t_color){1.0, 1.0, 1.0}, (t_color){0.5, 0.7, 1.0}, a));
 	*/
 
-	if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	// if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 	{
 		// printf("No hit, return background color(r:%f,g:%f,b:%f)\n",world->background.r,world->background.g,world->background.b);
-		return (world->background);
+		return (world->ambient);
 	}
 	color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 	if (rec.mat.type == LAMBERTIAN && !lambertian_scatter(ray, &rec, &attenuation, &scattered, &pdf_value))
@@ -126,8 +184,6 @@ void	camera_initialize(t_camera *camera)
 	camera->sqrt_spp = (int)sqrt(camera->samples_per_pixel);
 	camera->pixel_samples_scale = 1.0 / (camera->sqrt_spp * camera->sqrt_spp);
 	camera->recip_sqrt_spp = 1.0 / camera->sqrt_spp;
-	
-	camera->center = camera->lookfrom;
 
 	// double	focal_length = vec3_length(vec3_subtract(camera->lookfrom, camera->lookat));
 	double	focal_length = 10.0;
@@ -147,7 +203,7 @@ void	camera_initialize(t_camera *camera)
 	t_vec3	pixel_delta_u = vec3_multiply(viewport_u, 1.0 / (double)camera->image_width);
 	t_vec3	pixel_delta_v = vec3_multiply(viewport_v, 1.0 / (double)camera->image_height);
 
-	t_vec3	viewport_upper_left = vec3_subtract(camera->center,vec3_multiply(camera->w, focal_length));
+	t_vec3	viewport_upper_left = vec3_subtract(camera->lookfrom,vec3_multiply(camera->w, focal_length));
 	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_u, 0.5));
 	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_v, 0.5));
 
@@ -188,8 +244,8 @@ t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 	pixel_sample = vec3_add(camera->pixel00_loc,
 					vec3_add(vec3_multiply(camera->pixel_delta_u, pixel_x + offset.x),
 							 vec3_multiply(camera->pixel_delta_v, pixel_y + offset.y)));
-	ray_direction = vec3_subtract(pixel_sample, camera->center);
-	return (rt_ray(camera->center, ray_direction));
+	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
+	return (rt_ray(camera->lookfrom, ray_direction));
 }
 
 void	camera_render(t_camera *camera, t_world *wld)
@@ -212,7 +268,8 @@ void	camera_render(t_camera *camera, t_world *wld)
 				{
 					t_ray	r;
 					r = get_ray(i, j, s_i, s_j, camera);
-					pixel_color = color_add(pixel_color, ray_color(&r, camera->max_depth, wld, wld->lights));
+					pixel_color = color_add(pixel_color, ray_color_new(&r, camera->max_depth, wld));
+					// pixel_color = color_add(pixel_color, ray_color(&r, camera->max_depth, wld, wld->lights));
 				}
 			}
 			write_color(&img, i, j, color_multiply_number(pixel_color, camera->pixel_samples_scale));

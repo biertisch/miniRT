@@ -1,15 +1,15 @@
 NAME = miniRT
 SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c interval.c \
-						camera.c rt_utils.c material.c action.c quad.c plane.c cylinder.c aabb.c \
-						bvh_node.c texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
+						camera.c rt_utils.c material.c action.c quad.c plane.c cylinder.c \
+						texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
 						onb.c pdf.c parser/parser.c parser/parse_utils.c parser/schema.c \
 						parser/parse_line.c parser/validator.c controls.c cone.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
 CC = gcc
-#CCFLAGS = -Wextra -Wall -Werror -MMD
-CCFLAGS = -Werror -MMD
+#CCFLAGS = -Wextra -Wall -Werror -MMD --std=gnu11
+CCFLAGS = -Werror -MMD --std=gnu11
 
 D ?= 0
 

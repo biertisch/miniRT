@@ -1,6 +1,5 @@
 #include "minirt.h"
 
-
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
@@ -21,16 +20,6 @@ void free_all_the_world(t_world *wld)
 {
 	if (wld)
 	{
-		// if (wld->b_w.img)
-		// 	mlx_destroy_image(wld->mlx, wld->b_w.img);
-		// if (wld->b_c.img)
-		// 	mlx_destroy_image(wld->mlx, wld->b_c.img);
-		// if (wld->b_ec.img)
-		// 	mlx_destroy_image(wld->mlx, wld->b_ec.img);
-		// if (wld->b_eo.img)
-		// 	mlx_destroy_image(wld->mlx, wld->b_eo.img);
-		// if (wld->b_s.img)
-		// 	mlx_destroy_image(wld->mlx, wld->b_s.img);
 		if (wld->mlx && wld->win)
 			mlx_destroy_window(wld->mlx, wld->win);
 		if (wld->mlx)
@@ -70,6 +59,7 @@ void	reg_hook(t_world *wld)
 	// mlx_loop_hook(wld->mlx, loop_hook, wld);
 }
 
+<<<<<<< HEAD
 void	scene_1_checker_ground(t_world *wld)
 {
 	// t_material	material_ground = get_material(LAMBERTIAN,get_color(0.5,0.5,0.5),0.0);
@@ -204,6 +194,8 @@ void	scene_with_plane_and_cylinder(t_world *wld)
 	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 }
 
+=======
+>>>>>>> main
 void	checkered_spheres(t_world *wld)
 {
 	t_checker_texture *checker_tex = checker_texture_colors(0.99, get_color(0.2,0.3,0.1), get_color(0.9,0.9,0.9));
@@ -216,76 +208,21 @@ void	checkered_spheres(t_world *wld)
 
 	wld->camera.aspect_ratio = 16.0 / 9.0;
 	wld->camera.image_width = 400;
-	wld->camera.samples_per_pixel = 10;//default 100
-	wld->camera.max_depth = 5;//default 50
-	wld->camera.vfov = 20.0;
+	wld->camera.samples_per_pixel = 1;
+	wld->camera.max_depth = 3;
+	wld->camera.vfov = 70.0;
 	wld->camera.lookfrom = new_vec3(13,2,3);
 	wld->camera.lookat = new_vec3(0,0,0);
 	wld->camera.vup = new_vec3(0,1,0);
 
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
-}
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
-void	scene_quad(t_world *wld)
-{
-	t_material	left_red = get_material(LAMBERTIAN, get_color(1.0, 0.2, 0.2), 0.0);
-	t_material	back_green = get_material(LAMBERTIAN, get_color(.2, 1.0, 0.2), 0.0);
-	t_material	right_blue = get_material(LAMBERTIAN, get_color(0.2, .2, 1.0), 0.0);
-	t_material	upper_orange = get_material(LAMBERTIAN, get_color(1.0, 0.5, 0.0), 0.0);
-	t_material	lower_teal = get_material(LAMBERTIAN, get_color(.2, .8, 0.8), 0.0);
+	wld->ambient = get_color(1, 1, 1);
+	wld->ambient_ratio = 0.3;
 
-	t_quad	quad_left = new_quad(new_vec3(-3, -2, 5), new_vec3(0, 0, -4), new_vec3(0, 4, 0), left_red);
-	t_quad	quad_back = new_quad(new_vec3(-2, -2, -0), new_vec3(4, 0, 0), new_vec3(0, 4, 0), back_green);
-	t_quad	quad_right = new_quad(new_vec3(3, -2, 1), new_vec3(0, 0, 4), new_vec3(0, 4, 0), right_blue);
-	t_quad	quad_upper = new_quad(new_vec3(-2, 3, 1), new_vec3(4, 0, 0), new_vec3(0, 0, 4), upper_orange);
-	t_quad	quad_lower = new_quad(new_vec3(-2, -3, 5), new_vec3(4, 0, 0), new_vec3(0, 0, -4), lower_teal);
-
-	add_object_to_world(wld, QUAD, &quad_left);
-	add_object_to_world(wld, QUAD, &quad_back);
-	add_object_to_world(wld, QUAD, &quad_right);
-	add_object_to_world(wld, QUAD, &quad_upper);
-	add_object_to_world(wld, QUAD, &quad_lower);
-
-	wld->camera.aspect_ratio = 1;
-	wld->camera.image_width = 400;
-	wld->camera.samples_per_pixel = 10;//default 100
-	wld->camera.max_depth = 5;//default 50
-	wld->camera.vfov = 80.0;
-	wld->camera.lookfrom = new_vec3(0,0,10);
-	wld->camera.lookat = new_vec3(0,0,0);
-	wld->camera.vup = new_vec3(0,1,0);
-
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
-}
-
-void	simple_light_scene(t_world *wld)
-{
-	t_texture	*checker_tex = (t_texture *)checker_texture_colors(0.8, get_color(0.3,0.3,0.3), get_color(0.1,0.1,0.1));
-	t_material	lamber_mat = get_material_texture(LAMBERTIAN, checker_tex, 0.0);
-
-	t_sphere	ground = new_sphere((t_vec3){0,-1000,0}, 1000, lamber_mat);
-	t_sphere	sphere1 = new_sphere((t_vec3){0,2,0}, 2, lamber_mat);
-	add_object_to_world(wld, SPHERE, &ground);
-	add_object_to_world(wld, SPHERE, &sphere1);
-
-	// Light source material
-	t_texture	*light_tex = (t_texture *)solid_color_texture_ptr(get_color(14,14,14));
-	t_material	light_mat = get_material_texture(DIFFUSE_LIGHT, light_tex, 0.0);
-	t_quad		light_quad = new_quad(new_vec3(3,1,-2), new_vec3(2,0,0), new_vec3(0,2,0), light_mat);
-	t_sphere	light_sphere = new_sphere((t_vec3){0,7,0}, 2, light_mat);
-	add_object_to_world(wld, QUAD, &light_quad);
-	add_object_to_world(wld, SPHERE, &light_sphere);
-
-	wld->camera.aspect_ratio = 16.0 / 9.0;
-	wld->camera.image_width = 400;
-	wld->camera.samples_per_pixel = 100;//default 100
-	wld->camera.max_depth = 50;//default 50
-	wld->camera.vfov = 20.0;
-	wld->camera.lookfrom = new_vec3(26,3,6);
-	wld->camera.lookat = new_vec3(0,2,0);
-	wld->camera.vup = new_vec3(0,1,0);
-
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+	wld->spot_light.position = new_vec3(20, 0, 10);
+	wld->spot_light.brightness = 1;
+	wld->spot_light.light_color = get_color(1.0, 1.0, 1.0);
 }
 
 void	cornel_box_scene(t_world *wld)
@@ -302,6 +239,7 @@ void	cornel_box_scene(t_world *wld)
 
 	// t_quad	light_quad = new_quad(new_vec3(343, 554, 332), new_vec3(-230, 0, 0), new_vec3(0, 0, -205), light);
 	t_quad	light_quad = new_quad(new_vec3(213,554,227), new_vec3(130, 0, 0), new_vec3(0, 0, 105), light);
+	// t_quad light_spot = new_quad(new_vec3(213,554,332), new_vec3(130, 0, 0), new_vec3(0, 0, -105), light);
 	// t_quad	light_quad2 = new_quad(new_vec3(454, 478, 554), new_vec3(-180, 0, 0), new_vec3(0, -180, 0), light);
 	// add_object_to_world(wld, QUAD, &light_quad2);
 	t_quad	ceiling = new_quad(new_vec3(0, 0 , 0), new_vec3(555, 0, 0), new_vec3(0, 0, 555), white);
@@ -319,8 +257,12 @@ void	cornel_box_scene(t_world *wld)
 	add_object_to_world(wld, SPHERE, &sphere1);
 	t_sphere	glass_sphere = new_sphere(new_vec3(390, 120, 90), 80, glass);
 	add_object_to_world(wld, SPHERE, &glass_sphere);
-	t_sphere	metal_sphere = new_sphere(new_vec3(440, 300, 290), 80, metal);
-	add_object_to_world(wld, SPHERE, &metal_sphere);
+	// t_sphere	metal_sphere = new_sphere(new_vec3(440, 300, 290), 80, metal);
+	// add_object_to_world(wld, SPHERE, &metal_sphere);
+
+
+	t_sphere	light_sphere = new_sphere(new_vec3(440, 300, 290), 10, light);
+	add_object_to_world(wld, SPHERE, &light_sphere);
 
 	add_object_to_world(wld, QUAD, &left);
 	add_object_to_world(wld, QUAD, &right);
@@ -338,7 +280,104 @@ void	cornel_box_scene(t_world *wld)
 	wld->camera.lookat = new_vec3(278,278,0);
 	wld->camera.vup = new_vec3(0,1,0);
 
-	wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+
+	wld->ambient = get_color(1, 1, 1);
+	wld->ambient_ratio = 0.4;
+
+	wld->spot_light.position = new_vec3(440, 410, 240);
+	wld->spot_light.brightness = 1;
+	wld->spot_light.light_color = get_color(1.0, 1.0, 1.0);
+}
+
+void	base_scene1(t_world *wld)
+{
+	// Implement the mandatory base scene setup here
+	t_material	metal = get_material(METAL, get_color(0.8, 0.8, 0.9), 0.0);
+	t_material	red = get_material(LAMBERTIAN, get_color(0.65, 0.05, 0.05), 0.0);
+	t_material	green = get_material(LAMBERTIAN, get_color(0.12, 0.45, 0.15), 0.0);
+	t_material	blue = get_material(METAL, get_color(0.0, 0.0, 0.9), 0.0);
+	t_material	light = get_material(DIFFUSE_LIGHT, get_color(15, 15, 15), 0.0);
+
+	t_cylinder	cyl1 = new_cylinder(new_vec3(443, 100, 432), new_vec3(0,1,0), 80, 200, red);
+	t_cylinder	cyl2 = new_cylinder(new_vec3(143, 200, 232), new_vec3(0,1,0), 80, 400, green);
+	t_cylinder	cyl3 = new_cylinder(new_vec3(243, 250, 532), new_vec3(0,1,0), 80, 150, blue);
+	add_object_to_world(wld, CYLINDER, &cyl1);
+	add_object_to_world(wld, CYLINDER, &cyl2);
+	add_object_to_world(wld, CYLINDER, &cyl3);
+
+	t_sphere	sphere1 = new_sphere(new_vec3(290, 50, 190), 50, metal);
+	add_object_to_world(wld, SPHERE, &sphere1);
+	
+	t_sphere	light_sphere = new_sphere(new_vec3(440, 500, 400), 10, light);
+	add_object_to_world(wld, SPHERE, &light_sphere);
+
+
+	// Ground plane
+	t_checker_texture *checker_tex = checker_texture_colors(0.011, get_color(0.2,0.3,0.1), get_color(0.9,0.9,0.9));
+	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
+	t_material	mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
+	t_plane		ground_plane = new_plane(new_vec3(0, -2, 0), new_vec3(0, 1, 0), material_checker);
+	add_object_to_world(wld, PLANE, &ground_plane);
+
+	wld->camera.aspect_ratio = 1;
+	wld->camera.image_width = 600;
+	wld->camera.samples_per_pixel = 1;//default 100
+	wld->camera.max_depth = 5;//default 50
+	wld->camera.vfov = 40.0;
+	wld->camera.lookfrom = new_vec3(278,278,-800);
+	wld->camera.lookat = new_vec3(278,278,0);
+	wld->camera.vup = new_vec3(0,1,0);
+
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+
+	wld->ambient = get_color(1, 1, 1);
+	wld->ambient_ratio = 0.4;
+}
+
+void	base_plane_sphere_scene(t_world *wld)
+{
+	// Implement the mandatory base scene setup here
+	t_material	metal = get_material(METAL, get_color(0.8, 0, 0), 0.0);
+	t_material	red = get_material(LAMBERTIAN, get_color(0, 0.35, 0.35), 0.0);
+
+	t_material	c_sphere = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
+
+	t_sphere	sphere1 = new_sphere(new_vec3(0, 1, 0), 1, c_sphere);
+	add_object_to_world(wld, SPHERE, &sphere1);
+	
+	t_sphere	sphere2 = new_sphere(new_vec3(5, 1, 0), 1, metal);
+	add_object_to_world(wld, SPHERE, &sphere2);
+
+	t_cylinder	cyl = new_cylinder(new_vec3(-5, 1, 0), new_vec3(1, 1, 0), 1, 1, red);
+	add_object_to_world(wld, CYLINDER, &cyl);
+
+	// Ground plane
+	t_checker_texture *checker_tex = checker_texture_colors(0.99, get_color(0.2,0.3,0.1), get_color(0.9,0.9,0.9));
+	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
+
+	t_material	mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
+	t_plane		ground_plane = new_plane(new_vec3(0, 0, 0), new_vec3(0, 1, 0), material_checker);
+	add_object_to_world(wld, PLANE, &ground_plane);
+
+	wld->camera.aspect_ratio = 1;
+	wld->camera.image_width = 600;
+	wld->camera.samples_per_pixel = 1;//default 100
+	wld->camera.max_depth = 5;//default 50
+	wld->camera.vfov = 50;
+	wld->camera.lookfrom = new_vec3(0,2,-10);
+	wld->camera.lookat = new_vec3(0,0,1);
+	wld->camera.vup = new_vec3(0,1,0);
+
+	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
+
+
+	wld->spot_light.position = new_vec3(2, 4, -3);
+	wld->spot_light.brightness = 0.8;
+	wld->spot_light.light_color = get_color(1, 150/255, 200/255);
+
+	wld->ambient = get_color(1, 1, 1);
+	wld->ambient_ratio = 0.3;
 }
 
 int main(void)
@@ -347,6 +386,7 @@ int main(void)
 	t_quad		lights;
 	t_object	light_obj;
 
+<<<<<<< HEAD
 	memset(&wld, 0, sizeof(t_world));
 	// wld.background = get_color(0.70, 0.80, 1.00); // Light blue background
 	wld.background = get_color(0, 0, 0); // Black background
@@ -355,24 +395,14 @@ int main(void)
 	// scene_with_plane_and_cylinder(&wld);  // New scene with planes and cylinders
 
 	switch (7)
+=======
+	ft_memset(&wld, 0, sizeof(t_world));
+	
+	switch (9)
+>>>>>>> main
 	{
-		case 1:
-			scene_1_checker_ground(&wld);
-			break;
-		case 2:
-			scene_2(&wld);
-			break;
-		case 3:
-			scene_with_plane_and_cylinder(&wld);
-			break;
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres
-			break;
-		case 5:
-			scene_quad(&wld);                  // Scene with quadrilaterals
-			break;
-		case 6:
-			simple_light_scene(&wld);          // Scene with simple light sources
 			break;
 		case 7:
 			cornel_box_scene(&wld);            // Cornell box scene
@@ -383,11 +413,20 @@ int main(void)
 			light_obj.hit = quad_hit;
 			light_obj.pdf_value = quad_pdf_value;
 			light_obj.random = quad_random;
-			light_obj.bbox = lights.bbox;
 			wld.lights = light_obj;
 			break;
+		case 8:
+			base_scene1(&wld);
+			wld.spot_light.position = new_vec3(440, 800, 400);
+			wld.spot_light.brightness = 1;
+			wld.spot_light.light_color = get_color(1.0, 1.0, 1.0);
+
+			break;
+		case 9:
+			base_plane_sphere_scene(&wld);
+			break;
 		default:
-			scene_1_checker_ground(&wld);
+			checkered_spheres(&wld);
 			break;
 	}
 

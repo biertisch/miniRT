@@ -37,19 +37,6 @@ enum
 	DestroyNotify = 17
 };
 
-// typedef	struct s_film
-// {
-// 	int		width;
-// 	int		height;
-// 	int		data[WIDTH][HEIGHT];
-// }	t_film;
-
-// typedef struct s_vec2
-// {
-// 	double	x;
-// 	double	y;
-// }	t_vec2;
-
 typedef struct s_mat3 {
     double m[3][3];
 } t_mat3;
@@ -71,11 +58,6 @@ typedef struct s_ray
 //texture_begin
 typedef struct s_texture t_texture;
 // typedef struct s_texture_vtable t_texture_vtable;
-
-// struct s_texture_vtable
-// {
-// 	t_color	(*value)(t_texture self, double u, double v, t_vec3 p);
-// };
 
 struct s_texture
 {
@@ -100,38 +82,6 @@ typedef struct s_checker_texture
 
 t_checker_texture	checker_texture(double scale, t_texture *even, t_texture *odd);
 
-/*
-typedef enum e_texture_type
-{
-	SOLID_COLOR,
-	CHECKER
-} t_tex_type;
-
-typedef struct s_solid_color_texture
-{
-	t_color		albedo;
-}	t_solid_color_texture;
-
-typedef struct s_checker_texture
-{
-	double		inv_scale;
-	t_solid_color_texture	even;
-	t_solid_color_texture	odd;
-}	t_checker_texture;
-
-typedef union u_texture_data
-{
-	t_solid_color_texture	solid_color;
-	t_checker_texture	checker;
-}	t_texture_data;
-
-typedef struct	s_texture
-{
-	t_tex_type	type;
-	t_texture_data	data;
-	t_color		(*value)(struct s_texture texture, double u, double v, t_vec3 p);
-}  t_texture;
-*/
 //texture_end
 
 typedef enum e_material_type
@@ -189,12 +139,12 @@ typedef struct s_interval
 	double	max;
 }	t_interval;
 
-typedef	struct	s_aabb
-{
-	t_interval	x;
-	t_interval	y;
-	t_interval	z;
-}	t_aabb;
+// typedef	struct	s_aabb
+// {
+// 	t_interval	x;
+// 	t_interval	y;
+// 	t_interval	z;
+// }	t_aabb;
 
 typedef struct s_onb
 {
@@ -237,7 +187,6 @@ typedef struct s_quad
 	t_vec3		v;
 	t_vec3		w;
 	t_material	mat;
-	t_aabb		bbox;
 	t_vec3		normal;
 	double		D;
 	double		area;
@@ -247,7 +196,6 @@ typedef struct s_plane {
     t_vec3 point;
     t_vec3 normal;
     t_material mat;
-	t_aabb		bbox;
 } t_plane;
 
 typedef struct s_cylinder {
@@ -256,7 +204,6 @@ typedef struct s_cylinder {
 	double		radius;
 	double		height;
 	t_material	mat;
-	t_aabb		bbox;
 } t_cylinder;
 
 typedef struct s_sphere
@@ -264,24 +211,15 @@ typedef struct s_sphere
 	t_vec3		center;
 	double		radius;
 	t_material	mat;
-	t_aabb		bbox;
 }	t_sphere;
 
 typedef struct s_object t_object;
-
-typedef	struct s_bvh_node
-{
-	t_aabb		bbox;
-	t_object	*left;
-	t_object	*right;
-}	t_bvh_node;
 
 typedef union u_geo_data
 {
 	t_sphere	sphere;
 	t_plane		plane;
 	t_cylinder	cylinder;
-	t_bvh_node	bvh_node;
 	t_quad		quad;
 	t_cone		cone; //added bea
 }	t_geo_data;
@@ -307,7 +245,6 @@ typedef	struct s_hitable_pdf
 
 typedef struct s_camera
 {
-	t_vec3	center;
 	double	aspect_ratio;
 	int		image_width;
 	int		image_height;
@@ -326,28 +263,24 @@ typedef struct s_camera
 	t_vec3	w;
 	int		sqrt_spp;
 	double	recip_sqrt_spp;
-	// t_film	*film;
 }	t_camera;
-
-// typedef struct s_scene
-// {
-// 	t_camera	*camera;
-// 	t_sphere	*sphere;
-// 	int			num_spheres;
-// 	int			width;
-// 	int			hight;
-// }	t_scene;
 
 struct s_object
 {
 	t_geo_data		geo;
 	t_geo_type		type;
 	int 			(*hit)(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-	t_aabb			bbox;
 	double 			(*pdf_value)(t_object obj, t_vec3 origin, t_vec3 direction);
 	t_vec3 			(*random)(t_object obj, t_vec3 origin);
 	struct s_object	*next;
 };
+
+typedef struct s_spot_light
+{
+	t_vec3		position;
+	double		brightness;
+	t_color		light_color;
+}	t_s_light;
 
 typedef struct s_world
 {
@@ -357,7 +290,9 @@ typedef struct s_world
 	t_object	*bvh_root;
 	int			num_objects;
 	t_camera	camera;
-	t_color		background;
+	t_color		ambient;
+	double		ambient_ratio;
+	t_s_light	spot_light;
 	t_object	lights;
 	t_panel		*panel; //added bea
 }	t_world;
@@ -379,15 +314,9 @@ int		vec3_near_zero(t_vec3 vec);
 t_vec3	vec3_reflect(t_vec3 v, t_vec3 n);
 t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
 t_vec3	random_cosine_direction();
+t_vec3	vec3_clamp(t_vec3 v, double min, double max);
 
 
-// t_camera	*new_camera(t_vec3 *origin, t_vec3 *direction, double fovy, t_film *film);
-
-// t_scene	*new_scene(t_camera *camera, t_sphere *spheres, int num_spheres, int width, int height);
-
-// int sphere_intersect(t_camera *cam, t_vec3 *ray, t_sphere *sphere);
-// t_vplane *get_view_plane(double width, double height, double fovy);
-// void ray_tracing(void *mlx, void *window, t_scene *scene);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //main.c
@@ -399,6 +328,7 @@ void	write_color(t_data *img, int x, int y, t_color color);
 t_color	color_add(t_color a, t_color b);
 t_color	color_multiply_number(t_color color, double scalar);
 t_color	color_multiply_vector(t_color a, t_color b);
+t_color color_clamp(t_color v, double min, double max);
 
 //ray.c
 t_ray	rt_ray(t_vec3 origin, t_vec3 direction);
@@ -406,7 +336,8 @@ t_vec3	ray_at(t_ray *ray, double t);
 
 //hittable_list.c
 void	add_object_to_world(t_world *world, t_geo_type geo_type, void *sphere);
-int		world_hit(t_object *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
+// int		world_hit(t_object *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
+int		world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
 
 //quad.c
 t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
@@ -456,18 +387,6 @@ int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t
 
 //action.c
 int	handle_pressed(int keycode, void *wld);
-
-//aabb.c
-t_aabb	get_aabb(t_vec3 a, t_vec3 b);
-int		aabb_hit(t_aabb *box, t_ray *ray, t_interval ray_t);
-t_interval	aabb_axis_interval(t_aabb *aabb, int axis_index);
-t_aabb	get_aabb_surrounding(t_aabb *a, t_aabb *b);
-int	aabb_longest_axis(t_aabb *aabb);
-t_aabb	aabb_empty(void);
-
-//bvh_node.c
-t_object	*bvh_from_objects(t_object **objects, int start, int end);
-int		bvh_node_hit(t_ray *ray, t_interval ray_t, t_object obj,  t_hit_record *record);
 
 //texture_solid_color.c
 t_solid_color_tex	solid_color_texture(t_color color);
