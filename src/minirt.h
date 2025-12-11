@@ -226,6 +226,7 @@ struct s_hit_record
 	t_vec3	p;
 	t_vec3	normal;
 	t_material	mat;
+	t_object	*hit_obj;
 	double	t;
 	double	u;
 	double	v;
@@ -290,6 +291,7 @@ typedef struct s_world
 	double		ambient_ratio;
 	t_s_light	spot_light;
 	t_object	lights;
+	t_object	*current_obj;
 }	t_world;
 
 //vec3.c;
@@ -366,6 +368,7 @@ int	interval_contains(t_interval *interval, double value);
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
 void	camera_initialize(t_camera *camera);
 void	camera_render(t_camera *camera, t_world *wld);
+t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
 
 //rt_utils.c
 double	degrees_to_radians(double degrees);
