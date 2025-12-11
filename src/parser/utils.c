@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:16:49 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/11 18:34:12 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/11 22:12:27 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,9 @@ static void	fraction_to_buffer(double fraction, char *str, int *i, int precision
 {
 	int	len;
 
+	if (precision <= 0)
+		return ;
+	str[(*i)++] = '.';
 	len = 0;
 	while (len < precision)
 	{
@@ -182,7 +185,6 @@ char	*ft_ftoa(double n, int precision)
 	integer = (long)n;
 	fraction = n - (double)integer;
 	integer_to_buffer(integer, str, &i);
-	str[i++] = '.';
 	fraction_to_buffer(fraction, str, &i, precision);
 	str[i] = '\0';
 	return (str);

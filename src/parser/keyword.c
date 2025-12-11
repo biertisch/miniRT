@@ -6,30 +6,30 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:30:31 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/11 15:37:12 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/11 21:01:35 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static int	check_keyword_acl(const char *p, char *key, t_color *rgb_acl)
+static int	check_keyword_acl(const char *p, char *key, t_metadata *meta)
 {
 	if (ft_strncmp(p, "A ", 2) == 0)
 	{
 		ft_strlcpy(key, "A", 4);
-		rgb_acl->r++;
+		meta->ambient_count++;
 		return (1);
 	}
 	else if (ft_strncmp(p, "C ", 2) == 0)
 	{
 		ft_strlcpy(key, "C", 4);
-		rgb_acl->g++;
+		meta->camera_count++;
 		return (1);
 	}
 	else if (ft_strncmp(p, "L ", 2) == 0)
 	{
 		ft_strlcpy(key, "L", 4);
-		rgb_acl->b++;
+		meta->camera_light++;
 		return (1);
 	}
 	return (0);
@@ -60,10 +60,10 @@ static int	check_keyword_object(const char *p, char *key)
 	return (0);
 }
 
-int	is_valid_keyword(const char *p, char *key, t_color *acl)
+int	is_valid_keyword(const char *p, char *key, t_metadata *meta)
 {
 	key[0] = '\0';
-	if (check_keyword_acl(p, key, acl))
+	if (check_keyword_acl(p, key, meta))
 		return (1);
 	if (check_keyword_object(p, key))
 		return (1);

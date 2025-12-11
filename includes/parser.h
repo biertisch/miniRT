@@ -1,19 +1,17 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-# include <errno.h>
-# include <limits.h>
-# include <math.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include "vec3.h"
 # include "color.h"
 # include "libft.h"
 # include "minirt.h" // necessary?
 
 typedef enum e_field_type {
-    FIELD_FLOAT,
+    FIELD_INT,
+	FIELD_FLOAT,
     FIELD_VEC3,
     FIELD_COLOR
 }   t_field_type;
@@ -22,7 +20,7 @@ typedef struct s_field_rule {
     char            *name;
     t_field_type    type;
     float           min;
-    float           max; //replace with t_interval?
+    float           max;
 }   t_field_rule;
 
 typedef struct s_object_rule {
@@ -31,24 +29,43 @@ typedef struct s_object_rule {
     int             field_count;
 }   t_object_rule;
 
+typedef struct s_metadata
+{
+	t_object_rule	*rule;
+	int				camera_count;
+	int				ambient_count;
+	int				light_count;
+	int				line_no;
+	int				errors;
+}	t_metadata;
+
 // error.c
-int	report_error(int *errors, int line_no, char *message, char *arg);
-int	report_range_error(int *errors, int line_no, char *type, float value, t_interval range);
+int				report_error(t_metadata *meta, char *message, char *arg);
+int				report_range_error(t_metadata *meta, double value, int precision);
+int				report_global_error(t_metadata *meta, char *message, int count);
 
 // keyword.c
-int	is_valid_keyword(const char *p, char *key, t_color *acl);
+int				is_valid_keyword(const char *p, char *key, t_metadata *meta);
 
 // parser.c
-int	parser(t_world *scene, char *file);
+int				parser(t_world *scene, char *file);
 
-// parse_field.c
-int	parse_int(const	t_field_rule *rule, int *out, const char **s, int line_no, int *errors);
-int	parse_float(const t_field_rule *rule, float *out, const char **s, int line_no, int *errors);
-int	parse_color(const t_field_rule *rule, t_color *out, const char **s, int line_no, int *errors);
-int	parse_vec3(const t_field_rule *rule, t_vec3 *out, const char **s, int line_no, int *errors);
+// parse_color.c
+int				parse_color(t_color *out, const char **s, t_metadata *meta);
 
 // parse_line.c
-int	parse_line(t_world *scene, char *line, int line_no, t_color *acl, int *errors);
+int				parse_line(t_world *scene, char *line, t_metadata *meta);
+
+// parse_object.c
+int				parse_sphere_fields(t_world *scene, char **s, t_metadata *meta);
+int				parse_plane_fields(t_world *scene, char **s, t_metadata *meta);
+
+// parse_vector.c
+int				parse_vec3(t_vec3 *out, const char **s, t_metadata *meta);
+
+// parse_scalar.c
+int				parse_int(int *out, const char **s, t_metadata *meta);
+int				parse_float(double *out, const char **s, t_metadata *meta, int precision);
 
 // rules.c
 t_object_rule	*find_rule(const char *keyword);
@@ -60,29 +77,10 @@ t_field_rule	*get_cylinder_fields(void);
 t_field_rule	*get_cone_fields(void);
 
 // utils.c
-int	check_trailing(const char *p);
-void	skip_spaces(const char **s);
-int		ft_atoi_count(const char *str, int *read);
-double	ft_atof_count(const char *str, int *read);
-char	*ft_ftoa(double n, int precision);
-
-
-
-// /* main parsing API */
-// void    parse_config_file(const char *filename);
-// void    parse_and_validate(char *params, t_object_rule *rule, int line);
-// t_object_rule   *find_rule(const char *keyword);
-
-// /* helpers */
-// float   parse_float(char **str);
-// t_vec3  parse_vec3(char **str);
-// t_color parse_color(char **str);
-// void    skip_spaces(char **str);
-// void    error_line(int line, const char *msg);
-
-// //validator.c
-// int validate_config_file_full(const char *filename);
-
-// double	ft_atof_simple(const char *str, char **endptr);
+int				check_trailing(const char *p);
+void			skip_spaces(const char **s);
+int				ft_atoi_count(const char *str, int *read);
+double			ft_atof_count(const char *str, int *read);
+char			*ft_ftoa(double n, int precision);
 
 #endif
