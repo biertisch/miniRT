@@ -73,8 +73,8 @@ t_vec3	vec3_normalize(t_vec3 vec)
 	length = vec3_length(vec);
 	if (length != 0)
 		result = vec3_divide(vec, length);
-	else
-		printf("Warning: Zero length vector passed to vec3_normalize\n");
+	// else
+	// 	printf("Warning: Zero length vector passed to vec3_normalize\n");
 	return (result);
 }
 

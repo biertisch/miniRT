@@ -6,15 +6,15 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/09 16:11:14 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/12 16:29:07 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_color color)
+t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat)
 {
-	return ((t_cone){apex, axis, radius, height, color});
+	return ((t_cone){apex, axis, radius, height, mat});
 }
 
 static t_vec3	compute_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)

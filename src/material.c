@@ -36,7 +36,7 @@ t_color	default_emitted(t_material *self,t_ray r_in,t_hit_record *rec, double u,
 	(void)r_in;
 	(void)rec;
 	// return (get_color(0.0, 0.0, 0.0));
-	
+
 	switch(self->type)
 	{
 		case LAMBERTIAN:
@@ -93,7 +93,7 @@ int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t
 	double	cos_theta = fmin(vec3_dot(vec3_multiply(unit_direction, -1), rec->normal), 1.0);
 	double	sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 	int		cannot_refract = ri * sin_theta > 1.0;
-	
+
 	t_vec3	direction;
 	if (cannot_refract || reflectance(cos_theta, ri) > random_double())
 		direction = vec3_reflect(unit_direction, rec->normal);

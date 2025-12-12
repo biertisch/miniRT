@@ -10,7 +10,6 @@
 # include "color.h"
 # include "parser.h"
 # include "controls.h"
-# include "cone.h"
 
 # define WIDTH 400
 # define HEIGHT 600
@@ -192,13 +191,15 @@ typedef struct s_quad
 	double		area;
 } t_quad;
 
-typedef struct s_plane {
+typedef struct s_plane
+{
     t_vec3 point;
     t_vec3 normal;
     t_material mat;
 } t_plane;
 
-typedef struct s_cylinder {
+typedef struct s_cylinder
+{
 	t_vec3		center;
 	t_vec3		axis;
 	double		radius;
@@ -212,6 +213,15 @@ typedef struct s_sphere
 	double		radius;
 	t_material	mat;
 }	t_sphere;
+
+typedef struct s_cone
+{
+	t_vec3		apex;
+	t_vec3		axis;
+	double		radius;
+	double		height;
+	t_material	mat;
+}	t_cone;
 
 typedef struct s_object t_object;
 
@@ -279,7 +289,7 @@ typedef struct s_spot_light
 {
 	t_vec3		position;
 	double		brightness;
-	t_color		light_color;
+	t_color		light_color; //variable name can be abbreviate to color
 }	t_s_light;
 
 typedef struct s_world
@@ -412,5 +422,8 @@ t_vec3	onb_w(t_onb onb);
 //pdf.c
 t_cosine_pdf	cosine_pdf_new(t_vec3 w);
 t_hitable_pdf	hitable_pdf_new(t_object *obj, t_vec3 origin);
+
+//cone.c
+t_cone			new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
 
 #endif

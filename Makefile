@@ -2,14 +2,16 @@ NAME = miniRT
 SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c interval.c \
 						camera.c rt_utils.c material.c action.c quad.c plane.c cylinder.c \
 						texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
-						onb.c pdf.c parser/parser.c parser/parse_utils.c parser/schema.c \
-						parser/parse_line.c parser/validator.c controls.c cone.c)
+						onb.c pdf.c cone.c parser/error.c parser/keyword.c\
+						parser/parse_color.c parser/parse_line.c parser/parse_object.c\
+						parser/parse_scalar.c parser/parse_vector.c parser/parser.c parser/rules.c\
+						parser/rules2.c parser/utils.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
-CC = gcc
+CC = cc
 #CCFLAGS = -Wextra -Wall -Werror -MMD --std=gnu11
-CCFLAGS = -Werror -MMD --std=gnu11
+CCFLAGS = -Werror -MMD
 
 D ?= 0
 
@@ -30,7 +32,7 @@ $(NAME): $(OBJ) $(MLX) $(LIBFT_A)
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CCFLAGS) -g -I/usr/include -Iincludes -Ilibft -Imlx_linux -O3 -c $< -o $@
+	$(CC) $(CCFLAGS) -g -I/usr/include -Iincludes -Ilibft -Imlx_linux -O0 -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)

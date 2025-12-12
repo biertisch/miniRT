@@ -6,23 +6,23 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:10:00 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/11 22:28:31 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/12 20:16:55 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static void	add_range(char *buffer, t_field_rule *rule, int precision, int cap)
+static void	add_range(char *buffer, t_field_rule *field, int cap)
 {
 	char	*tmp;
 
 	ft_strlcat(buffer, " out of range [", cap);
-	tmp = ft_ftoa(rule->rule->min, precision);
+	tmp = ft_ftoa(field->min, field->precision);
 	if (tmp)
 		ft_strlcat(buffer, tmp, cap);
 	free(tmp);
 	ft_strlcat(buffer, ",", cap);
-	tmp = ft_ftoa(rule->max, precision);
+	tmp = ft_ftoa(field->max, field->precision);
 	if (tmp)
 		ft_strlcat(buffer, tmp, cap);
 	free(tmp);
@@ -68,7 +68,7 @@ int	report_error(t_metadata *meta, char *message, char *arg)
 	return (0);
 }
 
-int	report_range_error(t_metadata *meta, double value, int precision)
+int	report_range_error(t_metadata *meta, t_field_rule *field, double value)
 {
 	char	buffer[100];
 	char	*tmp;
@@ -77,13 +77,13 @@ int	report_range_error(t_metadata *meta, double value, int precision)
 	if (meta->errors == 0)
 		ft_strlcpy(buffer, "Error\n", sizeof(buffer));
 	add_line(buffer, meta->line_no, sizeof(buffer));
-	ft_strlcat(buffer, meta->rule->keyword, sizeof(buffer));
+	ft_strlcat(buffer, field->name, sizeof(buffer));
 	ft_strlcat(buffer, " value ", sizeof(buffer));
-	tmp = ft_ftoa(value, precision);
+	tmp = ft_ftoa(value, field->precision);
 	if (tmp)
 		ft_strlcat(buffer, tmp, sizeof(buffer));
 	free(tmp);
-	add_range(buffer, meta->rule, precision, sizeof(buffer));
+	add_range(buffer, field, sizeof(buffer));
 	ft_putstr_fd(buffer, STDERR_FILENO);
 	meta->errors++;
 	return (0);
@@ -97,7 +97,6 @@ int	report_global_error(t_metadata *meta, char *message, int count)
 	ft_memset(buffer, 0, sizeof(buffer));
 	if (meta->errors == 0)
 		ft_strlcpy(buffer, "Error\n", sizeof(buffer));
-	add_line(buffer, meta->line_no, sizeof(buffer));
 	ft_strlcat(buffer, message, sizeof(buffer));
 	tmp = ft_itoa(count);
 	if (tmp)

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:16:49 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/11 22:12:27 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/12 20:36:31 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	skip_spaces(const char **s)
 {
-    while (**s && ft_isspace((unsigned char)**s))
-        (*s)++;
+	while (**s && ft_isspace((unsigned char)**s))
+		(*s)++;
 }
 
 int	check_trailing(const char *s)
@@ -41,17 +41,17 @@ static double	parse_fraction(const char *str, int *i, int *has_digits)
 	return (result);
 }
 
-static double	parse_integer(const char *str, int *i, int has_digits)
+static double	parse_integer(const char *str, int *i, int *has_digits)
 {
 	double	result;
 
 	result = 0;
 	while (ft_isdigit(str[*i]))
-    {
-        result = result * 10 + (str[*i] - '0');
-        *has_digits = 1;
-        (*i)++;
-    }
+	{
+		result = result * 10 + (str[*i] - '0');
+		*has_digits = 1;
+		(*i)++;
+	}
 	return (result);
 }
 
@@ -61,40 +61,40 @@ static int	parse_sign(const char *str, int *i)
 
 	sign = 1;
 	if (str[*i] == '-' || str[*i] == '+')
-    {
-        if (str[*i] == '-')
-            sign = -n;
-        (*i)++;
-    }
+	{
+		if (str[*i] == '-')
+			sign = -1;
+		(*i)++;
+	}
 	return (sign);
 }
 
 double	ft_atof_count(const char *str, int *read)
 {
-    double	result;
-    int		sign;
-    int		has_digits;
+	double	result;
+	int		sign;
+	int		has_digits;
 	int		i;
 
 	i = 0;
-    sign = parse_sign(str, &i);
-    has_digits = 0;
-    result = parse_integer(str, &i, &has_digits);
-    if (str[i] == '.')
-    {
-        i++;
+	sign = parse_sign(str, &i);
+	has_digits = 0;
+	result = parse_integer(str, &i, &has_digits);
+	if (str[i] == '.')
+	{
+		i++;
 		result += parse_fraction(str, &i, &has_digits);
-    }
-    if (!has_digits)
+	}
+	if (!has_digits)
 	{
 		*read = 0;
 		return (0);
 	}
 	*read = i;
-    return (result * sign);
+	return (result * sign);
 }
 
-int		ft_atoi_count(const char *str, int *read)
+int	ft_atoi_count(const char *str, int *read)
 {
 	long	result;
 	int		sign;
@@ -102,7 +102,7 @@ int		ft_atoi_count(const char *str, int *read)
 	int		i;
 
 	i = 0;
-    sign = parse_sign(str, &i);
+	sign = parse_sign(str, &i);
 	result = 0;
 	has_digits = 0;
 	while (ft_isdigit(str[i]))
@@ -119,7 +119,8 @@ int		ft_atoi_count(const char *str, int *read)
 	return ((int)(result * sign));
 }
 
-static void	fraction_to_buffer(double fraction, char *str, int *i, int precision)
+static void	fraction_to_buffer(double fraction, char *str, int *i,
+	int precision)
 {
 	int	len;
 
@@ -132,7 +133,7 @@ static void	fraction_to_buffer(double fraction, char *str, int *i, int precision
 		fraction *= 10;
 		str[(*i)++] = (int)fraction + '0';
 		fraction -= (int)fraction;
-		len;
+		len++;
 	}
 }
 

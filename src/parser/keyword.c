@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:30:31 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/11 21:01:35 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/12 16:45:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	check_keyword_acl(const char *p, char *key, t_metadata *meta)
 	else if (ft_strncmp(p, "L ", 2) == 0)
 	{
 		ft_strlcpy(key, "L", 4);
-		meta->camera_light++;
+		meta->light_count++;
 		return (1);
 	}
 	return (0);

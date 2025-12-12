@@ -8,13 +8,7 @@ L -40,0,30 0.7 255,255,255
 # Objects
 # Plane (name:char:pl point:vector:[x,y,z] normalized_orientation_vector:vector:[-1,1] color:vector:[0-255,0-255,0-255])
 pl 0,0,0 0,1.0,0 255,0,225
-pl 0,0,0 0,1.0,0 255,0,225
-pl 0,0,0 0,1.0,0 255,0,225
 # Sphere (name:char:sp center:vector:[x,y,z] diameter:double color:vector:[0-255,0-255,0-255])
 sp 0,0,20 20 255,0,0
-sp 0,0,20 20 255,0,0
-sp 0,0,20 20 255,0,0
 # Cylinder (name:char:cy center_cy:vector:[x,y,z] normalized_orientation_vector:vector:[-1,1] diameter:double height:double color:vector:[0-255,0-255,0-255])
-cy 50.0,0.0,20.6 0,0,1.0 14.2 21.42 10,0,255
-cy 50.0,0.0,20.6 0,0,1.0 14.2 21.42 10,0,255
 cy 50.0,0.0,20.6 0,0,1.0 14.2 21.42 10,0,255
