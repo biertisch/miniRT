@@ -53,10 +53,13 @@ t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
         distance = vec3_length(vec3_subtract(world->spot_light.position, rec.p));
     
         // Check for shadows
-        if (world_hit(world, &r_2light, new_interval(0.001, distance-0.001), &temp_rec))
+        if (world_hit(world, &r_2light, new_interval(0.00001, distance-0.00001), &temp_rec))
         {
+			// printf("In shadow\n");
+			// printf("Hit object type in shadow: %d, t: %f, distance: %f, front_face: %d, p: (%f, %f, %f)\n", temp_rec.hit_obj->type,temp_rec.t, distance,temp_rec.front_face,temp_rec.p.x,temp_rec.p.y,temp_rec.p.z);
             // In shadow - only ambient and emission
-            return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number(ambient, 2.2)), 0.0, 1.0);
+			if (temp_rec.t <= 1)
+            	return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number(ambient, 2.2)), 0.0, 1.0);
         }
         
         // Calculate attenuation
@@ -139,6 +142,26 @@ t_color ray_color_v0(t_ray *ray, int depth, t_world *world)
 	}
 	else
 		return (ambient);
+}
+
+void	output_camara_info(t_camera *camera)
+{
+	printf("Camera Info:\n");
+	printf("  Lookfrom: (%f, %f, %f)\n", camera->lookfrom.x, camera->lookfrom.y, camera->lookfrom.z);
+	printf("  Lookat:   (%f, %f, %f)\n", camera->lookat.x, camera->lookat.y, camera->lookat.z);
+	printf("  Vup:      (%f, %f, %f)\n", camera->vup.x, camera->vup.y, camera->vup.z);
+	printf("  U:        (%f, %f, %f)\n", camera->u.x, camera->u.y, camera->u.z);
+	printf("  V:        (%f, %f, %f)\n", camera->v.x, camera->v.y, camera->v.z);
+	printf("  W:        (%f, %f, %f)\n", camera->w.x, camera->w.y, camera->w.z);
+	printf("  FOV:      %f\n", camera->vfov);
+	printf("  Aspect Ratio: %f\n", (double)camera->image_width / (double)camera->image_height);
+	printf("  Image Width:  %d\n", camera->image_width);
+	printf("  Image Height: %d\n", camera->image_height);
+	printf("  Samples per Pixel: %d\n", camera->samples_per_pixel);
+	printf("  Max Depth:        %d\n", camera->max_depth);
+	printf("  Pixel00 Location:    (%f, %f, %f)\n", camera->pixel00_loc.x, camera->pixel00_loc.y, camera->pixel00_loc.z);
+	printf("  Pixel Delta U:       (%f, %f, %f)\n", camera->pixel_delta_u.x, camera->pixel_delta_u.y, camera->pixel_delta_u.z);
+	printf("  Pixel Delta V:       (%f, %f, %f)\n", camera->pixel_delta_v.x, camera->pixel_delta_v.y, camera->pixel_delta_v.z);
 }
 
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
@@ -251,6 +274,10 @@ void	camera_initialize(t_camera *camera)
 {
 	int	image_height;
 
+	camera->aspect_ratio = 16.0/9.0;
+	camera->image_width = 800;
+	camera->samples_per_pixel = 1;
+	camera->max_depth = 5;
 	image_height = camera->image_width / camera->aspect_ratio;
 	if (image_height < 1)
 		image_height = 1;
@@ -258,9 +285,8 @@ void	camera_initialize(t_camera *camera)
 	camera->sqrt_spp = (int)sqrt(camera->samples_per_pixel);
 	camera->pixel_samples_scale = 1.0 / (camera->sqrt_spp * camera->sqrt_spp);
 	camera->recip_sqrt_spp = 1.0 / camera->sqrt_spp;
-
-	// double	focal_length = vec3_length(vec3_subtract(camera->lookfrom, camera->lookat));
-	double	focal_length = 10.0;
+	double	focal_length = vec3_length(vec3_subtract(camera->lookfrom, camera->lookat));
+	// double	focal_length = 10.0;
 	// double	viewport_height = 2.0;
 	double	theta = degrees_to_radians(camera->vfov);
 	double	h = tan(theta / 2);
@@ -286,6 +312,8 @@ void	camera_initialize(t_camera *camera)
 	camera->pixel00_loc = pixel00_loc;
 	camera->pixel_delta_u = pixel_delta_u;
 	camera->pixel_delta_v = pixel_delta_v;
+
+	output_camara_info(camera);
 }
 
 t_vec3	sample_square()
@@ -308,7 +336,7 @@ t_vec3	sample_square_stratified(int s_i, int s_j, t_camera *camera)
 	return (new_vec3(u, v, 0.0));
 }
 
-t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
+static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
 {
 	t_vec3	pixel_sample;
 	t_vec3	ray_direction;
@@ -336,31 +364,34 @@ t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 
 void	camera_render(t_camera *camera, t_world *wld)
 {
-	t_data img;
+	t_data	img;
+	t_color	pixel_color;
+	t_ray	r;
+	int		i;
+	int		j;
 
 	img.img = mlx_new_image(wld->mlx, camera->image_width, camera->image_height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 								&img.endian);
-
-	for (int j = 0; j < camera->image_height; j++)
+	j = 0;
+	while (j < camera->image_height)
 	{
-		// printf("Row %d\n", j);
-        for (int i = 0; i < camera->image_width; i++)
+		i = 0;
+        while (i < camera->image_width)
 		{
-			t_color pixel_color = {0,0,0};
-			
-			t_ray	r;
-			r = get_ray(i, j, 0, 0, camera);
+			pixel_color = (t_color){0,0,0};
+			r = get_ray(i, j, camera);
 			pixel_color = color_add(pixel_color, ray_color_v1(&r, camera->max_depth, wld));
-			// pixel_color = color_add(pixel_color, ray_color(&r, camera->max_depth, wld, wld->lights));
-			
-			write_color(&img, i, j, color_multiply_number(pixel_color, camera->pixel_samples_scale));
-        }
+			write_color(&img, i, j, 
+				color_multiply_number(pixel_color, camera->pixel_samples_scale));
+			i++;
+		}
+		j++;
     }
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
 	printf("Image painted to window\n");
 }
-
+/*
 void	camera_render_v0(t_camera *camera, t_world *wld)
 {
 	t_data img;
@@ -391,6 +422,7 @@ void	camera_render_v0(t_camera *camera, t_world *wld)
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
 	printf("Image painted to window\n");
 }
+*/
 
 // t_camera	*new_camera(t_vec3 *origin, t_vec3 *direction, double fovy, t_film *film)
 // {

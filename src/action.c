@@ -92,12 +92,12 @@ static void	do_action(int keycode, t_world *wld)
 		if(wld->current_obj){
 			if(wld->current_obj->type == SPHERE){
 				wld->current_obj->geo.sphere.radius *= 1.1;
-				camera_initialize(&wld->camera);
+				// camera_initialize(&wld->camera);
 				camera_render(&wld->camera, wld);
 			}else if (wld->current_obj->type == CYLINDER){
 				wld->current_obj->geo.cylinder.radius *= 1.1;
 				wld->current_obj->geo.cylinder.height *= 1.1;
-				camera_initialize(&wld->camera);
+				// camera_initialize(&wld->camera);
 				camera_render(&wld->camera, wld);
 			}
 		}else{
@@ -107,12 +107,12 @@ static void	do_action(int keycode, t_world *wld)
 		if(wld->current_obj){
 			if(wld->current_obj->type == SPHERE){
 				wld->current_obj->geo.sphere.radius *= 0.9;
-				camera_initialize(&wld->camera);
+				// camera_initialize(&wld->camera);
 				camera_render(&wld->camera, wld);
 			}else if (wld->current_obj->type == CYLINDER){
 				wld->current_obj->geo.cylinder.radius *= 0.9;
 				wld->current_obj->geo.cylinder.height *= 0.9;
-				camera_initialize(&wld->camera);
+				// camera_initialize(&wld->camera);
 				camera_render(&wld->camera, wld);
 			}
 		}else{

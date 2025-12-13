@@ -19,24 +19,24 @@ t_vec3	ray_at(t_ray *ray, double t)
 
 
 
-double	hit_sphere(t_vec3 center, double radius, t_ray *ray)
-{
-	t_vec3	oc;
-	double	a;
-	double	h;
-	double	c;
-	double	discriminant;
+// double	hit_sphere(t_vec3 center, double radius, t_ray *ray)
+// {
+// 	t_vec3	oc;
+// 	double	a;
+// 	double	h;
+// 	double	c;
+// 	double	discriminant;
 
-	oc = vec3_subtract(center, ray->origin);
-	a = vec3_length_squared(ray->direction);
-	h = vec3_dot(oc, ray->direction);
-	c = vec3_length_squared(oc) - radius * radius;
-	discriminant = h * h - a * c;
-	if (discriminant < 0)
-		return (-1.0);
-	else
-		return (h - sqrt(discriminant)) / a;
-}
+// 	oc = vec3_subtract(center, ray->origin);
+// 	a = vec3_length_squared(ray->direction);
+// 	h = vec3_dot(oc, ray->direction);
+// 	c = vec3_length_squared(oc) - radius * radius;
+// 	discriminant = h * h - a * c;
+// 	if (discriminant < 0)
+// 		return (-1.0);
+// 	else
+// 		return (h - sqrt(discriminant)) / a;
+// }
 
 
 /*

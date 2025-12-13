@@ -265,7 +265,6 @@ void	base_plane_sphere_scene(t_world *wld)
 	// Implement the mandatory base scene setup here
 	t_material	metal = get_material(METAL, get_color(0.8, 0, 0), 0.0);
 	t_material	red = get_material(LAMBERTIAN, get_color(0, 0.35, 0.35), 0.0);
-
 	t_material	c_sphere = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
 
 	t_sphere	sphere1 = new_sphere(new_vec3(0, 1, 0), 1, c_sphere);
@@ -281,25 +280,28 @@ void	base_plane_sphere_scene(t_world *wld)
 	t_checker_texture *checker_tex = checker_texture_colors(0.99, get_color(0.2,0.3,0.1), get_color(0.9,0.9,0.9));
 	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
 
+	
+	t_sphere	checker_sphere1 = new_sphere(new_vec3(0, 3, 0), 1, material_checker);
+	add_object_to_world(wld, SPHERE, &checker_sphere1);
+
 	t_material	mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
 	t_plane		ground_plane = new_plane(new_vec3(0, 0, 0), new_vec3(0, 1, 0), material_checker);
 	add_object_to_world(wld, PLANE, &ground_plane);
 
-	wld->camera.aspect_ratio = 1;
-	wld->camera.image_width = 600;
-	wld->camera.samples_per_pixel = 1;//default 100
-	wld->camera.max_depth = 5;//default 50
-	wld->camera.vfov = 50;
+	
+	wld->camera.vfov = 70;
 	wld->camera.lookfrom = new_vec3(0,2,-10);
 	wld->camera.lookat = new_vec3(0,0,1);
 	wld->camera.vup = new_vec3(0,1,0);
 
 	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 
+	t_sphere	sphere1_lightpos = new_sphere(new_vec3(2, 5, -3), .5, c_sphere);
+	add_object_to_world(wld, SPHERE, &sphere1_lightpos);
 
 	wld->spot_light.position = new_vec3(2, 4, -3);
 	wld->spot_light.brightness = 0.8;
-	wld->spot_light.light_color = get_color(1, 150/255, 200/255);
+	wld->spot_light.light_color = get_color(1, 1, 1);
 
 	wld->ambient = get_color(1, 1, 1);
 	wld->ambient_ratio = 0.3;
@@ -313,7 +315,7 @@ int main(void)
 
 	ft_memset(&wld, 0, sizeof(t_world));
 	
-	switch (8)
+	switch (7)
 	{
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres

@@ -35,7 +35,6 @@ t_color	default_emitted(t_material *self,t_ray r_in,t_hit_record *rec, double u,
 	(void)p;
 	(void)r_in;
 	(void)rec;
-	// return (get_color(0.0, 0.0, 0.0));
 	
 	switch(self->type)
 	{

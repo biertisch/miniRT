@@ -368,7 +368,7 @@ int	interval_contains(t_interval *interval, double value);
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
 void	camera_initialize(t_camera *camera);
 void	camera_render(t_camera *camera, t_world *wld);
-t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
+// t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
 
 //rt_utils.c
 double	degrees_to_radians(double degrees);
