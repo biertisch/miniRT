@@ -263,7 +263,7 @@ void	base_scene1(t_world *wld)
 void	base_plane_sphere_scene(t_world *wld)
 {
 	// Implement the mandatory base scene setup here
-	t_material	metal = get_material(METAL, get_color(0.8, 0, 0), 0.0);
+	t_material	metal = get_material(METAL, get_color(1, .85, .31), 0.0);
 	t_material	red = get_material(LAMBERTIAN, get_color(0, 0.35, 0.35), 0.0);
 	t_material	c_sphere = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
 
@@ -288,8 +288,8 @@ void	base_plane_sphere_scene(t_world *wld)
 	t_plane		ground_plane = new_plane(new_vec3(0, 0, 0), new_vec3(0, 1, 0), material_checker);
 	add_object_to_world(wld, PLANE, &ground_plane);
 
-	
-	wld->camera.vfov = 70;
+
+	wld->camera.vfov = 30;
 	wld->camera.lookfrom = new_vec3(0,2,-10);
 	wld->camera.lookat = new_vec3(0,0,1);
 	wld->camera.vup = new_vec3(0,1,0);
@@ -315,7 +315,7 @@ int main(void)
 
 	ft_memset(&wld, 0, sizeof(t_world));
 	
-	switch (7)
+	switch (9)
 	{
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres

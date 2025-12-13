@@ -19,6 +19,104 @@ double compute_attenuation(double d)
     return 1.0 / (constant + linear * d + quadratic * d * d);
 }
 
+// Version 2: Phong Reflection Model with Shadows and reflection
+t_color ray_color_v2(t_ray *ray, int depth, t_world *world)
+{
+    t_hit_record	rec;
+    t_hit_record	temp_rec;
+    t_ray			r_2light;
+    t_color			ambient;
+    t_color			diffuse;
+    t_color			specular;
+    t_color			color_from_emission;
+    t_vec3			light_dir;
+    t_vec3			view_dir;
+    t_vec3			reflect_dir;
+    double			cos_nl;
+    double			cos_rv;
+    double			brightness;
+    double			distance;
+    double			attenuation;
+
+    if (depth <= 0)
+        return (get_color(0.0, 0.0, 0.0));
+
+    ambient = color_multiply_number(world->ambient, world->ambient_ratio);
+    
+    if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
+    {
+        color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
+		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
+        distance = vec3_length(vec3_subtract(world->spot_light.position, rec.p));
+    
+        // Check for shadows
+        if (world_hit(world, &r_2light, new_interval(0.00001, distance-0.00001), &temp_rec) && temp_rec.t <= 1.0)
+			return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number(ambient, 2.2)), 0.0, 1.0);
+        // Calculate attenuation
+        attenuation = compute_attenuation(distance);
+        // Diffuse component (Lambert)
+        light_dir = vec3_normalize(r_2light.direction);
+        cos_nl = vec3_dot(rec.normal, light_dir);
+        if (cos_nl < 0)
+            cos_nl = 0;
+        brightness = world->spot_light.brightness * cos_nl;
+        diffuse = color_multiply_number(world->spot_light.light_color, brightness * attenuation);
+        
+        // Specular component (Phong)
+        view_dir = vec3_normalize(vec3_subtract(ray->origin, rec.p));
+        reflect_dir = vec3_subtract(vec3_multiply(rec.normal, 2.0 * vec3_dot(light_dir, rec.normal)), light_dir);
+        cos_rv = vec3_dot(reflect_dir, view_dir);
+        if (cos_rv < 0)
+            cos_rv = 0;
+        
+        // Shininess factor - adjust this value (higher = sharper highlight)
+        double shininess = 32.0;
+        double spec_strength = pow(cos_rv, shininess);
+        specular = color_multiply_number(world->spot_light.light_color, spec_strength * attenuation * world->spot_light.brightness);
+        
+        // Combine all components: ambient + diffuse + specular
+        t_color final_color = color_add(color_multiply_number(ambient, 2.2), diffuse);
+        final_color = color_add(final_color, specular);
+        
+		// ===== 镜面反射部分 =====
+		t_color reflected_color = get_color(0,0,0);
+
+		if (rec.mat.type == METAL)
+		{
+			final_color = (t_color){0,0,0};
+			t_vec3 I = vec3_normalize(ray->direction);
+			t_vec3 N = rec.normal;
+			t_vec3 R = vec3_subtract(I, vec3_multiply(N, 2.0 * vec3_dot(I, N)));
+
+			t_ray reflect_ray;
+			reflect_ray.origin = vec3_add(rec.p, vec3_multiply(N, 1e-4));
+			reflect_ray.direction = vec3_normalize(R);
+
+			reflected_color = ray_color_v2(&reflect_ray, depth - 1, world);
+		}
+
+		// 混合
+		final_color = color_add(
+			color_multiply_number(final_color, 1.0 - 0.8),
+			color_multiply_number(reflected_color, 0.8)
+		);
+
+		// return color_clamp(
+		// 	color_add(color_from_emission, final_color),
+		// 	0.0, 1.0
+		// );
+return color_clamp(
+			color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)),
+			0.0, 1.0
+		);
+        // Multiply by surface colrec.mat.reflectivityor and add emission
+      //  return color_clamp(color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)), 0.0, 1.0);
+    }
+    else
+        return (ambient);
+}
+
+// Version 1: Phong Reflection Model with Shadows and specular highlights
 t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
 {
     t_hit_record	rec;
@@ -45,26 +143,14 @@ t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
     if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
     {
         color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
-        
-		// t_vec3 shadow_origin = vec3_add(rec.p, vec3_multiply(rec.normal, 0.001));
-        // r_2light = rt_ray(shadow_origin, vec3_subtract(world->spot_light.position, shadow_origin));
-		
 		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
         distance = vec3_length(vec3_subtract(world->spot_light.position, rec.p));
     
         // Check for shadows
-        if (world_hit(world, &r_2light, new_interval(0.00001, distance-0.00001), &temp_rec))
-        {
-			// printf("In shadow\n");
-			// printf("Hit object type in shadow: %d, t: %f, distance: %f, front_face: %d, p: (%f, %f, %f)\n", temp_rec.hit_obj->type,temp_rec.t, distance,temp_rec.front_face,temp_rec.p.x,temp_rec.p.y,temp_rec.p.z);
-            // In shadow - only ambient and emission
-			if (temp_rec.t <= 1)
-            	return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number(ambient, 2.2)), 0.0, 1.0);
-        }
-        
+        if (world_hit(world, &r_2light, new_interval(0.00001, distance-0.00001), &temp_rec) && temp_rec.t <= 1.0)
+			return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number(ambient, 2.2)), 0.0, 1.0);
         // Calculate attenuation
         attenuation = compute_attenuation(distance);
-        
         // Diffuse component (Lambert)
         light_dir = vec3_normalize(r_2light.direction);
         cos_nl = vec3_dot(rec.normal, light_dir);
@@ -381,7 +467,7 @@ void	camera_render(t_camera *camera, t_world *wld)
 		{
 			pixel_color = (t_color){0,0,0};
 			r = get_ray(i, j, camera);
-			pixel_color = color_add(pixel_color, ray_color_v1(&r, camera->max_depth, wld));
+			pixel_color = color_add(pixel_color, ray_color_v2(&r, camera->max_depth, wld));
 			write_color(&img, i, j, 
 				color_multiply_number(pixel_color, camera->pixel_samples_scale));
 			i++;
