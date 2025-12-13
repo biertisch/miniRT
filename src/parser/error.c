@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:10:00 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:16:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:16:06 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,9 @@ int	report_range_error(t_metadata *meta, t_field_rule *field, double value)
 	if (meta->errors == 0)
 		ft_strlcpy(buffer, "Error\n", sizeof(buffer));
 	add_line(buffer, meta->line_no, sizeof(buffer));
+	ft_strlcat(buffer, "'", sizeof(buffer));
 	ft_strlcat(buffer, field->name, sizeof(buffer));
-	ft_strlcat(buffer, " value ", sizeof(buffer));
+	ft_strlcat(buffer, "' value ", sizeof(buffer));
 	tmp = ft_ftoa(value, field->precision);
 	if (tmp)
 		ft_strlcat(buffer, tmp, sizeof(buffer));

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:56:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:28:32 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:51:23 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,19 @@ static int	parse_vec3_component(const char **s, double *out, int i)
 	double	value;
 	int		read;
 
-	skip_spaces(s);
 	read = 0;
 	value = ft_atof_count(*s, &read);
 	(*s) += read;
-	if (read == 0 || (**s != '\0' && !ft_isspace(**s) && **s != ','))
+	if (read == 0)
 		return (0);
-	skip_spaces(s);
 	if (i < 2)
 	{
 		if (**s != ',')
 			return (0);
 		(*s)++;
 	}
+	if (i == 2 && **s != '\0' && !ft_isspace((unsigned char)**s))
+		return (0);
 	*out = value;
 	return (1);
 }
@@ -49,6 +49,7 @@ int	parse_vec3(t_vec3 *out, const char **s, t_field_rule *field,
 {
 	t_vec3	tmp;
 
+	skip_spaces(s);
 	if (!parse_vec3_component(s, &tmp.x, 0)
 		|| !parse_vec3_component(s, &tmp.y, 1)
 		|| !parse_vec3_component(s, &tmp.z, 2))

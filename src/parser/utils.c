@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:16:49 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:36:31 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 13:03:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	skip_spaces(const char **s)
 int	check_trailing(const char *s)
 {
 	skip_spaces(&s);
-	return (*s == '\0' || *s == '\n');
+	return (*s == '\0' || *s == '\n' || *s == '#');
 }
 
 static double	parse_fraction(const char *str, int *i, int *has_digits)
@@ -31,7 +31,7 @@ static double	parse_fraction(const char *str, int *i, int *has_digits)
 
 	fraction = 0.1;
 	result = 0;
-	while (ft_isdigit(str[*i]))
+	while (ft_isdigit((unsigned char)str[*i]))
 	{
 		result += (str[*i] - '0') * fraction;
 		fraction *= 0.1;
@@ -46,7 +46,7 @@ static double	parse_integer(const char *str, int *i, int *has_digits)
 	double	result;
 
 	result = 0;
-	while (ft_isdigit(str[*i]))
+	while (ft_isdigit((unsigned char)str[*i]))
 	{
 		result = result * 10 + (str[*i] - '0');
 		*has_digits = 1;
@@ -105,7 +105,7 @@ int	ft_atoi_count(const char *str, int *read)
 	sign = parse_sign(str, &i);
 	result = 0;
 	has_digits = 0;
-	while (ft_isdigit(str[i]))
+	while (ft_isdigit((unsigned char)str[i]))
 	{
 		result = result * 10 + (str[i++] - '0');
 		has_digits = 1;
@@ -119,22 +119,44 @@ int	ft_atoi_count(const char *str, int *read)
 	return ((int)(result * sign));
 }
 
-static void	fraction_to_buffer(double fraction, char *str, int *i,
-	int precision)
+static void	padd_fraction(long fraction, int precision, char *str, int *i)
 {
-	int	len;
+	int	digits;
 
-	if (precision <= 0)
-		return ;
-	str[(*i)++] = '.';
-	len = 0;
-	while (len < precision)
+	digits = 0;
+	if (fraction == 0)
+		digits = 1;
+	while (fraction > 0)
 	{
-		fraction *= 10;
-		str[(*i)++] = (int)fraction + '0';
-		fraction -= (int)fraction;
-		len++;
+		fraction /= 10;
+		digits++;
 	}
+	while (digits < precision)
+	{
+		str[(*i)++] = '0';
+		digits++;
+	}
+}
+
+static void	split_float(double n, int *precision, long *integer, long *fraction)
+{
+	long	scale;
+	long	rounded;
+	int		sign;
+	int		i;
+
+	if (n < 0)
+		n = -n;
+	scale = 1;
+	i = 0;
+	while (i < *precision)
+	{
+		scale *= 10;
+		i++;
+	}
+	rounded = (long)(n * scale + 0.5);
+	*integer = rounded / scale;
+	*fraction = rounded % scale;
 }
 
 static void	integer_to_buffer(long n, char *str, int *i)
@@ -144,7 +166,7 @@ static void	integer_to_buffer(long n, char *str, int *i)
 
 	if (n == 0)
 	{
-		str[(*i)++] = '\0';
+		str[(*i)++] = '0';
 		return ;
 	}
 	len = 0;
@@ -175,18 +197,26 @@ char	*ft_ftoa(double n, int precision)
 {
 	char	*str;
 	long	integer;
-	double	fraction;
+	long	fraction;
 	int		i;
 
-	str = malloc(50);
+	str = ft_calloc(50, sizeof(char));
 	if (!str)
 		return (0);
 	i = 0;
 	sign_to_buffer(&n, str, &i);
-	integer = (long)n;
-	fraction = n - (double)integer;
+	if (precision < 0)
+		precision = 0;
+	if (precision > 6)
+		precision = 6;
+	split_float(n, &precision, &integer, &fraction);
 	integer_to_buffer(integer, str, &i);
-	fraction_to_buffer(fraction, str, &i, precision);
+	if (precision > 0)
+	{
+		str[i++] = '.';
+		padd_fraction(fraction, precision, str, &i);
+		integer_to_buffer(fraction, str, &i);
+	}
 	str[i] = '\0';
 	return (str);
 }

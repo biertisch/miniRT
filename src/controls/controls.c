@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/09 11:48:07 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:28:45 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,9 @@ static int	init_letter(char c, int row)
 {
 	char	upper;
 
-	if (ft_isalpha(c))
+	if (ft_isalpha((unsigned char)c))
 	{
-		upper = ft_toupper(c);
+		upper = ft_toupper((unsigned char)c);
 		if (upper >= 'A' && upper <= 'M')
 			return (init_letter_a_to_m(upper, row));
 		return (init_letter_n_to_z(upper, row));
@@ -107,16 +107,16 @@ static int	init_digit(char c, int row)
 		{0x3C,0x66,0x66,0x3E,0x06,0x0C,0x38,0x00}
 	};
 
-	if (ft_isdigit(c))
+	if (ft_isdigit((unsigned char)c))
 		return (digits[c - '0'][row]);
 	return (0);
 }
 
 static int	get_font(char c, int row)
 {
-	if (ft_isdigit(c))
+	if (ft_isdigit((unsigned char)c))
 		return (init_digit(c, row));
-	if (ft_isalpha(c))
+	if (ft_isalpha((unsigned char)c))
 		return (init_letter(c, row));
 	return (init_punct(c, row));
 }

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:50:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:22:25 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:53:07 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@ static int	parse_color_component(const char **s, int *out, int i)
 	int	value;
 	int	read;
 
-	skip_spaces(s);
 	read = 0;
 	value = ft_atoi_count(*s, &read);
 	(*s) += read;
-	if (read == 0 || (**s != '\0' && !ft_isspace(**s) && **s != ','))
+	if (read == 0)
 		return (0);
-	skip_spaces(s);
 	if (i < 2)
 	{
 		if (**s != ',')
 			return (0);
 		(*s)++;
 	}
+	if (i == 2 && **s != '\0' && !ft_isspace((unsigned char)**s))
+		return (0);
 	*out = value;
 	return (1);
 }
@@ -39,6 +39,7 @@ int	parse_color(t_color *out, const char **s, t_field_rule *field,
 {
 	int	color[3];
 
+	skip_spaces(s);
 	if (!parse_color_component(s, &color[0], 0)
 		|| !parse_color_component(s, &color[1], 1)
 		|| !parse_color_component(s, &color[2], 2))
