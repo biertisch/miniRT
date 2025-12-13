@@ -6,11 +6,25 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:32:01 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 18:50:32 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+static t_material	parse_material(const char **s, t_color color)
+{
+	t_checker_texture	*checker;
+
+	skip_spaces(s);
+	if (**s == 'c')
+	{
+		(*s)++;
+		checker = checker_texture_colors(0.99, color, (t_color){232, 232, 228});
+		return (get_material_texture(LAMBERTIAN, (t_texture *)checker, 0));
+	}
+	return (get_material(LAMBERTIAN, color, 0));
+}
 
 int	parse_sphere_fields(t_world *scene, const char **s, t_metadata *meta)
 {
@@ -25,7 +39,7 @@ int	parse_sphere_fields(t_world *scene, const char **s, t_metadata *meta)
 	sphere.radius = diameter / 2;
 	if (!parse_color(&color, s, &meta->rule->fields[2], meta))
 		return (0);
-	sphere.mat = get_material(LAMBERTIAN, color, 0);
+	sphere.mat = parse_material(s, color);
 	add_object_to_world(scene, SPHERE, &sphere);
 	return (1);
 }
@@ -41,7 +55,7 @@ int	parse_plane_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	if (!parse_color(&color, s, &meta->rule->fields[2], meta))
 		return (0);
-	plane.mat = get_material(LAMBERTIAN, color, 0);
+	plane.mat = parse_material(s, color);
 	add_object_to_world(scene, PLANE, &plane);
 	return (1);
 }
@@ -63,7 +77,7 @@ int	parse_cylinder_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	if (!parse_color(&color, s, &meta->rule->fields[4], meta))
 		return (0);
-	cylinder.mat = get_material(LAMBERTIAN, color, 0);
+	cylinder.mat = parse_material(s, color);
 	add_object_to_world(scene, CYLINDER, &cylinder);
 	return (1);
 }
@@ -85,7 +99,7 @@ int	parse_cone_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	if (!parse_color(&color, s, &meta->rule->fields[4], meta))
 		return (0);
-	cone.mat = get_material(LAMBERTIAN, color, 0);
+	cone.mat = parse_material(s, color);
 	add_object_to_world(scene, CONE, &cone);
 	return (1);
 }
