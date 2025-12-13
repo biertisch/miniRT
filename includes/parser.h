@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:51:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 16:59:01 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:31:23 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,19 @@ int				parser(t_world *scene, char *file);
 int				parse_color(t_color *out, const char **s, t_field_rule *field,
 					t_metadata *meta);
 
-// parse_line.c
+// parse_fields.c
 int				parse_line(t_world *scene, const char *line, t_metadata *meta);
+void			skip_spaces(const char **s);
 
-// parse_object.c
+// parse_acl_fields.c
+int				parse_ambient_fields(t_world *scene, const char **s,
+					t_metadata *meta);
+int				parse_camera_fields(t_world *scene, const char **s,
+					t_metadata *meta);
+int				parse_light_fields(t_world *scene, const char **s,
+					t_metadata *meta);
+
+// parse_object_fields.c
 int				parse_sphere_fields(t_world *scene, const char **s,
 					t_metadata *meta);
 int				parse_plane_fields(t_world *scene, const char **s,
@@ -125,11 +134,11 @@ t_field_rule	*get_plane_fields(void);
 t_field_rule	*get_cylinder_fields(void);
 t_field_rule	*get_cone_fields(void);
 
-// utils.c
-int				check_trailing(const char *p);
-void			skip_spaces(const char **s);
-int				ft_atoi_count(const char *str, int *read);
+// ft_atof.c
 double			ft_atof_count(const char *str, int *read);
+int				ft_atoi_count(const char *str, int *read);
+
+// ft_ftoa.c
 char			*ft_ftoa(double n, int precision);
 
 #endif

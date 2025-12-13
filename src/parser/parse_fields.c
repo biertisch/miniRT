@@ -1,59 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_line.c                                       :+:      :+:    :+:   */
+/*   parse_fields.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:05:44 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:03:23 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:31:33 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static int	parse_ambient_fields(t_world *scene, const char **s,
-	t_metadata *meta)
+void	skip_spaces(const char **s)
 {
-	t_field_rule	*fields;
-
-	fields = meta->rule->fields;
-	if (!parse_float(&scene->ambient_ratio, s, &fields[0], meta))
-		return (0);
-	if (!parse_color(&scene->ambient, s, &fields[1], meta))
-		return (0);
-	return (1);
+	while (**s && ft_isspace((unsigned char)**s))
+		(*s)++;
 }
 
-static int	parse_camera_fields(t_world *scene, const char **s,
-	t_metadata *meta)
+static int	check_trailing(const char *s)
 {
-	t_field_rule	*fields;
-	int				fov;
-
-	fields = meta->rule->fields;
-	if (!parse_vec3(&scene->camera.lookfrom, s, &fields[0], meta))
-		return (0);
-	if (!parse_vec3(&scene->camera.vup, s, &fields[1], meta))
-		return (0);
-	if (!parse_int(&fov, s, &fields[2], meta))
-		return (0);
-	scene->camera.vfov = (double)fov;
-	return (1);
-}
-
-static int	parse_light_fields(t_world *scene, const char **s, t_metadata *meta)
-{
-	t_field_rule	*fields;
-
-	fields = meta->rule->fields;
-	if (!parse_vec3(&scene->spot_light.position, s, &fields[0], meta))
-		return (0);
-	if (!parse_float(&scene->spot_light.brightness, s, &fields[1], meta))
-		return (0);
-	if (!parse_color(&scene->spot_light.light_color, s, &fields[2], meta))
-		return (0);
-	return (1);
+	skip_spaces(&s);
+	return (*s == '\0' || *s == '\n' || *s == '#');
 }
 
 static int	parse_fields(t_world *scene, const char **s, t_metadata *meta)

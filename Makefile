@@ -3,9 +3,10 @@ SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c int
 						camera.c rt_utils.c material.c action.c quad.c plane.c cylinder.c \
 						texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
 						onb.c pdf.c cone.c parser/error.c parser/error_utils.c parser/keyword.c\
-						parser/parse_color.c parser/parse_line.c parser/parse_object.c\
-						parser/parse_scalar.c parser/parse_vector.c parser/parser.c parser/rules.c\
-						parser/rules2.c parser/utils.c)
+						parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
+						parser/parse_object_fields.c parser/parse_scalar.c parser/parse_vector.c\
+						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
+						parser/ft_ftoa.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
