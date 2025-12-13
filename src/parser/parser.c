@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:39:46 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:30:30 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:09:52 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,13 @@
 static int	validate_global_rules(t_metadata *meta)
 {
 	if (meta->ambient_count != 1)
-		report_global_error(meta,
-			"Global check: ambient light 'A' must appear exactly once (found ",
-			meta->ambient_count);
+		report_error(ERR_AMBIENT_COUNT, meta, NULL, -1);
 	if (meta->camera_count != 1)
-		report_global_error(meta,
-			"Global check: camera 'C' must appear exactly once (found ",
-			meta->camera_count);
+		report_error(ERR_CAMERA_COUNT, meta, NULL, -1);
 	if (meta->light_count != 1)
-		report_global_error(meta,
-			"Global check: light 'L' must appear exactly once (found ",
-			meta->light_count);
+		report_error(ERR_LIGHT_COUNT, meta, NULL, -1);
 	if (meta->errors != 0)
-	{
-		ft_putstr_fd("Validation failed: ", STDERR_FILENO);
-		ft_putnbr_fd(meta->errors, STDERR_FILENO);
-		ft_putstr_fd(" error(s) found in configuration file.\n", STDERR_FILENO);
-		return (0);
-	}
+		return (report_error(ERR_VALIDATE, meta, NULL, -1));
 	return (1);
 }
 

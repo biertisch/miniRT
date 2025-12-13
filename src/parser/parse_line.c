@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:05:44 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:27:22 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:03:23 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,14 @@ int	parse_line(t_world *scene, const char *line, t_metadata *meta)
 	if (*line == '\0' || *line == '\n' || *line == '#')
 		return (0);
 	if (!is_valid_keyword(line, key, meta))
-		return (report_error(meta, "unknown or malformed keyword", NULL));
+		return (report_error(ERR_KEYWORD, meta, NULL, -1));
 	meta->rule = find_rule(key);
 	if (!meta->rule)
-		return (report_error(meta, "unknown keyword", key));
+		return (report_error(ERR_KEYWORD, meta, NULL, -1));
 	line += ft_strlen(key);
 	if (!parse_fields(scene, &line, meta))
 		return (0);
 	if (!check_trailing(line))
-		return (report_error(meta,
-				"extra tokens or malformed input after fields", NULL));
+		return (report_error(ERR_TRAILING, meta, NULL, -1));
 	return (1);
 }

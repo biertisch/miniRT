@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:50:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 12:53:07 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:00:30 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ int	parse_color(t_color *out, const char **s, t_field_rule *field,
 		|| !parse_color_component(s, &color[1], 1)
 		|| !parse_color_component(s, &color[2], 2))
 	{
-		return (report_error(meta, "expected color 'r,g,b' for", field->name));
+		return (report_error(ERR_FORMAT, meta, field, -1));
 	}
 	if (color[0] < (int)field->min || color[0] > (int)field->max)
-		return (report_range_error(meta, field, color[0]));
+		return (report_error(ERR_RANGE, meta, field, (double)color[0]));
 	if (color[1] < (int)field->min || color[1] > (int)field->max)
-		return (report_range_error(meta, field, color[1]));
+		return (report_error(ERR_RANGE, meta, field, (double)color[1]));
 	if (color[2] < (int)field->min || color[2] > (int)field->max)
-		return (report_range_error(meta, field, color[2]));
+		return (report_error(ERR_RANGE, meta, field, (double)color[2]));
 	out->r = color[0];
 	out->g = color[1];
 	out->b = color[2];
