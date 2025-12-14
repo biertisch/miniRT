@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/08 11:02:29 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 19:13:30 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,29 @@
 
 # include "mlx.h"
 # include "libft.h"
+# include "vec3.h"
+# include "minirt.h"
 
 // panel dimensions
-# define PANEL_W	300
-# define PANEL_H	600
-# define ROW_H		20
-# define SLIDER_W	240
-# define SLIDER_H	14
-# define KNOB_W		10
-# define KNOB_H		10
+# define PANEL_W	400
+# define PANEL_H	900
+# define ROW_H		30
+# define SLIDER_W	340
+# define SLIDER_H	20
+# define KNOB_W		16
+# define KNOB_H		16
 # define BUTTON_W	100
-# define BUTTON_H	25
-# define CHAR_W		8
-# define CHAR_H		8
-# define OBJ_Y		40
-# define TRANSF_Y	175
-# define BUTTON_Y	550
+# define BUTTON_H	30
+# define CHAR_W		14
+# define CHAR_H		14
+# define OBJ_Y		50
+# define TRANSF_Y	250
+# define TRANSF1_Y	280
+# define TRANSF2_Y	470
+# define TRANSF3_Y	660
+# define BUTTON_Y	850
 # define PADD_X		20
-# define PADD_Y		15
+# define PADD_Y		10
 
 // colors
 # define WHITE		0xFFFFFF
@@ -45,9 +50,9 @@
 # define CONTROLS	"Controls"
 # define OBJECTS	"Objects"
 # define TRANSFORM	"Transformations"
-# define TRANSLATE	"Translation (x, y, z)"
-# define ROTATE		"Rotation (x, y, z)"
-# define RESIZE		"Resizing (diameter, height)"
+# define TRANSLATE	"Translation (x,y,z)"
+# define ROTATE		"Rotation (x,y,z)"
+# define RESIZE		"Resizing (diameter,height)"
 # define RESIZE2	"Resizing (diameter)"
 # define RENDER		"Render"
 # define RESET		"Reset"
@@ -55,7 +60,7 @@
 // transformation ranges
 # define TL_RANGE	20
 # define RT_RANGE	90
-# define RS_RANGE	20
+# define RS_RANGE	2
 
 # define BUFF_SIZE	16
 
@@ -108,10 +113,60 @@ typedef struct s_panel
 	t_slider	**sliders;
 }	t_panel;
 
+// controls.c
 int		setup_controls(t_world *scene);
+
+// drag.c
+void	begin_drag(t_panel *panel, int x);
+int		hit_knob(t_panel *panel, int x, int y);
+void	detect_active_slider(t_panel *panel, int x, int y);
+void	move_knob(t_panel *panel, t_world *scene, int x);
+
+// hooks.c
+int		controls_mouse_hook(int button, int x, int y, void *param);
+int		controls_mouse_move_hook(int x, int y, void *param);
+int		controls_mouse_release_hook(int button, int x, int y, void *param);
+
+// render.c
 void	render_controls(t_panel *panel, t_world *scene);
-void	init_panel(t_panel *panel, int object_count);
-int		slider_to_axis(int slider);
+
+// render_objects.c
+void	render_object_list(t_panel *panel, t_world *scene);
+
+// render_sliders.c
+void	render_sliders(t_panel *panel, t_world *scene);
+
+// render_text.c
+void	draw_string(t_data *img, const char *s, int x, int y, int color);
+void	draw_char(t_data *img, char c, int x, int y, int color);
+
+// render_text_utils.
+int		get_digit(char c, int row);
+int		get_letter(char c, int row);
+int		get_punct(char c, int row);
+
+// render_utils.c
+t_rect	rectangle(int x, int y, int width, int height);
+void	fill_rectangle(t_panel *panel, t_rect rect, int color);
+void	outline_rectangle(t_panel *panel, t_rect rect, int color);
+void	draw_dashed_line(t_panel *panel, int y, int color);
+
+// scroll.c
+void	select_object(t_panel *panel, int object_count, int y);
+void	scroll_up(t_panel *panel);
+void	scroll_down(t_panel *panel, int object_count);
+
+// sliders.c
+double	get_base_value(t_world *scene, int index, int slider);
+
+// sliders_utils.c
+void	init_sliders(t_slider **sliders, int object_count);
+int		free_sliders(t_slider **sliders, int size);
 t_vec3	*get_object_position(t_object *obj);
+int		slider_to_axis(int slider);
+
+// transform.c
+void	transform_scene(t_panel *panel, t_world *scene);
+
 
 #endif

@@ -297,7 +297,7 @@ int main(int argc, char **argv)
 	reg_hook(&wld);
 	printf("Starting render...\n");
 	camera_render(&(wld.camera), &wld);
-	// setup_controls(&wld);
+	setup_controls(&wld);
 	mlx_loop(wld.mlx);
 	return (0);
 }

@@ -1,0 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_objects.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
+/*   Updated: 2025/12/14 17:44:55 by beatde-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "controls.h"
+
+static char	*get_type_name(t_geo_type type)
+{
+	static char	*type_names[] = {
+		"sphere", "plane", "cilinder", "bvh node", "quad", "unknown"
+	};
+
+	return (type_names[type]);
+}
+
+static void	draw_object_row(t_panel *panel, t_world *scene, int index, int y)
+{
+	char	name[BUFF_SIZE];
+	char	*index_str;
+
+	index_str = ft_itoa(index);
+	if (!index_str) //issue warning and communicate error
+		return ;
+	ft_strlcpy(name, index_str, BUFF_SIZE);
+	free(index_str);
+	ft_strlcat(name, " ", BUFF_SIZE);
+	if (index == 0)
+		ft_strlcat(name, "Camera", BUFF_SIZE);
+	else if (index == 1)
+		ft_strlcat(name, "Light", BUFF_SIZE);
+	else
+	{
+		index -= 2;
+		ft_strlcat(name, get_type_name(scene->objects[index]->type), BUFF_SIZE);
+	}
+	draw_string(panel->buffer, name, PADD_X, y, WHITE);
+}
+
+static void	draw_highlight(t_panel *panel, int row, int y)
+{
+	int	x;
+	int	width;
+
+	x = PADD_X - 5;
+	y -= 7;
+	width = panel->width - 2 * x;
+	outline_rectangle(panel, rectangle(x, y, width, ROW_H), GRAY);
+}
+
+void	render_object_list(t_panel *panel, t_world *scene)
+{
+	int	row;
+	int	obj_index;
+	int	y;
+
+	row = 0;
+	while (row < panel->visible_objs)
+	{
+		obj_index = panel->scroll_offset + row;
+		if (obj_index >= scene->num_objects + 2) // camera + 1 light
+			break ;
+		y = PADD_Y + (OBJ_Y + ROW_H + row * ROW_H);
+		if (obj_index == panel->active_obj)
+			draw_highlight(panel, row, y);
+		draw_object_row(panel, scene, obj_index, y);
+		row++;
+	}
+}

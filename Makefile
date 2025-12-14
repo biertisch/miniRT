@@ -6,7 +6,10 @@ SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c int
 						parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
 						parser/parse_object_fields.c parser/parse_scalar.c parser/parse_vector.c\
 						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
-						parser/ft_ftoa.c)
+						parser/ft_ftoa.c controls/controls.c controls/drag.c controls/hooks.c\
+						controls/render_objects.c controls/render_sliders.c controls/render_text.c\
+						controls/render_text_utils.c controls/render_utils.c controls/render.c\
+						controls/scroll.c controls/sliders_utils.c controls/sliders.c controls/transform.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 

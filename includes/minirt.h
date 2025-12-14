@@ -36,6 +36,8 @@ enum
 	DestroyNotify = 17
 };
 
+typedef struct s_panel t_panel;
+
 typedef struct s_mat3 {
     double m[3][3];
 } t_mat3;
