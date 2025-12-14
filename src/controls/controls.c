@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 16:45:39 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 22:59:42 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ static int	create_buffer(t_panel *panel, t_world *scene)
 		ft_putstr_fd("Error\nFailed to create image buffer\n", STDERR_FILENO);
 		return (0);
 	}
-	panel->buffer->addr = mlx_get_data_addr(panel->buffer->img, &panel->buffer->bits_per_pixel, &panel->buffer->line_length, &panel->buffer->endian);
+	panel->buffer->addr = mlx_get_data_addr(
+			panel->buffer->img, &panel->buffer->bits_per_pixel,
+			&panel->buffer->line_length, &panel->buffer->endian);
 	if (!panel->buffer->addr)
 	{
 		ft_putstr_fd("Error\nFailed to access image buffer\n", STDERR_FILENO);
@@ -57,16 +59,10 @@ static int	allocate_panel(t_world *scene)
 
 	scene->panel = malloc(sizeof(*(scene->panel)));
 	if (!scene->panel)
-	{
-		perror("Error\nmalloc");
-		return (0);
-	}
+		return (perror("Error\nmalloc"), 0);
 	scene->panel->sliders = malloc(sizeof(t_slider *) * scene->num_objects);
 	if (!scene->panel->sliders)
-	{
-		perror("Error\nmalloc");
-		return (0);
-	}
+		return (perror("Error\nmalloc"), 0);
 	i = 0;
 	while (i < scene->num_objects)
 	{
@@ -89,7 +85,8 @@ int	setup_controls(t_world *scene)
 		return (0);
 	init_panel(scene->panel, scene->num_objects);
 	panel = scene->panel;
-	panel->win = mlx_new_window(scene->mlx, panel->width, panel->height, "Control Panel");
+	panel->win = mlx_new_window(
+			scene->mlx, panel->width, panel->height, "Control Panel");
 	if (!panel->win)
 	{
 		ft_putstr_fd("Error\nFailed to create window\n", STDERR_FILENO);

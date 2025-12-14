@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 19:13:30 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 22:56:42 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define KNOB_H		16
 # define BUTTON_W	100
 # define BUTTON_H	30
-# define CHAR_W		14
-# define CHAR_H		14
+# define CHAR_W		12
+# define CHAR_H		12
 # define OBJ_Y		50
 # define TRANSF_Y	250
 # define TRANSF1_Y	280
@@ -37,7 +37,7 @@
 # define TRANSF3_Y	660
 # define BUTTON_Y	850
 # define PADD_X		20
-# define PADD_Y		10
+# define PADD_Y		20
 
 // colors
 # define WHITE		0xFFFFFF
@@ -77,9 +77,9 @@ typedef enum s_sliders
 	SLIDER_COUNT
 }	t_sliders;
 
-typedef struct s_data t_data;
-typedef struct s_world t_world;
-typedef struct s_object t_object;
+typedef struct s_data	t_data;
+typedef struct s_world	t_world;
+typedef struct s_object	t_object;
 
 typedef struct s_rect
 {
@@ -106,7 +106,7 @@ typedef struct s_panel
 	int			active_obj;
 	int			scroll_offset;
 	int			visible_objs;
-	int 		active_slider;
+	int			active_slider;
 	int			dragging;
 	int			drag_start_x;
 	double		drag_start_norm;
@@ -141,9 +141,8 @@ void	draw_string(t_data *img, const char *s, int x, int y, int color);
 void	draw_char(t_data *img, char c, int x, int y, int color);
 
 // render_text_utils.
-int		get_digit(char c, int row);
 int		get_letter(char c, int row);
-int		get_punct(char c, int row);
+int		get_symbol(char c, int row);
 
 // render_utils.c
 t_rect	rectangle(int x, int y, int width, int height);
@@ -167,6 +166,5 @@ int		slider_to_axis(int slider);
 
 // transform.c
 void	transform_scene(t_panel *panel, t_world *scene);
-
 
 #endif

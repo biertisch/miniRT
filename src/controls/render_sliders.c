@@ -6,13 +6,13 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 17:45:37 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 23:07:32 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "controls.h"
 
-static void draw_value(t_panel *panel, int value, int y, int pos)
+static void	draw_value(t_panel *panel, int value, int y, int pos)
 {
 	char	*str;
 	int		x;
@@ -110,7 +110,7 @@ static void	render_translation(t_panel *panel, t_world *scene, int x, int y)
 	int	i;
 	int	obj;
 
-	draw_string(panel->buffer, TRANSLATE, x,  y, LIGHT_GRAY);
+	draw_string(panel->buffer, TRANSLATE, x, y, LIGHT_GRAY);
 	obj = panel->active_obj;
 	i = 0;
 	while (i < 3)

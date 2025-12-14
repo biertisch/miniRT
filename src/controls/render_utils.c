@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:30:57 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 16:13:57 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 23:05:13 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ void	draw_dashed_line(t_panel *panel, int y, int color)
 
 void	outline_rectangle(t_panel *panel, t_rect rect, int color)
 {
-	int row;
+	int	row;
 	int	col;
 
-	if (rect.x < 0 || rect.x + rect.width > panel->width || rect.y < 0 || rect.y + rect.height > panel->height)
+	if (rect.x < 0 || rect.x + rect.width > panel->width
+		|| rect.y < 0 || rect.y + rect.height > panel->height)
 		return ;
 	row = 0;
 	while (row < rect.height)
@@ -50,8 +51,10 @@ void	outline_rectangle(t_panel *panel, t_rect rect, int color)
 		col = 0;
 		while (col < rect.width)
 		{
-			if (row == 0 || row == rect.height - 1 || col == 0 || col == rect.width - 1)
-				my_mlx_pixel_put(panel->buffer, rect.x + col, rect.y + row, color);
+			if (row == 0 || row == rect.height - 1
+				|| col == 0 || col == rect.width - 1)
+				my_mlx_pixel_put(
+					panel->buffer, rect.x + col, rect.y + row, color);
 			col++;
 		}
 		row++;
@@ -60,10 +63,11 @@ void	outline_rectangle(t_panel *panel, t_rect rect, int color)
 
 void	fill_rectangle(t_panel *panel, t_rect rect, int color)
 {
-	int row;
+	int	row;
 	int	col;
 
-	if (rect.x < 0 || rect.x + rect.width > panel->width || rect.y < 0 || rect.y + rect.height > panel->height)
+	if (rect.x < 0 || rect.x + rect.width > panel->width
+		|| rect.y < 0 || rect.y + rect.height > panel->height)
 		return ;
 	row = 0;
 	while (row < rect.height)

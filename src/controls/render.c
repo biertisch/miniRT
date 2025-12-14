@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:30:13 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 18:18:37 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 23:06:30 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	render_buttons(t_panel *panel)
 	int	b2_x;
 	int	y;
 
-	y = BUTTON_Y + PADD_Y;
+	y = BUTTON_Y + PADD_Y / 2;
 	b1_x = (panel->width / 2 - BUTTON_W) / 2;
 	fill_rectangle(panel, rectangle(b1_x, y, BUTTON_W, BUTTON_H), LIGHT_GRAY);
 	b2_x = b1_x + panel->width / 2;
@@ -26,7 +26,7 @@ static void	render_buttons(t_panel *panel)
 	y += (BUTTON_H - CHAR_H) / 2 ;
 	b1_x += (BUTTON_W - ft_strlen(RENDER) * CHAR_W) / 2;
 	draw_string(panel->buffer, RENDER, b1_x, y, BLACK);
-	b2_x += (BUTTON_W - ft_strlen(RESET) * CHAR_W ) / 2;
+	b2_x += (BUTTON_W - ft_strlen(RESET) * CHAR_W) / 2;
 	draw_string(panel->buffer, RESET, b2_x, y, BLACK);
 }
 
@@ -39,11 +39,11 @@ static void	render_sections(t_panel *panel)
 	draw_dashed_line(panel, TRANSF_Y, GRAY);
 	draw_dashed_line(panel, BUTTON_Y, GRAY);
 	x = (panel->width - ft_strlen(CONTROLS) * CHAR_W) / 2;
-	y = PADD_Y * 2;
+	y = PADD_Y;
 	draw_string(panel->buffer, CONTROLS, x, y, WHITE);
 	x = (panel->width - ft_strlen(OBJECTS) * CHAR_W) / 2;
 	y = OBJ_Y + PADD_Y;
-	draw_string(panel->buffer, OBJECTS, x,  y, WHITE);
+	draw_string(panel->buffer, OBJECTS, x, y, WHITE);
 	x = (panel->width - ft_strlen(TRANSFORM) * CHAR_W) / 2;
 	y = TRANSF_Y + PADD_Y;
 	draw_string(panel->buffer, TRANSFORM, x, y, WHITE);

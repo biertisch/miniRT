@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:38:05 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 16:15:02 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 23:03:24 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ double	get_base_value(t_world *scene, int index, int slider)
 	if (index == 0)
 		return (get_camera_value(scene, slider));
 	if (index == 1)
-		return round(get_light_value(scene, slider));
+		return (round(get_light_value(scene, slider)));
 	return (get_object_value(scene->objects[index - 2], slider));
 	return (0);
 }

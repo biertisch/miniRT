@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:16:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 16:12:41 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/14 23:03:54 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ int	controls_mouse_hook(int button, int x, int y, void *param)
 	if (button == 1)
 	{
 		detect_active_slider(scene->panel, x, y);
-		if (scene->panel->active_obj != -1 && scene->panel->active_slider != -1 && hit_knob(scene->panel, x, y))
+		if (scene->panel->active_obj != -1 && scene->panel->active_slider != -1
+			&& hit_knob(scene->panel, x, y))
 			begin_drag(scene->panel, x);
 		else if (y >= OBJ_Y && y < TRANSF_Y)
 			select_object(scene->panel, scene->num_objects, y);
