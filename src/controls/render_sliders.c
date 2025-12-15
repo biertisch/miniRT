@@ -6,46 +6,57 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 23:07:32 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/15 12:21:01 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "controls.h"
 
-static void	draw_value(t_panel *panel, int value, int y, int pos)
+static void	draw_value(t_panel *panel, double value, int y, int pos)
 {
 	char	*str;
+	int		len;
 	int		x;
 
-	str = ft_itoa(value);
+	str = ft_ftoa(value, 1);
 	if (!str) // issue warning?
 		return ;
+	len = ft_strlen(str);
 	if (pos == 0)
-		x = PANEL_W / 2 - (ft_strlen(str) * CHAR_W * 2) / 2;
+		x = (PANEL_W - len * CHAR_W) / 2;
 	else if (pos == -1)
 		x = PADD_X;
 	else
-		x = PANEL_W - PADD_X - ft_strlen(str) * CHAR_W * 2;
+		x = PANEL_W - PADD_X - len * CHAR_W;
 	draw_string(panel->buffer, str, x, y, WHITE);
 	free(str);
 }
 
 static void	render_values(t_panel *panel, t_world *scene, int slider, int y)
 {
-	int		curr;
-	int		max;
-	int		min;
+	double	curr;
+	double	max;
+	double	min;
 
-	panel->sliders[panel->active_obj][slider].base_value = get_base_value(scene, panel->active_obj, slider);
-	curr = round(panel->sliders[panel->active_obj][slider].base_value);
-	max = curr + TL_RANGE / 2;
-	min = curr - TL_RANGE / 2;
-	if ((slider == RESIZE_D || slider == RESIZE_H) && min < 0)
-		min = 0;
-	if (slider == ROTATE_X || slider == ROTATE_Y || slider == ROTATE_Z)
+	panel->sliders[panel->active_obj][slider].base_value
+		= get_base_value(scene, panel->active_obj, slider);
+	if (slider >= TRANSL_X && slider <= TRANSL_Z)
 	{
-		max = curr + RT_RANGE / 2;
-		min = curr - RT_RANGE / 2;
+		curr = panel->sliders[panel->active_obj][slider].base_value;
+		max = curr + RANGE_TR / 2;
+		min = curr - RANGE_TR / 2;
+	}
+	else if (slider >= ROTATE_X && slider <= ROTATE_Z)
+	{
+		curr = 0;
+		max = RANGE_RT / 2;
+		min = RANGE_RT / 2;
+	}
+	else if (slider == RESIZE_D || slider == RESIZE_H)
+	{
+		curr = 1;
+		min = 0.5;
+		max = 2;
 	}
 	y += SLIDER_H + 3;
 	draw_value(panel, min, y, -1); // check return for failed malloc
@@ -53,79 +64,55 @@ static void	render_values(t_panel *panel, t_world *scene, int slider, int y)
 	draw_value(panel, max, y, 1);
 }
 
-static void	render_resizing(t_panel *panel, t_world *scene, int x, int y)
+static void	get_block_start_and_end(char *header, int *start, int *end)
 {
-	int	obj;
-	int	type;
-	int	i;
-	int	count;
+	if (ft_strcmp(header, TRANSLATE) == 0)
+	{
+		*start = TRANSL_X;
+		*end = TRANSL_Z;
+	}
+	else if (ft_strcmp(header, ROTATE) == 0)
+	{
+		*start = ROTATE_X;
+		*end = ROTATE_Z;
+	}
+	else if (ft_strcmp(header, RESIZE) == 0)
+	{
+		*start = RESIZE_D;
+		*end = RESIZE_H;
+	}
+	else if (ft_strcmp(header, RESIZE2) == 0)
+	{
+		*start = RESIZE_D;
+		*end = RESIZE_H;
+	}
+}
 
+static void	render_slider_block(t_panel *panel, t_world *scene, char *header, int x, int y)
+{
+	int	i;
+	int	obj;
+	int	start;
+	int	end;
+
+	draw_string(panel->buffer, header, x, y, LIGHT_GRAY);
 	obj = panel->active_obj;
-	type = scene->objects[obj - 2]->type;
-	if (type == CYLINDER)
+	y += ROW_H;
+	get_block_start_and_end(header, &start, &end);
+	i = start;
+	while (i <= end)
 	{
-		draw_string(panel->buffer, RESIZE, x, y, LIGHT_GRAY);
-		count = SLIDER_COUNT;
-	}
-	else
-	{
-		draw_string(panel->buffer, RESIZE2, x, y, LIGHT_GRAY);
-		count = SLIDER_COUNT - 1;
-	}
-	i = 6;
-	while (i < count)
-	{
+		panel->sliders[obj][i].y = y;
 		x = panel->sliders[obj][i].x;
-		y = panel->sliders[obj][i].y;
 		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
 		x += 2 + panel->sliders[obj][i].knob_pos * (SLIDER_W - KNOB_W - 4);
 		fill_rectangle(panel, rectangle(x, y + 2, KNOB_W, KNOB_H), BLACK);
 		render_values(panel, scene, i, y);
+		y += SLIDER_H + ROW_H;
 		i++;
 	}
 }
 
-static void	render_rotation(t_panel *panel, t_world *scene, int x, int y)
-{
-	int	i;
-	int	obj;
-
-	draw_string(panel->buffer, ROTATE, x, y, LIGHT_GRAY);
-	obj = panel->active_obj;
-	i = 3;
-	while (i < 6)
-	{
-		x = panel->sliders[obj][i].x;
-		y = panel->sliders[obj][i].y;
-		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
-		x += 2 + panel->sliders[obj][i].knob_pos * (SLIDER_W - KNOB_W - 4);
-		fill_rectangle(panel, rectangle(x, y + 2, KNOB_W, KNOB_H), BLACK);
-		render_values(panel, scene, i, y);
-		i++;
-	}
-}
-
-static void	render_translation(t_panel *panel, t_world *scene, int x, int y)
-{
-	int	i;
-	int	obj;
-
-	draw_string(panel->buffer, TRANSLATE, x, y, LIGHT_GRAY);
-	obj = panel->active_obj;
-	i = 0;
-	while (i < 3)
-	{
-		x = panel->sliders[obj][i].x;
-		y = panel->sliders[obj][i].y;
-		fill_rectangle(panel, rectangle(x, y, SLIDER_W, SLIDER_H), GRAY);
-		x += 2 + panel->sliders[obj][i].knob_pos * (SLIDER_W - KNOB_W - 4);
-		fill_rectangle(panel, rectangle(x, y + 2, KNOB_W, KNOB_H), BLACK);
-		render_values(panel, scene, i, y);
-		i++;
-	}
-}
-
-// remove rotation from spheres and lights
 void	render_sliders(t_panel *panel, t_world *scene)
 {
 	int	obj;
@@ -134,19 +121,17 @@ void	render_sliders(t_panel *panel, t_world *scene)
 	int	y;
 
 	obj = panel->active_obj;
-	if (obj < 0 || obj >= scene->num_objects + 2)
+	if (obj < 0 || obj >= scene->num_objects + 1) // local light
 		return ;
 	type = -1;
-	if (obj >= 2)
-		type = scene->objects[obj - 2]->type;
+	if (obj >= 1) // local light
+		type = scene->objects[obj - 1]->type;
 	x = PADD_X;
-	y = TRANSF_Y + PADD_Y + ROW_H;
-	render_translation(panel, scene, x, y);
-	y += ROW_H + 3 * (SLIDER_H + ROW_H) + 5;
-	render_rotation(panel, scene, x, y);
-	if (type != -1 && (type == CYLINDER || type == SPHERE))
-	{
-		y += ROW_H + 3 * (SLIDER_H + ROW_H) + 5;
-		render_resizing(panel, scene, x, y);
-	}
+	render_slider_block(panel, scene, TRANSLATE, x, TRANSF1_Y);
+	if (type == PLANE || type == CYLINDER || type == CONE)
+		render_slider_block(panel, scene, ROTATE, x, TRANSF2_Y);
+	else if (type == SPHERE)
+		render_slider_block(panel, scene, RESIZE2, x, TRANSF2_Y);
+	if (type == CYLINDER || type == CONE)
+		render_slider_block(panel, scene, RESIZE, x, TRANSF3_Y);
 }

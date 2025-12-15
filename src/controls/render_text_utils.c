@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:10:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 23:05:36 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/15 10:35:11 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	get_letter_u_to_z(char c, int row)
 		0x0600, 0x0C00, 0x0FFC, 0x0FFC, 0x0000, 0x0000}
 	};
 
-	return (letters[c - 'N'][row]);
+	return (letters[c - 'U'][row]);
 }
 
 static int	get_letter_k_to_t(char c, int row)

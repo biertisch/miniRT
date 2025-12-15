@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 22:56:42 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/15 11:56:24 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@
 # define CHAR_H		12
 # define OBJ_Y		50
 # define TRANSF_Y	250
-# define TRANSF1_Y	280
-# define TRANSF2_Y	470
-# define TRANSF3_Y	660
+# define TRANSF1_Y	300
+# define TRANSF2_Y	490
+# define TRANSF3_Y	680
 # define BUTTON_Y	850
 # define PADD_X		20
 # define PADD_Y		20
@@ -58,9 +58,9 @@
 # define RESET		"Reset"
 
 // transformation ranges
-# define TL_RANGE	20
-# define RT_RANGE	90
-# define RS_RANGE	2
+# define RANGE_TR	20
+# define RANGE_RT	90
+# define RANGE_RS	2 //check
 
 # define BUFF_SIZE	16
 
@@ -161,7 +161,6 @@ double	get_base_value(t_world *scene, int index, int slider);
 // sliders_utils.c
 void	init_sliders(t_slider **sliders, int object_count);
 int		free_sliders(t_slider **sliders, int size);
-t_vec3	*get_object_position(t_object *obj);
 int		slider_to_axis(int slider);
 
 // transform.c

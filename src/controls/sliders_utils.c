@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:36:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 15:46:08 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/15 11:33:31 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,6 @@ int	slider_to_axis(int slider)
 	return (-1);
 }
 
-t_vec3	*get_object_position(t_object *obj)
-{
-	if (obj->type == PLANE)
-		return (&obj->geo.plane.point);
-	if (obj->type == SPHERE)
-		return (&obj->geo.sphere.center);
-	if (obj->type == CYLINDER)
-		return (&obj->geo.cylinder.center);
-	return (NULL);
-}
-
 int	free_sliders(t_slider **sliders, int size)
 {
 	int	i;
@@ -48,25 +37,20 @@ int	free_sliders(t_slider **sliders, int size)
 	return (0);
 }
 
+// slider.y is defined when rendering, depending on object type
 void	init_sliders(t_slider **sliders, int object_count)
 {
 	int	i;
 	int	j;
-	int	y;
 
 	i = 0;
-	while (i < object_count)
+	while (i < object_count + 1) // local light
 	{
-		y = TRANSF_Y + 2 * ROW_H + PADD_Y;
 		j = 0;
 		while (j < SLIDER_COUNT)
 		{
 			sliders[i][j].x = (PANEL_W - SLIDER_W) / 2;
-			sliders[i][j].y = y;
 			sliders[i][j].knob_pos = 0.5;
-			y += SLIDER_H + ROW_H;
-			if (j == TRANSL_Z || j == ROTATE_Z)
-				y += ROW_H + 5;
 			j++;
 		}
 		i++;

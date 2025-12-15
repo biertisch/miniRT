@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 22:59:42 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/15 10:20:19 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ static int	allocate_panel(t_world *scene)
 	scene->panel = malloc(sizeof(*(scene->panel)));
 	if (!scene->panel)
 		return (perror("Error\nmalloc"), 0);
-	scene->panel->sliders = malloc(sizeof(t_slider *) * scene->num_objects);
+	scene->panel->sliders = malloc(sizeof(t_slider *) * scene->num_objects + 1); // local light
 	if (!scene->panel->sliders)
 		return (perror("Error\nmalloc"), 0);
 	i = 0;
-	while (i < scene->num_objects)
+	while (i < scene->num_objects + 1) // local light
 	{
 		scene->panel->sliders[i] = malloc(sizeof(t_slider) * SLIDER_COUNT);
 		if (!scene->panel->sliders[i])

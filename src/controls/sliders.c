@@ -6,65 +6,78 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:38:05 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 23:03:24 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/15 12:30:09 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "controls.h"
 
-static double	get_object_value(t_object *obj, int slider)
+static double	get_object_height(t_object *obj)
 {
-	t_vec3	*pos;
-	int		axis;
-
-	axis = slider_to_axis(slider);
-	if (axis != -1)
-	{
-		pos = get_object_position(obj);
-		if (!pos)
-			return (0);
-		return (((double *)pos)[axis]);
-	}
-	if (slider == RESIZE_D)
-	{
-		if (obj->type == SPHERE)
-			return (obj->geo.sphere.radius * 2);
-		if (obj->type == CYLINDER)
-			return (obj->geo.cylinder.radius * 2);
-	}
-	if (slider == RESIZE_H && obj->type == CYLINDER)
+	if (obj->type == CYLINDER)
 		return (obj->geo.cylinder.height);
+	else if (obj->type == CONE)
+		return (obj->geo.cone.height);
 	return (0);
 }
 
-static double	get_light_value(t_world *scene, int slider)
+static double	get_object_diameter(t_object *obj)
 {
-	int	axis;
-
-	axis = slider_to_axis(slider);
-	if (axis == -1)
-		return (0);
-	return (0); // update when light struct is updated
+	if (obj->type == SPHERE)
+		return (obj->geo.sphere.radius * 2);
+	else if (obj->type == CYLINDER)
+		return (obj->geo.cylinder.radius * 2);
+	else if (obj->type == CONE)
+		return (obj->geo.cone.radius * 2);
+	return (0);
 }
 
-static double	get_camera_value(t_world *scene, int slider)
+static double	get_object_orientation(t_object *obj, int axis)
 {
-	int	axis;
+	if (obj->type == PLANE)
+		return (((double *)&obj->geo.plane.normal)[axis]);
+	else if (obj->type == CYLINDER)
+		return (((double *)&obj->geo.cylinder.axis)[axis]);
+	else if (obj->type == CONE)
+		return (((double *)&obj->geo.cone.axis)[axis]);
+	return (0);
+}
 
-	axis = slider_to_axis(slider);
-	if (axis == -1)
-		return (0);
-	return (((double *)&scene->camera.lookfrom)[axis]);
+static double	get_object_position(t_object *obj, int axis)
+{
+	if (obj->type == PLANE)
+		return (((double *)&obj->geo.plane.point)[axis]);
+	else if (obj->type == SPHERE)
+		return (((double *)&obj->geo.sphere.center)[axis]);
+	else if (obj->type == CYLINDER)
+		return (((double *)&obj->geo.cylinder.center)[axis]);
+	else if (obj->type == CONE)
+		return (((double *)&obj->geo.cone.apex)[axis]);
+	return (0);
 }
 
 double	get_base_value(t_world *scene, int index, int slider)
 {
-	if (index < 0)
+	t_object	*obj;
+	int			axis;
+
+	if (index < 0 || index > scene->num_objects + 1) // spot light
 		return (0);
-	if (index == 0)
-		return (get_camera_value(scene, slider));
-	if (index == 1)
-		return (round(get_light_value(scene, slider)));
-	return (get_object_value(scene->objects[index - 2], slider));
+	axis = slider_to_axis(slider);
+	if (index == 0) // spot light
+	{
+		if (slider >= TRANSL_X && slider <= TRANSL_Z)
+			return (((double *)&scene->spot_light.position)[axis]);
+		return (0);
+	}
+	obj = scene->objects[index - 1];
+	if (slider >= TRANSL_X && slider <= TRANSL_Z)
+		return (get_object_position(obj, axis));
+	else if (slider >= ROTATE_X && slider <= ROTATE_Z)
+		return (get_object_orientation(obj, axis));
+	else if (slider == RESIZE_D)
+		return (get_object_diameter(obj));
+	else if (slider == RESIZE_H)
+		return (get_object_height(obj));
 	return (0);
 }
