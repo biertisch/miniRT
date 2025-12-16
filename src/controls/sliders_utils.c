@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:36:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 10:59:40 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:56:41 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,30 @@ int	slider_to_axis(int slider)
 	if (slider == TRANSL_Z || slider == ROTATE_Z)
 		return (2);
 	return (-1);
+}
+
+void	get_block_start_and_end(char *header, int *start, int *end)
+{
+	if (ft_strcmp(header, TRANSLATE) == 0)
+	{
+		*start = TRANSL_X;
+		*end = TRANSL_Z;
+	}
+	else if (ft_strcmp(header, ROTATE) == 0)
+	{
+		*start = ROTATE_X;
+		*end = ROTATE_Z;
+	}
+	else if (ft_strcmp(header, RESIZE) == 0)
+	{
+		*start = RESIZE_D;
+		*end = RESIZE_H;
+	}
+	else if (ft_strcmp(header, RESIZE2) == 0)
+	{
+		*start = RESIZE_D;
+		*end = RESIZE_D;
+	}
 }
 
 int	free_sliders(t_slider **sliders, int size)
@@ -44,7 +68,7 @@ void	init_slider_type(t_slider **sliders, int object_count)
 	int	j;
 
 	i = 0;
-	while (i < object_count + 1) // local light
+	while (i < object_count + 1) // light count
 	{
 		j = 0;
 		while (j < SLIDER_COUNT)

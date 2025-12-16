@@ -8,8 +8,8 @@ SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c int
 						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
 						parser/ft_ftoa.c controls/controls.c controls/drag.c controls/hooks.c\
 						controls/render_objects.c controls/render_sliders.c controls/render_text.c\
-						controls/render_text_utils.c controls/render_utils.c controls/render.c\
-						controls/scroll.c controls/sliders_utils.c controls/sliders.c controls/transform.c\
+						controls/bitmaps.c controls/render_utils.c controls/render.c controls/scroll.c\
+						controls/sliders_utils.c controls/values.c controls/transform.c\
 						controls/rotation.c controls/translation.c controls/resize.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a

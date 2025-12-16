@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:55:23 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 11:55:46 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:50:11 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	rotate_z(t_vec3 *result, t_vec3 base, double c, double s)
 
 static void	rotate_y(t_vec3 *result, t_vec3 base, double c, double s)
 {
-	result->x = base.x * c + base.z *s;
+	result->x = base.x * c + base.z * s;
 	result->y = base.y;
 	result->z = -base.x * s + base.z * c;
 }

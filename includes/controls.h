@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 11:59:35 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 14:04:40 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@
 # define WHITE		0xFFFFFF
 # define LIGHT_GRAY	0xC8C8C8
 # define GRAY		0x808080
-# define DARK_GRAY	0x646464
 # define BLACK		0x000000
 
 // titles
@@ -58,7 +57,7 @@
 # define RESET		"Reset"
 
 // transformation ranges
-# define RANGE_TR	20
+# define RANGE_TR	10
 # define RANGE_RT	90
 
 # define BUFF_SIZE	16
@@ -80,6 +79,12 @@ typedef struct s_data	t_data;
 typedef struct s_world	t_world;
 typedef struct s_object	t_object;
 
+typedef	struct s_point
+{
+	int	x;
+	int	y;
+}	t_point;
+
 typedef struct s_rect
 {
 	int	x;
@@ -87,6 +92,13 @@ typedef struct s_rect
 	int	width;
 	int	height;
 }	t_rect;
+
+typedef struct s_ref_vals
+{
+	double	curr;
+	double	min;
+	double	max;
+}	t_ref_vals;
 
 typedef struct s_slider
 {
@@ -113,6 +125,10 @@ typedef struct s_panel
 	t_slider	**sliders;
 }	t_panel;
 
+// bitmaps.c
+int		get_letter(char c, int row);
+int		get_symbol(char c, int row);
+
 // controls.c
 int		setup_controls(t_world *scene);
 
@@ -137,15 +153,11 @@ void	render_object_list(t_panel *panel, t_world *scene);
 void	render_sliders(t_panel *panel, t_world *scene);
 
 // render_text.c
-void	draw_string(t_data *img, const char *s, int x, int y, int color);
-void	draw_char(t_data *img, char c, int x, int y, int color);
-
-// render_text_utils.
-int		get_letter(char c, int row);
-int		get_symbol(char c, int row);
+void	draw_string(t_data *img, const char *s, t_point point, int color);
+void	draw_char(t_data *img, char c, t_point point, int color);
 
 // render_utils.c
-t_rect	rectangle(int x, int y, int width, int height);
+t_rect	rectangle(t_point point, int width, int height);
 void	fill_rectangle(t_panel *panel, t_rect rect, int color);
 void	outline_rectangle(t_panel *panel, t_rect rect, int color);
 void	draw_dashed_line(t_panel *panel, int y, int color);
@@ -161,12 +173,10 @@ void	select_object(t_panel *panel, int object_count, int y);
 void	scroll_up(t_panel *panel);
 void	scroll_down(t_panel *panel, int object_count);
 
-// sliders.c
-double	get_base_value(t_world *scene, int index, int slider);
-
 // sliders_utils.c
 void	init_slider_type(t_slider **sliders, int object_count);
 int		free_sliders(t_slider **sliders, int size);
+void	get_block_start_and_end(char *header, int *start, int *end);
 int		slider_to_axis(int slider);
 
 // transform.c
@@ -174,5 +184,8 @@ void	transform_scene(t_panel *panel, t_world *scene);
 
 // translation.c
 void	apply_translation(t_slider *sliders, t_vec3 *position);
+
+// values.c
+double	get_base_value(t_world *scene, int index, t_slider_type slider);
 
 #endif

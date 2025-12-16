@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/15 10:28:50 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:04:01 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	draw_object_row(t_panel *panel, t_world *scene, int index, int y)
 	char	*index_str;
 
 	index_str = ft_itoa(index);
-	if (!index_str) //issue warning
+	if (!index_str) //issue warning?
 		return ;
 	ft_strlcpy(name, index_str, BUFF_SIZE);
 	free(index_str);
@@ -37,7 +37,7 @@ static void	draw_object_row(t_panel *panel, t_world *scene, int index, int y)
 	else
 		ft_strlcat(name, get_type_name(scene->objects[index - 1]->type),
 			BUFF_SIZE);
-	draw_string(panel->buffer, name, PADD_X, y, WHITE);
+	draw_string(panel->buffer, name, (t_point){PADD_X, y}, WHITE);
 }
 
 static void	draw_highlight(t_panel *panel, int row, int y)
@@ -48,7 +48,7 @@ static void	draw_highlight(t_panel *panel, int row, int y)
 	x = PADD_X - 5;
 	y -= (ROW_H - CHAR_H) / 2;
 	width = panel->width - 2 * x;
-	outline_rectangle(panel, rectangle(x, y, width, ROW_H), GRAY);
+	outline_rectangle(panel, rectangle((t_point){x, y}, width, ROW_H), GRAY);
 }
 
 void	render_object_list(t_panel *panel, t_world *scene)
@@ -61,7 +61,7 @@ void	render_object_list(t_panel *panel, t_world *scene)
 	while (row < panel->visible_objs)
 	{
 		obj_index = panel->scroll_offset + row;
-		if (obj_index >= scene->num_objects + 1) // local light
+		if (obj_index >= scene->num_objects + 1) // light count
 			break ;
 		y = OBJ_Y + PADD_Y + ROW_H + row * ROW_H;
 		if (obj_index == panel->active_obj)

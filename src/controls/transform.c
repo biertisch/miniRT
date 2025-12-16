@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:33:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 12:07:51 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:51:45 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@ static void	transform_object(t_slider *sliders, t_object *object)
 	{
 		apply_translation(sliders, &object->geo.cylinder.center);
 		apply_rotation(sliders, &object->geo.cylinder.axis);
-		apply_resize(sliders, &object->geo.cylinder.radius, &object->geo.cylinder.height);
+		apply_resize(sliders, &object->geo.cylinder.radius,
+			&object->geo.cylinder.height);
 	}
 	else if (object->type == CONE)
 	{
 		apply_translation(sliders, &object->geo.cone.apex);
 		apply_rotation(sliders, &object->geo.cone.axis);
-		apply_resize(sliders, &object->geo.cone.radius, &object->geo.cone.height);
+		apply_resize(sliders, &object->geo.cone.radius,
+			&object->geo.cone.height);
 	}
 }
 
@@ -46,7 +48,7 @@ void	transform_scene(t_panel *panel, t_world *scene)
 	i = 0;
 	while (i < scene->num_objects)
 	{
-		transform_object(panel->sliders[i + 1], scene->objects[i]); // num spot lights
+		transform_object(panel->sliders[i + 1], scene->objects[i]); // light count
 		i++;
 	}
 	camera_render(&scene->camera, scene);

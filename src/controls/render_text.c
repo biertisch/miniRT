@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:08:09 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 22:57:39 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 12:53:12 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	get_char(char c, int row)
 	return (get_symbol(c, row));
 }
 
-void	draw_char(t_data *img, char c, int x, int y, int color)
+void	draw_char(t_data *img, char c, t_point point, int color)
 {
 	int	row;
 	int	col;
@@ -61,14 +61,14 @@ void	draw_char(t_data *img, char c, int x, int y, int color)
 		while (col < CHAR_W)
 		{
 			if (get_char(c, row) & (1 << (CHAR_W - 1 - col)))
-				my_mlx_pixel_put(img, x + col, y + row, color);
+				my_mlx_pixel_put(img, point.x + col, point.y + row, color);
 			col++;
 		}
 		row++;
 	}
 }
 
-void	draw_string(t_data *img, const char *s, int x, int y, int color)
+void	draw_string(t_data *img, const char *s, t_point point, int color)
 {
 	int	i;
 
@@ -77,7 +77,7 @@ void	draw_string(t_data *img, const char *s, int x, int y, int color)
 	i = 0;
 	while (s[i])
 	{
-		draw_char(img, s[i], x + i * CHAR_W, y, color);
+		draw_char(img, s[i], (t_point){point.x + i * CHAR_W, point.y}, color);
 		i++;
 	}
 }

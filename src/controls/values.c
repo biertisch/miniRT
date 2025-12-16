@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sliders.c                                          :+:      :+:    :+:   */
+/*   values.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:38:05 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/15 12:30:09 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:55:29 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,15 @@ static double	get_object_position(t_object *obj, int axis)
 	return (0);
 }
 
-double	get_base_value(t_world *scene, int index, int slider)
+double	get_base_value(t_world *scene, int index, t_slider_type slider)
 {
 	t_object	*obj;
 	int			axis;
 
-	if (index < 0 || index > scene->num_objects + 1) // spot light
+	if (index < 0 || index > scene->num_objects + 1) // light count
 		return (0);
 	axis = slider_to_axis(slider);
-	if (index == 0) // spot light
+	if (index == 0) // light count
 	{
 		if (slider >= TRANSL_X && slider <= TRANSL_Z)
 			return (((double *)&scene->spot_light.position)[axis]);

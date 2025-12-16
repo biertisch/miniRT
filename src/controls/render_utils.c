@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:30:57 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 23:05:13 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 13:02:19 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	fill_rectangle(t_panel *panel, t_rect rect, int color)
 	}
 }
 
-t_rect	rectangle(int x, int y, int width, int height)
+t_rect	rectangle(t_point point, int width, int height)
 {
-	return ((t_rect){x, y, width, height});
+	return ((t_rect){point.x, point.y, width, height});
 }
