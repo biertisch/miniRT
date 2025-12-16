@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 14:04:40 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 14:13:24 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ typedef struct s_data	t_data;
 typedef struct s_world	t_world;
 typedef struct s_object	t_object;
 
-typedef	struct s_point
+typedef struct s_point
 {
 	int	x;
 	int	y;
