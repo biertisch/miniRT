@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/15 11:56:24 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 11:59:35 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,14 @@
 # define TRANSFORM	"Transformations"
 # define TRANSLATE	"Translation (x,y,z)"
 # define ROTATE		"Rotation (x,y,z)"
-# define RESIZE		"Resizing (diameter,height)"
-# define RESIZE2	"Resizing (diameter)"
+# define RESIZE		"Resize (diameter,height)"
+# define RESIZE2	"Resize (diameter)"
 # define RENDER		"Render"
 # define RESET		"Reset"
 
 // transformation ranges
 # define RANGE_TR	20
 # define RANGE_RT	90
-# define RANGE_RS	2 //check
 
 # define BUFF_SIZE	16
 
@@ -75,7 +74,7 @@ typedef enum s_sliders
 	RESIZE_D,
 	RESIZE_H,
 	SLIDER_COUNT
-}	t_sliders;
+}	t_slider_type;
 
 typedef struct s_data	t_data;
 typedef struct s_world	t_world;
@@ -91,10 +90,11 @@ typedef struct s_rect
 
 typedef struct s_slider
 {
-	double	base_value;
-	double	knob_pos;
-	int		x;
-	int		y;
+	t_slider_type	type;
+	double			base_value;
+	double			knob_pos;
+	int				x;
+	int				y;
 }	t_slider;
 
 typedef struct s_panel
@@ -150,6 +150,12 @@ void	fill_rectangle(t_panel *panel, t_rect rect, int color);
 void	outline_rectangle(t_panel *panel, t_rect rect, int color);
 void	draw_dashed_line(t_panel *panel, int y, int color);
 
+// resize.c
+void	apply_resize(t_slider *sliders, double *radius, double *height);
+
+// rotation.c
+void	apply_rotation(t_slider *sliders, t_vec3 *direction);
+
 // scroll.c
 void	select_object(t_panel *panel, int object_count, int y);
 void	scroll_up(t_panel *panel);
@@ -159,11 +165,14 @@ void	scroll_down(t_panel *panel, int object_count);
 double	get_base_value(t_world *scene, int index, int slider);
 
 // sliders_utils.c
-void	init_sliders(t_slider **sliders, int object_count);
+void	init_slider_type(t_slider **sliders, int object_count);
 int		free_sliders(t_slider **sliders, int size);
 int		slider_to_axis(int slider);
 
 // transform.c
 void	transform_scene(t_panel *panel, t_world *scene);
+
+// translation.c
+void	apply_translation(t_slider *sliders, t_vec3 *position);
 
 #endif

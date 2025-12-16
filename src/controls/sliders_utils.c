@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:36:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/15 11:33:31 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 10:59:40 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	free_sliders(t_slider **sliders, int size)
 }
 
 // slider.y is defined when rendering, depending on object type
-void	init_sliders(t_slider **sliders, int object_count)
+void	init_slider_type(t_slider **sliders, int object_count)
 {
 	int	i;
 	int	j;
@@ -49,6 +49,7 @@ void	init_sliders(t_slider **sliders, int object_count)
 		j = 0;
 		while (j < SLIDER_COUNT)
 		{
+			sliders[i][j].type = j;
 			sliders[i][j].x = (PANEL_W - SLIDER_W) / 2;
 			sliders[i][j].knob_pos = 0.5;
 			j++;

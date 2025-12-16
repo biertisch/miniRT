@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/15 12:21:01 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 10:54:47 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	get_block_start_and_end(char *header, int *start, int *end)
 	else if (ft_strcmp(header, RESIZE2) == 0)
 	{
 		*start = RESIZE_D;
-		*end = RESIZE_H;
+		*end = RESIZE_D;
 	}
 }
 

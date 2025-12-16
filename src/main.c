@@ -249,47 +249,47 @@ int main(int argc, char **argv)
 	t_quad		lights;
 	t_object	light_obj;
 
-	if (argc != 2)
-	{
-		ft_putstr_fd("Usage: miniRT xxx.rt\n", STDERR_FILENO);
-		return (1);
-	}
+	// if (argc != 2)
+	// {
+	// 	ft_putstr_fd("Usage: miniRT xxx.rt\n", STDERR_FILENO);
+	// 	return (1);
+	// }
 
 	ft_memset(&wld, 0, sizeof(t_world));
 
-	if (!parser(&wld, argv[1]))
-		return (1);
+	// if (!parser(&wld, argv[1]))
+	// 	return (1);
 
-	// switch (9)
-	// {
-	// 	case 4:
-	// 		checkered_spheres(&wld);           // Scene with checkered spheres
-	// 		break;
-	// 	case 7:
-	// 		cornel_box_scene(&wld);            // Cornell box scene
-	// 		t_material	light_mat = get_material(LAMBERTIAN, get_color(15, 15, 15), 0.0);
-	// 		lights = new_quad(new_vec3(343, 554, 332), new_vec3(-130, 0, 0), new_vec3(0, 0, -105), light_mat);
-	// 		light_obj.type = QUAD;
-	// 		light_obj.geo.quad = lights;
-	// 		light_obj.hit = quad_hit;
-	// 		light_obj.pdf_value = quad_pdf_value;
-	// 		light_obj.random = quad_random;
-	// 		wld.lights = light_obj;
-	// 		break;
-	// 	case 8:
-	// 		base_scene1(&wld);
-	// 		wld.spot_light.position = new_vec3(440, 800, 400);
-	// 		wld.spot_light.brightness = 1;
-	// 		wld.spot_light.light_color = get_color(1.0, 1.0, 1.0);
+	switch (9)
+	{
+		case 4:
+			checkered_spheres(&wld);           // Scene with checkered spheres
+			break;
+		case 7:
+			cornel_box_scene(&wld);            // Cornell box scene
+			t_material	light_mat = get_material(LAMBERTIAN, get_color(15, 15, 15), 0.0);
+			lights = new_quad(new_vec3(343, 554, 332), new_vec3(-130, 0, 0), new_vec3(0, 0, -105), light_mat);
+			light_obj.type = QUAD;
+			light_obj.geo.quad = lights;
+			light_obj.hit = quad_hit;
+			light_obj.pdf_value = quad_pdf_value;
+			light_obj.random = quad_random;
+			wld.lights = light_obj;
+			break;
+		case 8:
+			base_scene1(&wld);
+			wld.spot_light.position = new_vec3(440, 800, 400);
+			wld.spot_light.brightness = 1;
+			wld.spot_light.light_color = get_color(1.0, 1.0, 1.0);
 
-	// 		break;
-	// 	case 9:
-	// 		base_plane_sphere_scene(&wld);
-	// 		break;
-	// 	default:
-	// 		checkered_spheres(&wld);
-	// 		break;
-	// }
+			break;
+		case 9:
+			base_plane_sphere_scene(&wld);
+			break;
+		default:
+			checkered_spheres(&wld);
+			break;
+	}
 
 	camera_initialize(&wld.camera);
 	wld.mlx = mlx_init();

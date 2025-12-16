@@ -255,6 +255,9 @@ t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 
 void	camera_render(t_camera *camera, t_world *wld)
 {
+	//debugging
+	printf("ligth current position x=%f y=%f z=%f\n", wld->spot_light.position.x, wld->spot_light.position.y, wld->spot_light.position.z);
+
 	t_data img;
 
 	img.img = mlx_new_image(wld->mlx, camera->image_width, camera->image_height);

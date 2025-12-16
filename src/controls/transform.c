@@ -6,60 +6,49 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:33:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/15 11:45:41 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 12:07:51 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "controls.h"
 
-static double	commit_slider(t_slider *slider, int range)
+static void	transform_object(t_slider *sliders, t_object *object)
 {
-	double	value;
-
-	value = slider->base_value + (slider->knob_pos - 0.5) * range;
-	slider->base_value = value;
-	slider->knob_pos = 0.5;
-	return (value);
-}
-
-static void	transform_objects(t_slider **sliders, t_object **objects, int object_count)
-{
-	int	i;
-
-	i = 0;
-	while (i < object_count)
+	if (object->type == PLANE)
 	{
-		if (objects[i]->type == CYLINDER)
-		{
-			objects[i]->geo.cylinder.center.x = commit_slider(&sliders[i][TRANSL_X], RANGE_TR);
-			objects[i]->geo.cylinder.center.y = commit_slider(&sliders[i][TRANSL_Y], RANGE_TR);
-			objects[i]->geo.cylinder.center.z = commit_slider(&sliders[i][TRANSL_Z], RANGE_TR);
-			// rotate axis vector along x, y, and z
-			objects[i]->geo.cylinder.radius = commit_slider(&sliders[i][RESIZE_D], RANGE_RS) / 2;
-			objects[i]->geo.cylinder.height = commit_slider(&sliders[i][RESIZE_H], RANGE_RS);
-		}
-		else if (objects[i]->type == SPHERE)
-		{
-			objects[i]->geo.sphere.center.x = commit_slider(&sliders[i][TRANSL_X], RANGE_TR);
-			objects[i]->geo.sphere.center.y = commit_slider(&sliders[i][TRANSL_Y], RANGE_TR);
-			objects[i]->geo.sphere.center.z = commit_slider(&sliders[i][TRANSL_Z], RANGE_TR);
-			objects[i]->geo.sphere.radius = commit_slider(&sliders[i][RESIZE_D], RANGE_RS) / 2;
-		}
-		else if (objects[i]->type == PLANE)
-		{
-			objects[i]->geo.plane.point.x = commit_slider(&sliders[i][TRANSL_X], RANGE_TR);
-			objects[i]->geo.plane.point.y = commit_slider(&sliders[i][TRANSL_Y], RANGE_TR);
-			objects[i]->geo.plane.point.z = commit_slider(&sliders[i][TRANSL_Z], RANGE_TR);
-			// rotate normal vector along x, y, and z
-		}
-		i++;
+		apply_translation(sliders, &object->geo.plane.point);
+		apply_rotation(sliders, &object->geo.plane.normal);
+	}
+	else if (object->type == SPHERE)
+	{
+		apply_translation(sliders, &object->geo.sphere.center);
+		apply_resize(sliders, &object->geo.sphere.radius, NULL);
+	}
+	else if (object->type == CYLINDER)
+	{
+		apply_translation(sliders, &object->geo.cylinder.center);
+		apply_rotation(sliders, &object->geo.cylinder.axis);
+		apply_resize(sliders, &object->geo.cylinder.radius, &object->geo.cylinder.height);
+	}
+	else if (object->type == CONE)
+	{
+		apply_translation(sliders, &object->geo.cone.apex);
+		apply_rotation(sliders, &object->geo.cone.axis);
+		apply_resize(sliders, &object->geo.cone.radius, &object->geo.cone.height);
 	}
 }
 
 void	transform_scene(t_panel *panel, t_world *scene)
 {
-	//transform light
-	transform_objects(panel->sliders + 2, scene->objects, scene->num_objects);
+	int	i;
+
+	apply_translation(panel->sliders[0], &scene->spot_light.position);
+	i = 0;
+	while (i < scene->num_objects)
+	{
+		transform_object(panel->sliders[i + 1], scene->objects[i]); // num spot lights
+		i++;
+	}
 	camera_render(&scene->camera, scene);
 	render_controls(panel, scene);
 }

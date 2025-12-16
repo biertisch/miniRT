@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:16:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 23:03:54 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 10:58:46 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	reset_panel(t_panel *panel, int object_count)
 	panel->dragging = 0;
 	panel->drag_start_x = PANEL_W / 2;
 	panel->drag_start_norm = 0.5;
-	init_sliders(panel->sliders, object_count);
+	init_slider_type(panel->sliders, object_count);
 }
 
 int	controls_mouse_release_hook(int button, int x, int y, void *param)
