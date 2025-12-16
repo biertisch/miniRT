@@ -53,6 +53,23 @@ void	camera_action(void (*func)(t_camera *, float), t_world *wld, float val)
 	camera_render(&wld->camera, wld);
 }
 
+void	resize_obj(t_world *wld, float scale)
+{
+	if(wld->current_obj)
+	{
+		if(wld->current_obj->type == SPHERE){
+			wld->current_obj->geo.sphere.radius *= scale;
+			camera_render(&wld->camera, wld);
+		}else if (wld->current_obj->type == CYLINDER){
+			wld->current_obj->geo.cylinder.radius *= scale;
+			wld->current_obj->geo.cylinder.height *= scale;
+			camera_render(&wld->camera, wld);
+		}
+	}
+	else
+		printf("Use mouse to select object first.\n");
+}
+
 static void	do_action(int keycode, t_world *wld)
 {
 	if (keycode == 65361)
@@ -88,37 +105,10 @@ static void	do_action(int keycode, t_world *wld)
 		printf("📷 Print Info:\n");
 		printf("  Camera Position: (%.2f, %.2f, %.2f)\n", wld->camera.lookfrom.x, wld->camera.lookfrom.y, wld->camera.lookfrom.z);
 		printf("  Camera Target:   (%.2f, %.2f, %.2f)\n", wld->camera.lookat.x, wld->camera.lookat.y, wld->camera.lookat.z);	
-	}else if (keycode == '='){
-		if(wld->current_obj){
-			if(wld->current_obj->type == SPHERE){
-				wld->current_obj->geo.sphere.radius *= 1.1;
-				// camera_initialize(&wld->camera);
-				camera_render(&wld->camera, wld);
-			}else if (wld->current_obj->type == CYLINDER){
-				wld->current_obj->geo.cylinder.radius *= 1.1;
-				wld->current_obj->geo.cylinder.height *= 1.1;
-				// camera_initialize(&wld->camera);
-				camera_render(&wld->camera, wld);
-			}
-		}else{
-			printf("Use mouse to select object first.\n");
-		}
-	}else if (keycode == '-'){
-		if(wld->current_obj){
-			if(wld->current_obj->type == SPHERE){
-				wld->current_obj->geo.sphere.radius *= 0.9;
-				// camera_initialize(&wld->camera);
-				camera_render(&wld->camera, wld);
-			}else if (wld->current_obj->type == CYLINDER){
-				wld->current_obj->geo.cylinder.radius *= 0.9;
-				wld->current_obj->geo.cylinder.height *= 0.9;
-				// camera_initialize(&wld->camera);
-				camera_render(&wld->camera, wld);
-			}
-		}else{
-			printf("Use mouse to select object first.\n");
-		}
-	}
+	}else if (keycode == '=')
+		resize_obj(wld, 1.1f);
+	else if (keycode == '-')
+		resize_obj(wld, 0.9f);
 }
 
 int	handle_pressed(int keycode, void *param)
@@ -126,7 +116,8 @@ int	handle_pressed(int keycode, void *param)
 	t_world *wld;
 
 	wld = (t_world *)param;
-	printf("Key pressed: %d\n", keycode);
+	if (DEBUG)
+		printf("Key pressed: %d\n", keycode);
 	if (keycode == 65307)
 	{
 		printf("ESC❌\n");

@@ -118,7 +118,6 @@ void	reg_hook(t_world *wld)
 	mlx_hook(wld->win, DestroyNotify, 0, handle_destroy, wld);
 	mlx_mouse_hook(wld->win, mouse_hook, wld);
 	mlx_hook(wld->win, 4, 1L << 2, mouse_press, wld);
-	// mlx_loop_hook(wld->mlx, loop_hook, wld);
 }
 
 void	docoloralignment(t_world *wld)
@@ -139,7 +138,7 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	ft_memset(&wld, 0, sizeof(t_world));
-	if (9)
+	if (0)
 		use_test_scene(&wld, 9);
 	else
 	{
