@@ -233,7 +233,7 @@ void	base_scene1(t_world *wld)
 
 	t_sphere	sphere1 = new_sphere(new_vec3(290, 50, 190), 50, metal);
 	add_object_to_world(wld, SPHERE, &sphere1);
-	
+
 	t_sphere	light_sphere = new_sphere(new_vec3(440, 500, 400), 10, light);
 	add_object_to_world(wld, SPHERE, &light_sphere);
 
@@ -269,7 +269,7 @@ void	base_plane_sphere_scene(t_world *wld)
 
 	t_sphere	sphere1 = new_sphere(new_vec3(0, 1, 0), 1, c_sphere);
 	add_object_to_world(wld, SPHERE, &sphere1);
-	
+
 	t_sphere	sphere2 = new_sphere(new_vec3(5, 1, 0), 1, metal);
 	add_object_to_world(wld, SPHERE, &sphere2);
 
@@ -307,51 +307,57 @@ void	base_plane_sphere_scene(t_world *wld)
 	wld->ambient_ratio = 0.3;
 }
 
-int main(void)
+double	normalize_color(int color_channel)
+{
+	return (color_channel / 255.0);
+}
+
+void	docoloralignment(t_world *wld)
+{
+	wld->ambient = get_normalize_color(wld->ambient);
+	wld->spot_light.light_color = get_normalize_color(wld->spot_light.light_color);
+}
+
+void	use_test_scene(t_world *wld, int scene_id)
+{
+	switch (scene_id)
+	{
+		case 4:
+			checkered_spheres(wld);
+			break;
+		case 8:
+			base_scene1(wld);
+			break;
+		case 9:
+			base_plane_sphere_scene(wld);
+			break;
+		default:
+			checkered_spheres(wld);
+			break;
+	}
+}
+
+int main(int argc, char **argv)
 {
 	t_world		wld;
 	t_quad		lights;
 	t_object	light_obj;
 
-	ft_memset(&wld, 0, sizeof(t_world));
-	
-	switch (9)
+	if (argc != 2)
 	{
-		case 4:
-			checkered_spheres(&wld);           // Scene with checkered spheres
-			break;
-		case 7:
-			cornel_box_scene(&wld);            // Cornell box scene
-			t_material	light_mat = get_material(LAMBERTIAN, get_color(15, 15, 15), 0.0);
-			lights = new_quad(new_vec3(343, 554, 332), new_vec3(-130, 0, 0), new_vec3(0, 0, -105), light_mat);
-			light_obj.type = QUAD;
-			light_obj.geo.quad = lights;
-			light_obj.hit = quad_hit;
-			light_obj.pdf_value = quad_pdf_value;
-			light_obj.random = quad_random;
-			wld.lights = light_obj;
-			break;
-		case 8:
-			base_scene1(&wld);
-			wld.spot_light.position = new_vec3(440, 800, 400);
-			wld.spot_light.brightness = 1;
-			wld.spot_light.light_color = get_color(1.0, 1.0, 1.0);
-
-			break;
-		case 9:
-			base_plane_sphere_scene(&wld);
-			break;
-		default:
-			checkered_spheres(&wld);
-			break;
+		ft_putstr_fd("Usage: miniRT xxx.rt\n", STDERR_FILENO);
+		return (1);
 	}
-
+	ft_memset(&wld, 0, sizeof(t_world));
+	if (!parser(&wld, argv[1]))
+		return (1);
+	docoloralignment(&wld);
 	camera_initialize(&wld.camera);
 	wld.mlx = mlx_init();
 	wld.win = mlx_new_window(wld.mlx, wld.camera.image_width, wld.camera.image_height, "MiniRT");
 	reg_hook(&wld);
-	printf("Starting render...\n");
 	camera_render(&(wld.camera), &wld);
+	// setup_controls(&wld);
 	mlx_loop(wld.mlx);
 	return (0);
 }

@@ -9,11 +9,16 @@
 # include "vec3.h"
 # include "color.h"
 # include "parser.h"
+# include "controls.h"
 
 # define WIDTH 400
 # define HEIGHT 600
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.05
+
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
 
 enum
 {
@@ -90,7 +95,7 @@ typedef enum e_material_type
 	DIFFUSE_LIGHT
 } t_mat_type;
 
-typedef struct s_mat_limb
+typedef struct s_mat_lamb
 {
 	t_texture	*tex;
 }	t_mat_lamb;
@@ -174,7 +179,8 @@ typedef enum e_geometry_type
 	PLANE,
 	CYLINDER,
 	BVH_NODE,
-	QUAD
+	QUAD,
+	CONE
 } t_geo_type;
 
 typedef struct s_quad
@@ -189,13 +195,15 @@ typedef struct s_quad
 	double		area;
 } t_quad;
 
-typedef struct s_plane {
+typedef struct s_plane
+{
     t_vec3 point;
     t_vec3 normal;
     t_material mat;
 } t_plane;
 
-typedef struct s_cylinder {
+typedef struct s_cylinder
+{
 	t_vec3		center;
 	t_vec3		axis;
 	double		radius;
@@ -210,6 +218,15 @@ typedef struct s_sphere
 	t_material	mat;
 }	t_sphere;
 
+typedef struct s_cone
+{
+	t_vec3		apex;
+	t_vec3		axis;
+	double		radius;
+	double		height;
+	t_material	mat;
+}	t_cone;
+
 typedef struct s_object t_object;
 
 typedef union u_geo_data
@@ -218,6 +235,7 @@ typedef union u_geo_data
 	t_plane		plane;
 	t_cylinder	cylinder;
 	t_quad		quad;
+	t_cone		cone;
 }	t_geo_data;
 
 
@@ -276,7 +294,7 @@ typedef struct s_spot_light
 {
 	t_vec3		position;
 	double		brightness;
-	t_color		light_color;
+	t_color		light_color; //variable name can be abbreviate to color
 }	t_s_light;
 
 typedef struct s_world
@@ -292,6 +310,7 @@ typedef struct s_world
 	t_s_light	spot_light;
 	t_object	lights;
 	t_object	*current_obj;
+	t_panel		*panel;
 }	t_world;
 
 //vec3.c;
@@ -321,6 +340,7 @@ void free_all_the_world(t_world *wld);
 
 // color.c
 t_color	get_color(double r, double g, double b);
+t_color	get_normalize_color(t_color color);
 void	write_color(t_data *img, int x, int y, t_color color);
 t_color	color_add(t_color a, t_color b);
 t_color	color_multiply_number(t_color color, double scalar);
@@ -410,5 +430,8 @@ t_vec3	onb_w(t_onb onb);
 //pdf.c
 t_cosine_pdf	cosine_pdf_new(t_vec3 w);
 t_hitable_pdf	hitable_pdf_new(t_object *obj, t_vec3 origin);
+
+//cone.c
+t_cone			new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
 
 #endif

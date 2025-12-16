@@ -34,6 +34,16 @@ t_color	get_color(double r, double g, double b)
 	return (color);
 }
 
+t_color	get_normalize_color(t_color color)
+{
+	t_color	norm_color;
+
+	norm_color.r = (color.r / 255.0);
+	norm_color.g = (color.g / 255.0);
+	norm_color.b = (color.b / 255.0);
+	return (norm_color);
+}
+
 t_color	color_add(t_color a, t_color b)
 {
 	t_color	result;

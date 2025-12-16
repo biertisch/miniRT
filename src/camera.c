@@ -204,7 +204,7 @@ t_color ray_color_v0(t_ray *ray, int depth, t_world *world)
 		color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 		// printf("Emitted color: R=%f, G=%f, B=%f\n", color_from_emission.r, color_from_emission.g, color_from_emission.b);
 		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
-		
+
 		// if (world_hit(world->bvh_root, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
 		if (world_hit(world, &r_2light, new_interval(0.001, 0.0000001 + vec3_length(vec3_subtract(world->spot_light.position, rec.p))), &temp_rec))
 		{
@@ -232,6 +232,8 @@ t_color ray_color_v0(t_ray *ray, int depth, t_world *world)
 
 void	output_camara_info(t_camera *camera)
 {
+	if (DEBUG == 0)
+		return ;
 	printf("Camera Info:\n");
 	printf("  Lookfrom: (%f, %f, %f)\n", camera->lookfrom.x, camera->lookfrom.y, camera->lookfrom.z);
 	printf("  Lookat:   (%f, %f, %f)\n", camera->lookat.x, camera->lookat.y, camera->lookat.z);
@@ -294,7 +296,7 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 		// r = rt_ray(rec.p, direction);
 		// return (color_multiply(ray_color(&r, depth-1, world), 0.5));
 	}
-	
+
 	unit_direction = vec3_normalize(ray->direction);
 	double	a;
 	a = 0.5 * (unit_direction.y + 1.0);
@@ -316,7 +318,7 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 		return (color_from_emission);
 	else if (rec.mat.type == DIFFUSE_LIGHT)
 		return (color_from_emission);
-	
+
 	if (rec.mat.type ==METAL || rec.mat.type == DIELECTRIC)
 	{
 		return (color_multiply_vector(attenuation, ray_color(&scattered, depth - 1, world, lights)));
@@ -328,16 +330,16 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	to_light = unit_vector(to_light);
 	if (vec3_dot(to_light, rec.normal) < 0)
 		return (color_from_emission);
-	
+
 	double	light_area=(343-213)*(332-227);
 	double	light_cosine = fabs(to_light.y);
 	if (light_cosine < 0.000001)
 		return (color_from_emission);
-		
+
 	// pdf_value = 1/(2 * M_PI);
 	pdf_value = distance_squared/(light_cosine * light_area);
 	scattered = rt_ray(rec.p, to_light);*/
-	
+
 	t_hitable_pdf	light_pdf;
 	light_pdf = hitable_pdf_new(&lights, rec.p);
 	scattered = rt_ray(rec.p, light_pdf.base.generate((t_pdf *)&light_pdf));
@@ -360,10 +362,11 @@ void	camera_initialize(t_camera *camera)
 {
 	int	image_height;
 
-	camera->aspect_ratio = 16.0/9.0;
-	camera->image_width = 800;
-	camera->samples_per_pixel = 1;
-	camera->max_depth = 5;
+	camera->aspect_ratio = 1;
+	camera->image_width = 600;
+	camera->samples_per_pixel = 1;//default 100
+	camera->max_depth = 5;//default 50
+	camera->lookat = new_vec3(0,0,1);
 	image_height = camera->image_width / camera->aspect_ratio;
 	if (image_height < 1)
 		image_height = 1;

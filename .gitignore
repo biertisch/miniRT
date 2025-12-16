@@ -1,5 +1,8 @@
 *.o
 libft/*.o
 libft/*.d
+libft/*.a
 objs/
 miniRT
+*.pdf
+.vscode
