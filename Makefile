@@ -6,7 +6,7 @@ SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c int
 						parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
 						parser/parse_object_fields.c parser/parse_scalar.c parser/parse_vector.c\
 						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
-						parser/ft_ftoa.c)
+						parser/ft_ftoa.c scene.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 

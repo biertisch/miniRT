@@ -6,6 +6,7 @@
 # include <math.h>
 # include <string.h>
 # include "mlx.h"
+# include "libft.h"
 # include "vec3.h"
 # include "color.h"
 # include "parser.h"
@@ -266,8 +267,8 @@ typedef struct s_camera
 	t_vec3	pixel00_loc;
 	t_vec3	pixel_delta_u;
 	t_vec3	pixel_delta_v;
-	int		samples_per_pixel;
-	double	pixel_samples_scale;
+	// int		samples_per_pixel;
+	// double	pixel_samples_scale;
 	int		max_depth;
 	double	vfov;
 	t_vec3	lookfrom;
@@ -276,8 +277,9 @@ typedef struct s_camera
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
-	int		sqrt_spp;
-	double	recip_sqrt_spp;
+	// int		sqrt_spp;
+	// double	recip_sqrt_spp;
+	int		initialized;
 }	t_camera;
 
 struct s_object
@@ -433,5 +435,8 @@ t_hitable_pdf	hitable_pdf_new(t_object *obj, t_vec3 origin);
 
 //cone.c
 t_cone			new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
+
+//scene.c
+void	use_test_scene(t_world *wld, int scene_no);
 
 #endif
