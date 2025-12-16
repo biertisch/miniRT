@@ -260,7 +260,7 @@ int main(int argc, char **argv)
 	// if (!parser(&wld, argv[1]))
 	// 	return (1);
 
-	switch (9)
+	switch (8)
 	{
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres

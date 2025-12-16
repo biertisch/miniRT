@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 14:13:24 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:33:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,10 @@ typedef struct s_panel
 int		get_letter(char c, int row);
 int		get_symbol(char c, int row);
 
+// buttons.c
+void	check_button(t_world *scene, int x);
+void	transform_scene(t_panel *panel, t_world *scene);
+
 // controls.c
 int		setup_controls(t_world *scene);
 
@@ -139,9 +143,11 @@ void	detect_active_slider(t_panel *panel, int x, int y);
 void	move_knob(t_panel *panel, t_world *scene, int x);
 
 // hooks.c
-int		controls_mouse_hook(int button, int x, int y, void *param);
-int		controls_mouse_move_hook(int x, int y, void *param);
-int		controls_mouse_release_hook(int button, int x, int y, void *param);
+void	setup_controls_hooks(t_panel *panel, t_world *scene);
+int		controls_mouse_press(int button, int x, int y, void *param);
+int		controls_mouse_move(int x, int y, void *param);
+int		controls_mouse_release(int button, int x, int y, void *param);
+int		controls_mouse_scroll(int button, int x, int y, void *param);
 
 // render.c
 void	render_controls(t_panel *panel, t_world *scene);
@@ -178,9 +184,6 @@ void	init_slider_type(t_slider **sliders, int object_count);
 int		free_sliders(t_slider **sliders, int size);
 void	get_block_start_and_end(char *header, int *start, int *end);
 int		slider_to_axis(int slider);
-
-// transform.c
-void	transform_scene(t_panel *panel, t_world *scene);
 
 // translation.c
 void	apply_translation(t_slider *sliders, t_vec3 *position);

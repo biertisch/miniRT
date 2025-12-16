@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   transform.c                                        :+:      :+:    :+:   */
+/*   buttons.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:33:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 13:51:45 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:17:05 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,26 @@ void	transform_scene(t_panel *panel, t_world *scene)
 	}
 	camera_render(&scene->camera, scene);
 	render_controls(panel, scene);
+}
+
+static void	reset_panel(t_panel *panel, int object_count)
+{
+	panel->active_slider = -1;
+	panel->dragging = 0;
+	panel->drag_start_x = PANEL_W / 2;
+	panel->drag_start_norm = 0.5;
+	init_slider_type(panel->sliders, object_count);
+}
+
+void	check_button(t_world *scene, int x)
+{
+	int	b1_x;
+	int	b2_x;
+
+	b1_x = (scene->panel->width / 2 - BUTTON_W) / 2;
+	b2_x = b1_x + scene->panel->width / 2;
+	if (x >= b1_x && x < b1_x + BUTTON_W)
+		transform_scene(scene->panel, scene);
+	else if (x >= b2_x && x < b2_x + BUTTON_W)
+		reset_panel(scene->panel, scene->num_objects);
 }

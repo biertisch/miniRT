@@ -15,6 +15,8 @@
 # define HEIGHT 600
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.05
+# define ESC	65307
+# define ENTER	65293
 
 enum
 {
@@ -332,7 +334,8 @@ t_vec3	vec3_clamp(t_vec3 v, double min, double max);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //main.c
-void free_all_the_world(t_world *wld);
+int		handle_destroy(void *param);
+void 	free_all_the_world(t_world *wld);
 
 // color.c
 t_color	get_color(double r, double g, double b);

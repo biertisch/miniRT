@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 14:12:03 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 14:53:33 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ static void	render_slider_block(t_panel *panel, t_world *scene, char *header,
 		fill_rectangle(panel, rectangle(point, SLIDER_W, SLIDER_H), GRAY);
 		point.x += 2 + panel->sliders[obj][i].knob_pos
 			* (SLIDER_W - KNOB_W - 4);
+		point.y += 2;
 		fill_rectangle(panel, rectangle(point, KNOB_W, KNOB_H), BLACK);
 		render_values(panel, scene, &panel->sliders[obj][i], point.y);
 		point.y += SLIDER_H + ROW_H;

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 13:48:33 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 14:40:48 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ int	setup_controls(t_world *scene)
 		return (0);
 	}
 	render_controls(panel, scene);
-	mlx_hook(panel->win, 6, 1L << 6, controls_mouse_move_hook, scene);
-	mlx_hook(panel->win, 5, 1L << 3, controls_mouse_release_hook, panel);
-	mlx_mouse_hook(panel->win, controls_mouse_hook, scene);
+	setup_controls_hooks(panel, scene);
 	return (1);
 }
