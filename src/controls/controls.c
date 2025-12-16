@@ -6,13 +6,11 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 14:40:48 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:02:23 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-// free panel
 
 static int	create_buffer(t_panel *panel, t_world *scene)
 {
@@ -39,7 +37,7 @@ static int	create_buffer(t_panel *panel, t_world *scene)
 	return (1);
 }
 
-static void	init_panel(t_panel *panel, int object_count)
+static void	init_panel(t_panel *panel, t_world *scene)
 {
 	panel->width = PANEL_W;
 	panel->height = PANEL_H;
@@ -50,7 +48,7 @@ static void	init_panel(t_panel *panel, int object_count)
 	panel->dragging = 0;
 	panel->drag_start_x = PANEL_W / 2;
 	panel->drag_start_norm = 0.5;
-	init_slider_type(panel->sliders, object_count);
+	init_sliders(panel->sliders, scene);
 }
 
 static int	allocate_panel(t_world *scene)
@@ -70,7 +68,7 @@ static int	allocate_panel(t_world *scene)
 		if (!scene->panel->sliders[i])
 		{
 			perror("Error\nmalloc");
-			return (free_sliders(scene->panel->sliders, i));
+			return (free_sliders(&scene->panel->sliders, i));
 		}
 		i++;
 	}
@@ -83,7 +81,7 @@ int	setup_controls(t_world *scene)
 
 	if (!allocate_panel(scene))
 		return (0);
-	init_panel(scene->panel, scene->num_objects);
+	init_panel(scene->panel, scene);
 	panel = scene->panel;
 	panel->win = mlx_new_window(
 			scene->mlx, panel->width, panel->height, "Control Panel");
@@ -93,10 +91,7 @@ int	setup_controls(t_world *scene)
 		return (0);
 	}
 	if (!create_buffer(panel, scene))
-	{
-		//free panel or integrate into general cleanup function
 		return (0);
-	}
 	render_controls(panel, scene);
 	setup_controls_hooks(panel, scene);
 	return (1);

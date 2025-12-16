@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:38:05 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 13:55:29 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:33:43 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static double	get_object_position(t_object *obj, int axis)
 	return (0);
 }
 
-double	get_base_value(t_world *scene, int index, t_slider_type slider)
+double	get_initial_value(t_world *scene, int index, t_slider_type slider)
 {
 	t_object	*obj;
 	int			axis;

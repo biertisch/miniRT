@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 15:33:26 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:34:43 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,17 +93,11 @@ typedef struct s_rect
 	int	height;
 }	t_rect;
 
-typedef struct s_ref_vals
-{
-	double	curr;
-	double	min;
-	double	max;
-}	t_ref_vals;
-
 typedef struct s_slider
 {
 	t_slider_type	type;
 	double			base_value;
+	double			initial_value;
 	double			knob_pos;
 	int				x;
 	int				y;
@@ -128,10 +122,6 @@ typedef struct s_panel
 // bitmaps.c
 int		get_letter(char c, int row);
 int		get_symbol(char c, int row);
-
-// buttons.c
-void	check_button(t_world *scene, int x);
-void	transform_scene(t_panel *panel, t_world *scene);
 
 // controls.c
 int		setup_controls(t_world *scene);
@@ -168,6 +158,9 @@ void	fill_rectangle(t_panel *panel, t_rect rect, int color);
 void	outline_rectangle(t_panel *panel, t_rect rect, int color);
 void	draw_dashed_line(t_panel *panel, int y, int color);
 
+// reset.c
+void	reset_scene(t_panel *panel, t_world *scene);
+
 // resize.c
 void	apply_resize(t_slider *sliders, double *radius, double *height);
 
@@ -180,15 +173,20 @@ void	scroll_up(t_panel *panel);
 void	scroll_down(t_panel *panel, int object_count);
 
 // sliders_utils.c
-void	init_slider_type(t_slider **sliders, int object_count);
-int		free_sliders(t_slider **sliders, int size);
+void	init_sliders(t_slider **sliders, t_world *scene);
+void	reset_sliders(t_slider **sliders, int object_count);
+int		free_sliders(t_slider ***sliders, int size);
 void	get_block_start_and_end(char *header, int *start, int *end);
 int		slider_to_axis(int slider);
+
+// transform.c
+void	check_button(t_world *scene, int x);
+void	transform_scene(t_panel *panel, t_world *scene);
 
 // translation.c
 void	apply_translation(t_slider *sliders, t_vec3 *position);
 
 // values.c
-double	get_base_value(t_world *scene, int index, t_slider_type slider);
+double	get_initial_value(t_world *scene, int index, t_slider_type slider);
 
 #endif

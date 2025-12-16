@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 14:53:33 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:37:57 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,42 +32,34 @@ static void	draw_value(t_panel *panel, double value, int y, int pos)
 	free(str);
 }
 
-static t_ref_vals	get_reference_values(t_slider_type type, double base)
-{
-	t_ref_vals	ref;
-
-	if (type >= TRANSL_X && type <= TRANSL_Z)
-	{
-		ref.curr = base;
-		ref.max = ref.curr + RANGE_TR / 2;
-		ref.min = ref.curr - RANGE_TR / 2;
-	}
-	else if (type >= ROTATE_X && type <= ROTATE_Z)
-	{
-		ref.curr = 0;
-		ref.max = RANGE_RT / 2;
-		ref.min = RANGE_RT / 2;
-	}
-	else if (type == RESIZE_D || type == RESIZE_H)
-	{
-		ref.curr = 1;
-		ref.min = 0.5;
-		ref.max = 2;
-	}
-	return (ref);
-}
-
 static void	render_values(t_panel *panel, t_world *scene, t_slider *slider,
 	int y)
 {
-	t_ref_vals	ref;
+	double	curr;
+	double	min;
+	double	max;
 
-	slider->base_value = get_base_value(scene, panel->active_obj, slider->type);
-	ref = get_reference_values(slider->type, slider->base_value);
-	y += SLIDER_H + 3;
-	draw_value(panel, ref.min, y, -1); // check return for failed malloc?
-	draw_value(panel, ref.curr, y, 0);
-	draw_value(panel, ref.max, y, 1);
+	if (slider->type >= TRANSL_X && slider->type <= TRANSL_Z)
+	{
+		curr = slider->base_value;
+		max = curr + RANGE_TR / 2;
+		min = curr - RANGE_TR / 2;
+	}
+	else if (slider->type >= ROTATE_X && slider->type <= ROTATE_Z)
+	{
+		curr = 0;
+		max = RANGE_RT / 2;
+		min = RANGE_RT / 2;
+	}
+	else if (slider->type == RESIZE_D || slider->type == RESIZE_H)
+	{
+		curr = 1;
+		min = 0.5;
+		max = 2;
+	}
+	draw_value(panel, min, y, -1); // check return for failed malloc?
+	draw_value(panel, curr, y, 0);
+	draw_value(panel, max, y, 1);
 }
 
 static void	render_slider_block(t_panel *panel, t_world *scene, char *header,
@@ -92,7 +84,8 @@ static void	render_slider_block(t_panel *panel, t_world *scene, char *header,
 			* (SLIDER_W - KNOB_W - 4);
 		point.y += 2;
 		fill_rectangle(panel, rectangle(point, KNOB_W, KNOB_H), BLACK);
-		render_values(panel, scene, &panel->sliders[obj][i], point.y);
+		render_values(panel, scene, &panel->sliders[obj][i],
+			point.y + SLIDER_H + 3);
 		point.y += SLIDER_H + ROW_H;
 		i++;
 	}

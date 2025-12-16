@@ -27,6 +27,11 @@ void free_all_the_world(t_world *wld)
 			mlx_destroy_display(wld->mlx);
 			free(wld->mlx);
 		}
+		if (wld->panel)
+		{
+			free_sliders(&wld->panel->sliders, wld->num_objects + 1); // light count
+			free(wld->panel);
+		}
 	}
 }
 
@@ -260,7 +265,7 @@ int main(int argc, char **argv)
 	// if (!parser(&wld, argv[1]))
 	// 	return (1);
 
-	switch (8)
+	switch (9)
 	{
 		case 4:
 			checkered_spheres(&wld);           // Scene with checkered spheres

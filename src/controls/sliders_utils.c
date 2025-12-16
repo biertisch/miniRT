@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:36:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 13:56:41 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:33:48 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,24 @@ void	get_block_start_and_end(char *header, int *start, int *end)
 	}
 }
 
-int	free_sliders(t_slider **sliders, int size)
+int	free_sliders(t_slider ***sliders, int size)
 {
 	int	i;
 
+	if (!sliders || !*sliders)
+		return (0);
 	i = 0;
 	while (i < size)
 	{
-		free(sliders[i]);
+		free((*sliders)[i]);
 		i++;
 	}
-	free(sliders);
+	free(*sliders);
+	*sliders = NULL;
 	return (0);
 }
 
-// slider.y is defined when rendering, depending on object type
-void	init_slider_type(t_slider **sliders, int object_count)
+void	reset_sliders(t_slider **sliders, int object_count)
 {
 	int	i;
 	int	j;
@@ -73,7 +75,29 @@ void	init_slider_type(t_slider **sliders, int object_count)
 		j = 0;
 		while (j < SLIDER_COUNT)
 		{
+			sliders[i][j].base_value = sliders[i][j].initial_value;
+			sliders[i][j].knob_pos = 0.5;
+			j++;
+		}
+		i++;
+	}
+}
+
+// slider.y is defined when rendering, depending on object type
+void	init_sliders(t_slider **sliders, t_world *scene)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < scene->num_objects + 1) // light count
+	{
+		j = 0;
+		while (j < SLIDER_COUNT)
+		{
 			sliders[i][j].type = j;
+			sliders[i][j].initial_value = get_initial_value(scene, i, j);
+			sliders[i][j].base_value = sliders[i][j].initial_value;
 			sliders[i][j].x = (PANEL_W - SLIDER_W) / 2;
 			sliders[i][j].knob_pos = 0.5;
 			j++;
