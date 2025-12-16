@@ -16,7 +16,7 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 CC = cc
 #CCFLAGS = -Wextra -Wall -Werror -MMD --std=gnu11
-CCFLAGS = -Werror -MMD
+CCFLAGS = -Werror -MMD --std=gnu11
 
 D ?= 0
 
@@ -81,3 +81,9 @@ run: re
 -include $(OBJ:.o=.d)
 
 re : fclean all
+
+debug: fclean
+	$(MAKE) D=1
+	@./$(NAME) ./RT/base2.rt
+
+.PHONY: all clean fclean re

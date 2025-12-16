@@ -259,6 +259,8 @@ int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
             }
         }
     }
+	if (hit_any)
+		rec->hit_obj = &obj;
 
     return (hit_any);
 }

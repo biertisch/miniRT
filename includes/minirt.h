@@ -18,6 +18,10 @@
 # define ESC	65307
 # define ENTER	65293
 
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
+
 enum
 {
 	KeyPress = 2,
@@ -244,6 +248,7 @@ struct s_hit_record
 	t_vec3	p;
 	t_vec3	normal;
 	t_material	mat;
+	t_object	*hit_obj;
 	double	t;
 	double	u;
 	double	v;
@@ -308,6 +313,7 @@ typedef struct s_world
 	double		ambient_ratio;
 	t_s_light	spot_light;
 	t_object	lights;
+	t_object	*current_obj;
 	t_panel		*panel;
 }	t_world;
 
@@ -339,6 +345,7 @@ void 	free_all_the_world(t_world *wld);
 
 // color.c
 t_color	get_color(double r, double g, double b);
+t_color	get_normalize_color(t_color color);
 void	write_color(t_data *img, int x, int y, t_color color);
 t_color	color_add(t_color a, t_color b);
 t_color	color_multiply_number(t_color color, double scalar);
@@ -386,6 +393,7 @@ int	interval_contains(t_interval *interval, double value);
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
 void	camera_initialize(t_camera *camera);
 void	camera_render(t_camera *camera, t_world *wld);
+// t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
 
 //rt_utils.c
 double	degrees_to_radians(double degrees);

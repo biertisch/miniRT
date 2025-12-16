@@ -26,8 +26,17 @@ t_checker_texture	*checker_texture_colors(double scale, t_color even_color, t_co
 	return (texture);
 }
 
-
 t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p)
+{
+	t_checker_texture *ct = (t_checker_texture *)texture;
+    double s = sin(p.x * ct->inv_scale * M_PI)
+             * sin(p.z * ct->inv_scale * M_PI);
+    if (s < 0)
+        return texture_value(ct->even, u, v, p);
+    else
+        return texture_value(ct->odd, u, v, p);
+}
+t_color	checker_texture_value_old(t_texture *texture, double u, double v, t_vec3 p)
 {
 	int					xInt;
 	int					yInt;

@@ -88,6 +88,36 @@ static void	do_action(int keycode, t_world *wld)
 		printf("📷 Print Info:\n");
 		printf("  Camera Position: (%.2f, %.2f, %.2f)\n", wld->camera.lookfrom.x, wld->camera.lookfrom.y, wld->camera.lookfrom.z);
 		printf("  Camera Target:   (%.2f, %.2f, %.2f)\n", wld->camera.lookat.x, wld->camera.lookat.y, wld->camera.lookat.z);	
+	}else if (keycode == '='){
+		if(wld->current_obj){
+			if(wld->current_obj->type == SPHERE){
+				wld->current_obj->geo.sphere.radius *= 1.1;
+				// camera_initialize(&wld->camera);
+				camera_render(&wld->camera, wld);
+			}else if (wld->current_obj->type == CYLINDER){
+				wld->current_obj->geo.cylinder.radius *= 1.1;
+				wld->current_obj->geo.cylinder.height *= 1.1;
+				// camera_initialize(&wld->camera);
+				camera_render(&wld->camera, wld);
+			}
+		}else{
+			printf("Use mouse to select object first.\n");
+		}
+	}else if (keycode == '-'){
+		if(wld->current_obj){
+			if(wld->current_obj->type == SPHERE){
+				wld->current_obj->geo.sphere.radius *= 0.9;
+				// camera_initialize(&wld->camera);
+				camera_render(&wld->camera, wld);
+			}else if (wld->current_obj->type == CYLINDER){
+				wld->current_obj->geo.cylinder.radius *= 0.9;
+				wld->current_obj->geo.cylinder.height *= 0.9;
+				// camera_initialize(&wld->camera);
+				camera_render(&wld->camera, wld);
+			}
+		}else{
+			printf("Use mouse to select object first.\n");
+		}
 	}
 }
 

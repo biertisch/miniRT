@@ -66,5 +66,6 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	set_face_normal(ray, outward_normal, record);
 	get_sphere_uv(outward_normal, &record->u, &record->v);
 	record->mat = sphere->mat;
+	record->hit_obj = &obj;
 	return (1);
 }
