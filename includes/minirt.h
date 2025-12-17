@@ -18,6 +18,8 @@
 # define ROT_SPEED 0.05
 # define ESC	65307
 # define ENTER	65293
+# define STEP_ANGLE .1f
+# define STEP_MOVE 3.3f
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -42,6 +44,13 @@ enum
 	CreateNotify = 16,
 	DestroyNotify = 17
 };
+
+typedef enum e_direction
+{
+	FORWARD_BACKWARD,
+	LEFT_RIGHT,
+	UP_DOWN
+} t_direction;
 
 typedef struct s_panel t_panel;
 
@@ -409,7 +418,7 @@ int	metal_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray 
 int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
 
 //action.c
-int	handle_pressed(int keycode, void *wld);
+void	do_action(int keycode, t_world *wld);
 
 //texture_solid_color.c
 t_solid_color_tex	solid_color_texture(t_color color);
@@ -444,5 +453,8 @@ int		use_test_scene(t_world *wld, int scene_no);
 
 //mouseselect.c
 int		mouse_press(int button, int x, int y, void *param);
+
+//worldfree.c
+void	free_all_the_world(t_world *wld);
 
 #endif

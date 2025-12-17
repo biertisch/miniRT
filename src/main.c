@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 12:13:54 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 14:50:24 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,6 @@
 // 	src = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 // 	return (*(unsigned int *)src);
 // }
-
-void	free_all_the_world(t_world *wld)
-{
-	if (wld)
-	{
-		if (wld->mlx && wld->win)
-			mlx_destroy_window(wld->mlx, wld->win);
-		if (wld->mlx)
-		{
-			mlx_destroy_display(wld->mlx);
-			free(wld->mlx);
-		}
-		if (wld->panel)
-		{
-			free_sliders(&wld->panel->sliders, wld->num_objects + 1);
-			free(wld->panel);
-		}
-	}
-}
 
 int	handle_destroy(void *param)
 {
@@ -56,6 +37,24 @@ int	mouse_hook(int keycode, void *param)
 	wld = (t_world *)param;
 	(void)wld;
 	printf("Hello from key_hook![%d]\n", keycode);
+	return (0);
+}
+
+int	handle_pressed(int keycode, void *param)
+{
+	t_world	*wld;
+
+	wld = (t_world *)param;
+	if (DEBUG)
+		printf("Key pressed: %d\n", keycode);
+	if (keycode == 65307)
+	{
+		printf("ESC❌\n");
+		free_all_the_world(wld);
+		exit(0);
+	}
+	else
+		do_action(keycode, wld);
 	return (0);
 }
 

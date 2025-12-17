@@ -6,13 +6,14 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:09:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 12:10:05 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 12:16:10 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int	has_object_was_clicked(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
+int	has_object_was_clicked(t_world *world, t_ray *ray,
+	t_interval ray_t, t_hit_record *rec)
 {
 	t_hit_record	temp_rec;
 	int				hit_anything;

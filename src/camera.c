@@ -235,7 +235,6 @@ void	output_camara_info(t_camera *camera)
 	printf("  Aspect Ratio: %f\n", (double)camera->image_width / (double)camera->image_height);
 	printf("  Image Width:  %d\n", camera->image_width);
 	printf("  Image Height: %d\n", camera->image_height);
-	// printf("  Samples per Pixel: %d\n", camera->samples_per_pixel);
 	printf("  Max Depth:        %d\n", camera->max_depth);
 	printf("  Pixel00 Location:    (%f, %f, %f)\n", camera->pixel00_loc.x, camera->pixel00_loc.y, camera->pixel00_loc.z);
 	printf("  Pixel Delta U:       (%f, %f, %f)\n", camera->pixel_delta_u.x, camera->pixel_delta_u.y, camera->pixel_delta_u.z);
@@ -454,7 +453,7 @@ void	camera_render(t_camera *camera, t_world *wld)
 		j++;
     }
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
-	("Image painted to window\n");
+	mlx_destroy_image(wld->mlx, img.img);
 }
 /*
 void	camera_render_v0(t_camera *camera, t_world *wld)
