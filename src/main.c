@@ -27,6 +27,11 @@ void free_all_the_world(t_world *wld)
 			mlx_destroy_display(wld->mlx);
 			free(wld->mlx);
 		}
+		if (wld->panel)
+		{
+			free_sliders(&wld->panel->sliders, wld->num_objects + 1); // light count
+			free(wld->panel);
+		}
 	}
 }
 
@@ -66,7 +71,7 @@ int	has_object_was_clicked(t_world *world, t_ray *ray, t_interval ray_t, t_hit_r
 	{
 		current = world->objects[i];
 		ray_t.max = closest_so_far;
-		
+
 		if (current->hit && current->hit(ray, ray_t, *current, &temp_rec))
 		{
 			hit_anything = 1;
@@ -151,7 +156,7 @@ int main(int argc, char **argv)
 	wld.win = mlx_new_window(wld.mlx, wld.camera.image_width, wld.camera.image_height, "MiniRT");
 	reg_hook(&wld);
 	camera_render(&(wld.camera), &wld);
-	// setup_controls(&wld);
+	setup_controls(&wld);
 	mlx_loop(wld.mlx);
 	return (0);
 }
