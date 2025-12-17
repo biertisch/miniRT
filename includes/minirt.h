@@ -338,9 +338,6 @@ t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
 t_vec3	random_cosine_direction();
 t_vec3	vec3_clamp(t_vec3 v, double min, double max);
 
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
-
 //main.c
 int		handle_destroy(void *param);
 void 	free_all_the_world(t_world *wld);
@@ -353,6 +350,7 @@ t_color	color_add(t_color a, t_color b);
 t_color	color_multiply_number(t_color color, double scalar);
 t_color	color_multiply_vector(t_color a, t_color b);
 t_color color_clamp(t_color v, double min, double max);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //ray.c
 t_ray	rt_ray(t_vec3 origin, t_vec3 direction);
@@ -393,7 +391,7 @@ int	interval_contains(t_interval *interval, double value);
 
 //camera.c
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
-void	camera_initialize(t_camera *camera);
+void	camera_light_initialize(t_world *wld);
 void	camera_render(t_camera *camera, t_world *wld);
 // t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
 
@@ -442,6 +440,9 @@ t_hitable_pdf	hitable_pdf_new(t_object *obj, t_vec3 origin);
 t_cone			new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
 
 //scene.c
-void	use_test_scene(t_world *wld, int scene_no);
+int		use_test_scene(t_world *wld, int scene_no);
+
+//mouseselect.c
+int		mouse_press(int button, int x, int y, void *param);
 
 #endif

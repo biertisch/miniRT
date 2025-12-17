@@ -356,13 +356,20 @@ void	init_camera_viewport(t_camera *camera)
 	camera->pixel00_loc = vec3_add(viewport_upper_left, vec3_multiply(vec3_add(camera->pixel_delta_u,camera->pixel_delta_v), 0.5));
 }
 
-void	camera_initialize(t_camera *camera)
+void	camera_light_initialize(t_world *wld)
 {
+	t_camera *camera;
+
+	camera = &wld->camera;
 	camera->aspect_ratio = 16.0/9.0;
 	camera->image_width = 400;
 	camera->max_depth = 5;
 	if (!camera->initialized)
+	{
 		camera->lookat = new_vec3(0,0,1);
+		wld->ambient = get_normalize_color(wld->ambient);
+		wld->spot_light.light_color = get_normalize_color(wld->spot_light.light_color);
+	}
 	camera->image_height = camera->image_width / camera->aspect_ratio;
 	if (camera->image_height < 1)
 		camera->image_height = 1;

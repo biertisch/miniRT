@@ -7,6 +7,14 @@ double	linear_to_gamma(double linear_component)
 	return (0.0);
 }
 
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
+}
+
 void	write_color(t_data *img, int x, int y, t_color color)
 {
 	int			r;

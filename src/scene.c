@@ -178,21 +178,24 @@ void base_plane_sphere_scene(t_world *wld)
 	wld->ambient_ratio = 0.3;
 }
 
-void	use_test_scene(t_world *wld, int scene_id)
+int	use_test_scene(t_world *wld, int scene_id)
 {
 	switch (scene_id)
 	{
 		case 4:
 			checkered_spheres(wld);
+			return (1);
 			break;
 		case 8:
 			base_scene1(wld);
+			return (1);
 			break;
 		case 9:
 			base_plane_sphere_scene(wld);
+			return (1);
 			break;
 		default:
-			checkered_spheres(wld);
+			return (0);
 			break;
 	}
 }

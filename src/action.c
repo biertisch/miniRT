@@ -49,7 +49,7 @@ void camera_pitch_down(t_camera *cam, float angle)
 void	camera_action(void (*func)(t_camera *, float), t_world *wld, float val)
 {
 	func(&wld->camera, val);
-	camera_initialize(&wld->camera);
+	camera_light_initialize(wld);
 	camera_render(&wld->camera, wld);
 }
 
