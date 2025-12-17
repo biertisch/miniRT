@@ -83,7 +83,7 @@ t_color ray_color_v2(t_ray *ray, int depth, t_world *world)
 
 		if (rec.mat.type == METAL)
 		{
-			final_color = (t_color){0,0,0};
+			final_color = color_add(ambient, specular);
 			t_vec3 I = vec3_normalize(ray->direction);
 			t_vec3 N = rec.normal;
 			t_vec3 R = vec3_subtract(I, vec3_multiply(N, 2.0 * vec3_dot(I, N)));
@@ -93,29 +93,18 @@ t_color ray_color_v2(t_ray *ray, int depth, t_world *world)
 			reflect_ray.direction = vec3_normalize(R);
 
 			reflected_color = ray_color_v2(&reflect_ray, depth - 1, world);
+			// 混合
+			final_color = color_add(
+				color_multiply_number(final_color, 1.0 - 0.8),
+				color_multiply_number(reflected_color, 0.8)
+			);
 		}
-
-		// 混合
-		final_color = color_add(
-			color_multiply_number(final_color, 1.0 - 0.8),
-			color_multiply_number(reflected_color, 0.8)
-		);
-
-		// return color_clamp(
-		// 	color_add(color_from_emission, final_color),
-		// 	0.0, 1.0
-		// );
-return color_clamp(
-			color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)),
-			0.0, 1.0
-		);
-        // Multiply by surface colrec.mat.reflectivityor and add emission
-      //  return color_clamp(color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)), 0.0, 1.0);
+		return color_clamp(color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)),0.0, 1.0);
     }
     else
         return (ambient);
 }
-
+/*
 // Version 1: Phong Reflection Model with Shadows and specular highlights
 t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
 {
@@ -229,6 +218,7 @@ t_color ray_color_v0(t_ray *ray, int depth, t_world *world)
 	else
 		return (ambient);
 }
+*/
 
 void	output_camara_info(t_camera *camera)
 {
@@ -245,13 +235,12 @@ void	output_camara_info(t_camera *camera)
 	printf("  Aspect Ratio: %f\n", (double)camera->image_width / (double)camera->image_height);
 	printf("  Image Width:  %d\n", camera->image_width);
 	printf("  Image Height: %d\n", camera->image_height);
-	printf("  Samples per Pixel: %d\n", camera->samples_per_pixel);
 	printf("  Max Depth:        %d\n", camera->max_depth);
 	printf("  Pixel00 Location:    (%f, %f, %f)\n", camera->pixel00_loc.x, camera->pixel00_loc.y, camera->pixel00_loc.z);
 	printf("  Pixel Delta U:       (%f, %f, %f)\n", camera->pixel_delta_u.x, camera->pixel_delta_u.y, camera->pixel_delta_u.z);
 	printf("  Pixel Delta V:       (%f, %f, %f)\n", camera->pixel_delta_v.x, camera->pixel_delta_v.y, camera->pixel_delta_v.z);
 }
-
+/*
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 {
 	t_hit_record	rec;
@@ -265,43 +254,43 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	if (depth <= 0)
 		return (get_color(0.0, 0.0, 0.0));
 	// ray_t = new_interval(0.001, RT_INFINITY);
-	/*
-	if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
-	{
-		t_ray	scattered;
-		t_color	attenuation;
-		if (rec.mat.type == LAMBERTIAN)
-		{
-			if (lambertian_scatter(ray, &rec, &attenuation, &scattered))
-			{
-				return (color_multiply_vector(ray_color(&scattered, depth - 1, world), attenuation));
-			}
-		}
-		else if (rec.mat.type == METAL)
-		{
-			if (metal_scatter(ray, &rec, &attenuation, &scattered))
-			{
-				return (color_multiply_vector(ray_color(&scattered, depth - 1, world), attenuation));
-			}
-		}
-		else if (rec.mat.type == DIELECTRIC)
-		{
-			if (dielectric_scatter(ray, &rec, &attenuation, &scattered))
-			{
-				return (color_multiply_vector(ray_color(&scattered, depth - 1, world), attenuation));
-			}
-		}
-		return ((t_color){0.0, 0.0, 0.0});
-		// direction = vec3_add(rec.normal, random_unit_vec3());
-		// r = rt_ray(rec.p, direction);
-		// return (color_multiply(ray_color(&r, depth-1, world), 0.5));
-	}
+	
+	// if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
+	// {
+	// 	t_ray	scattered;
+	// 	t_color	attenuation;
+	// 	if (rec.mat.type == LAMBERTIAN)
+	// 	{
+	// 		if (lambertian_scatter(ray, &rec, &attenuation, &scattered))
+	// 		{
+	// 			return (color_multiply_vector(ray_color(&scattered, depth - 1, world), attenuation));
+	// 		}
+	// 	}
+	// 	else if (rec.mat.type == METAL)
+	// 	{
+	// 		if (metal_scatter(ray, &rec, &attenuation, &scattered))
+	// 		{
+	// 			return (color_multiply_vector(ray_color(&scattered, depth - 1, world), attenuation));
+	// 		}
+	// 	}
+	// 	else if (rec.mat.type == DIELECTRIC)
+	// 	{
+	// 		if (dielectric_scatter(ray, &rec, &attenuation, &scattered))
+	// 		{
+	// 			return (color_multiply_vector(ray_color(&scattered, depth - 1, world), attenuation));
+	// 		}
+	// 	}
+	// 	return ((t_color){0.0, 0.0, 0.0});
+	// 	// direction = vec3_add(rec.normal, random_unit_vec3());
+	// 	// r = rt_ray(rec.p, direction);
+	// 	// return (color_multiply(ray_color(&r, depth-1, world), 0.5));
+	// }
 
-	unit_direction = vec3_normalize(ray->direction);
-	double	a;
-	a = 0.5 * (unit_direction.y + 1.0);
-	return (blend_colors((t_color){1.0, 1.0, 1.0}, (t_color){0.5, 0.7, 1.0}, a));
-	*/
+	// unit_direction = vec3_normalize(ray->direction);
+	// double	a;
+	// a = 0.5 * (unit_direction.y + 1.0);
+	// return (blend_colors((t_color){1.0, 1.0, 1.0}, (t_color){0.5, 0.7, 1.0}, a));
+	
 
 	// if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
 	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
@@ -323,22 +312,6 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	{
 		return (color_multiply_vector(attenuation, ray_color(&scattered, depth - 1, world, lights)));
 	}
-/* //handcoded light sampling
-	t_vec3	on_light = new_vec3(random_double_range(213,343),554,random_double_range(227,332));
-	t_vec3	to_light = vec3_subtract(on_light, rec.p);
-	double distance_squared = vec3_length_squared(to_light);
-	to_light = unit_vector(to_light);
-	if (vec3_dot(to_light, rec.normal) < 0)
-		return (color_from_emission);
-
-	double	light_area=(343-213)*(332-227);
-	double	light_cosine = fabs(to_light.y);
-	if (light_cosine < 0.000001)
-		return (color_from_emission);
-
-	// pdf_value = 1/(2 * M_PI);
-	pdf_value = distance_squared/(light_cosine * light_area);
-	scattered = rt_ray(rec.p, to_light);*/
 
 	t_hitable_pdf	light_pdf;
 	light_pdf = hitable_pdf_new(&lights, rec.p);
@@ -356,55 +329,58 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 color_from_scatter = color_multiply_number(color_from_scatter, 4);
 
 	return (color_add(color_from_emission, color_from_scatter));
+}*/
+
+void	init_camera_viewport(t_camera *camera)
+{
+	t_vec3	viewport_upper_left;
+	double	focal_length;
+	double	theta;
+	double	viewport_height;
+	double	viewport_width;
+	t_vec3	viewport_v;
+	t_vec3	viewport_u;
+
+	focal_length = vec3_length(vec3_subtract(camera->lookfrom, camera->lookat));
+	theta = degrees_to_radians(camera->vfov);
+	viewport_height = 2.0 * (tan(theta / 2)) * focal_length;
+	viewport_width = viewport_height * ((double)camera->image_width/camera->image_height);
+	viewport_u = vec3_multiply(camera->u, viewport_width);
+	viewport_v = vec3_multiply(camera->v, -viewport_height);
+	camera->pixel_delta_u = vec3_multiply(viewport_u, 1.0 / (double)camera->image_width);
+	camera->pixel_delta_v = vec3_multiply(viewport_v, 1.0 / (double)camera->image_height);
+	viewport_upper_left = vec3_subtract(camera->lookfrom,vec3_multiply(camera->w, focal_length));
+	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_u, 0.5));
+	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_v, 0.5));
+	camera->pixel00_loc = vec3_add(viewport_upper_left, vec3_multiply(vec3_add(camera->pixel_delta_u,camera->pixel_delta_v), 0.5));
 }
 
-void	camera_initialize(t_camera *camera)
+void	camera_light_initialize(t_world *wld)
 {
-	int	image_height;
+	t_camera *camera;
 
-	camera->aspect_ratio = 1;
-	camera->image_width = 600;
-	camera->samples_per_pixel = 1;//default 100
-	camera->max_depth = 5;//default 50
-	camera->lookat = new_vec3(0,0,1);
-	image_height = camera->image_width / camera->aspect_ratio;
-	if (image_height < 1)
-		image_height = 1;
-	camera->image_height = image_height;
-	camera->sqrt_spp = (int)sqrt(camera->samples_per_pixel);
-	camera->pixel_samples_scale = 1.0 / (camera->sqrt_spp * camera->sqrt_spp);
-	camera->recip_sqrt_spp = 1.0 / camera->sqrt_spp;
-	double	focal_length = vec3_length(vec3_subtract(camera->lookfrom, camera->lookat));
-	// double	focal_length = 10.0;
-	// double	viewport_height = 2.0;
-	double	theta = degrees_to_radians(camera->vfov);
-	double	h = tan(theta / 2);
-	double	viewport_height = 2.0 * h * focal_length;
-	double	viewport_width = viewport_height * ((double)camera->image_width/image_height);
-
+	camera = &wld->camera;
+	camera->aspect_ratio = 16.0/9.0;
+	camera->image_width = 400;
+	camera->max_depth = 5;
+	if (!camera->initialized)
+	{
+		camera->lookat = new_vec3(0,0,1);
+		wld->ambient = get_normalize_color(wld->ambient);
+		wld->spot_light.light_color = get_normalize_color(wld->spot_light.light_color);
+	}
+	camera->image_height = camera->image_width / camera->aspect_ratio;
+	if (camera->image_height < 1)
+		camera->image_height = 1;
 	camera->w = unit_vector(vec3_subtract(camera->lookfrom, camera->lookat));
 	camera->u = unit_vector(vec3_cross(camera->vup, camera->w));
 	camera->v = vec3_cross(camera->w, camera->u);
-
-	t_vec3	viewport_u = vec3_multiply(camera->u, viewport_width);
-	t_vec3	viewport_v = vec3_multiply(camera->v, -viewport_height);
-
-	t_vec3	pixel_delta_u = vec3_multiply(viewport_u, 1.0 / (double)camera->image_width);
-	t_vec3	pixel_delta_v = vec3_multiply(viewport_v, 1.0 / (double)camera->image_height);
-
-	t_vec3	viewport_upper_left = vec3_subtract(camera->lookfrom,vec3_multiply(camera->w, focal_length));
-	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_u, 0.5));
-	viewport_upper_left = vec3_subtract(viewport_upper_left, vec3_multiply(viewport_v, 0.5));
-
-	t_vec3	pixel00_loc = vec3_add(viewport_upper_left, vec3_multiply(vec3_add(pixel_delta_u,pixel_delta_v), 0.5));
-
-	camera->pixel00_loc = pixel00_loc;
-	camera->pixel_delta_u = pixel_delta_u;
-	camera->pixel_delta_v = pixel_delta_v;
-
+	init_camera_viewport(camera);
+	camera->initialized = 1;
 	output_camara_info(camera);
 }
 
+/*
 t_vec3	sample_square()
 {
 	double	u;
@@ -413,17 +389,16 @@ t_vec3	sample_square()
 	u = random_double() - 0.5;
 	v = random_double() - 0.5;
 	return (new_vec3(u, v, 0.0));
-}
+}*/
 
-t_vec3	sample_square_stratified(int s_i, int s_j, t_camera *camera)
-{
-	double	u;
-	double	v;
-
-	u = (random_double() + s_i) * camera->recip_sqrt_spp - 0.5;
-	v = (random_double() + s_j) * camera->recip_sqrt_spp - 0.5;
-	return (new_vec3(u, v, 0.0));
-}
+// t_vec3	sample_square_stratified(int s_i, int s_j, t_camera *camera)
+// {
+// 	double	u;
+// 	double	v;
+// 	u = (random_double() + s_i) * camera->recip_sqrt_spp - 0.5;
+// 	v = (random_double() + s_j) * camera->recip_sqrt_spp - 0.5;
+// 	return (new_vec3(u, v, 0.0));
+// }
 
 static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
 {
@@ -436,7 +411,7 @@ static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
 	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
 	return (rt_ray(camera->lookfrom, ray_direction));
 }
-
+/*
 t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 {
 	t_vec3	offset;
@@ -450,6 +425,7 @@ t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
 	return (rt_ray(camera->lookfrom, ray_direction));
 }
+*/
 
 void	camera_render(t_camera *camera, t_world *wld)
 {
@@ -471,14 +447,13 @@ void	camera_render(t_camera *camera, t_world *wld)
 			pixel_color = (t_color){0,0,0};
 			r = get_ray(i, j, camera);
 			pixel_color = color_add(pixel_color, ray_color_v2(&r, camera->max_depth, wld));
-			write_color(&img, i, j, 
-				color_multiply_number(pixel_color, camera->pixel_samples_scale));
+			write_color(&img, i, j, pixel_color);
 			i++;
 		}
 		j++;
     }
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
-	printf("Image painted to window\n");
+	mlx_destroy_image(wld->mlx, img.img);
 }
 /*
 void	camera_render_v0(t_camera *camera, t_world *wld)

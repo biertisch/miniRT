@@ -6,6 +6,7 @@
 # include <math.h>
 # include <string.h>
 # include "mlx.h"
+# include "libft.h"
 # include "vec3.h"
 # include "color.h"
 # include "parser.h"
@@ -17,6 +18,8 @@
 # define ROT_SPEED 0.05
 # define ESC	65307
 # define ENTER	65293
+# define STEP_ANGLE .1f
+# define STEP_MOVE 3.3f
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -41,6 +44,13 @@ enum
 	CreateNotify = 16,
 	DestroyNotify = 17
 };
+
+typedef enum e_direction
+{
+	FORWARD_BACKWARD,
+	LEFT_RIGHT,
+	UP_DOWN
+} t_direction;
 
 typedef struct s_panel t_panel;
 
@@ -270,8 +280,8 @@ typedef struct s_camera
 	t_vec3	pixel00_loc;
 	t_vec3	pixel_delta_u;
 	t_vec3	pixel_delta_v;
-	int		samples_per_pixel;
-	double	pixel_samples_scale;
+	// int		samples_per_pixel;
+	// double	pixel_samples_scale;
 	int		max_depth;
 	double	vfov;
 	t_vec3	lookfrom;
@@ -280,8 +290,9 @@ typedef struct s_camera
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
-	int		sqrt_spp;
-	double	recip_sqrt_spp;
+	// int		sqrt_spp;
+	// double	recip_sqrt_spp;
+	int		initialized;
 }	t_camera;
 
 struct s_object
@@ -336,9 +347,6 @@ t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
 t_vec3	random_cosine_direction();
 t_vec3	vec3_clamp(t_vec3 v, double min, double max);
 
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
-
 //main.c
 int		handle_destroy(void *param);
 void 	free_all_the_world(t_world *wld);
@@ -351,6 +359,7 @@ t_color	color_add(t_color a, t_color b);
 t_color	color_multiply_number(t_color color, double scalar);
 t_color	color_multiply_vector(t_color a, t_color b);
 t_color color_clamp(t_color v, double min, double max);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //ray.c
 t_ray	rt_ray(t_vec3 origin, t_vec3 direction);
@@ -391,7 +400,7 @@ int	interval_contains(t_interval *interval, double value);
 
 //camera.c
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
-void	camera_initialize(t_camera *camera);
+void	camera_light_initialize(t_world *wld);
 void	camera_render(t_camera *camera, t_world *wld);
 // t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
 
@@ -409,7 +418,7 @@ int	metal_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray 
 int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
 
 //action.c
-int	handle_pressed(int keycode, void *wld);
+void	do_action(int keycode, t_world *wld);
 
 //texture_solid_color.c
 t_solid_color_tex	solid_color_texture(t_color color);
@@ -442,5 +451,14 @@ int		cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
 
 //cone_quadratic.c
 int		solve_cone_quadratic(t_ray *ray, t_cone *cone, double *t1, double *t2);
+
+//scene.c
+int		use_test_scene(t_world *wld, int scene_no);
+
+//mouseselect.c
+int		mouse_press(int button, int x, int y, void *param);
+
+//worldfree.c
+void	free_all_the_world(t_world *wld);
 
 #endif
