@@ -11,7 +11,7 @@ void checkered_spheres(t_world *wld)
 	add_object_to_world(wld, SPHERE, &sphere2);
 
 	wld->camera.aspect_ratio = 16.0 / 9.0;
-	wld->camera.image_width = 400;
+	wld->camera.img_w = 400;
 	// wld->camera.samples_per_pixel = 1;
 	wld->camera.max_depth = 3;
 	wld->camera.vfov = 70.0;
@@ -74,7 +74,7 @@ void cornel_box_scene(t_world *wld)
 	add_object_to_world(wld, QUAD, &floor);
 
 	wld->camera.aspect_ratio = 1;
-	wld->camera.image_width = 600;
+	wld->camera.img_w = 600;
 	// wld->camera.samples_per_pixel = 1;//default 100
 	wld->camera.max_depth = 5; // default 50
 	wld->camera.vfov = 40.0;
@@ -122,7 +122,7 @@ void base_scene1(t_world *wld)
 	add_object_to_world(wld, PLANE, &ground_plane);
 
 	wld->camera.aspect_ratio = 1;
-	wld->camera.image_width = 1024;
+	wld->camera.img_w = 1024;
 	// wld->camera.samples_per_pixel = 1;//default 100
 	wld->camera.max_depth = 5; // default 50
 	wld->camera.vfov = 40.0;
@@ -173,8 +173,8 @@ void base_plane_sphere_scene(t_world *wld)
 	add_object_to_world(wld, SPHERE, &sphere1_lightpos);
 	wld->spot_light.position = new_vec3(2, 4, -3);
 	wld->spot_light.brightness = 0.8;
-	wld->spot_light.light_color = get_color(1, 1, 1);
-	wld->ambient = get_color(1, 1, 1);
+	wld->spot_light.light_color = get_color(255, 255, 255);
+	wld->ambient = get_color(255, 255, 255);
 	wld->ambient_ratio = 0.3;
 }
 

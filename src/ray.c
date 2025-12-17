@@ -13,7 +13,7 @@ t_vec3	ray_at(t_ray *ray, double t)
 {
 	t_vec3 point;
 
-	point = vec3_add(ray->origin, vec3_multiply(ray->direction, t));
+	point = vec3_add(ray->origin, vec3_mul_n(ray->direction, t));
 	return (point);
 }
 

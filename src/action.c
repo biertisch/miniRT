@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:59:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 14:51:46 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 17:07:50 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ static	void	camera_move(t_camera *cam, t_direction direction, float dist)
 
 	if (direction == FORWARD_BACKWARD)
 	{
-		forward = unit_vector(vec3_subtract(cam->lookat, cam->lookfrom));
-		cam->lookfrom = vec3_add(cam->lookfrom, vec3_multiply(forward, dist));
-		cam->lookat = vec3_add(cam->lookat, vec3_multiply(forward, dist));
+		forward = unit_vector(vec3_sub(cam->lookat, cam->lookfrom));
+		cam->lookfrom = vec3_add(cam->lookfrom, vec3_mul_n(forward, dist));
+		cam->lookat = vec3_add(cam->lookat, vec3_mul_n(forward, dist));
 	}
 	else if (direction == LEFT_RIGHT)
 	{
-		forward = unit_vector(vec3_subtract(cam->lookat, cam->lookfrom));
+		forward = unit_vector(vec3_sub(cam->lookat, cam->lookfrom));
 		right = unit_vector(vec3_cross(forward, cam->vup));
-		cam->lookfrom = vec3_add(cam->lookfrom, vec3_multiply(right, dist));
-		cam->lookat = vec3_add(cam->lookat, vec3_multiply(right, dist));
+		cam->lookfrom = vec3_add(cam->lookfrom, vec3_mul_n(right, dist));
+		cam->lookat = vec3_add(cam->lookat, vec3_mul_n(right, dist));
 	}
 }
 
@@ -40,19 +40,19 @@ static	void	camera_rotate_pitch(t_camera *cam, t_direction dir, float angle)
 	double	sin_angle;
 	t_vec3	new_forward;
 
-	forward = unit_vector(vec3_subtract(cam->lookat, cam->lookfrom));
+	forward = unit_vector(vec3_sub(cam->lookat, cam->lookfrom));
 	right = unit_vector(vec3_cross(forward, cam->vup));
 	cos_angle = cos(angle);
 	sin_angle = sin(angle);
 	if (dir == UP_DOWN)
 	{
-		new_forward = vec3_add(vec3_multiply(forward, cos_angle),
-				vec3_multiply(cam->vup, sin_angle));
+		new_forward = vec3_add(vec3_mul_n(forward, cos_angle),
+				vec3_mul_n(cam->vup, sin_angle));
 		cam->vup = vec3_cross(right, new_forward);
 	}
 	else if (dir == LEFT_RIGHT)
-		new_forward = vec3_add(vec3_multiply(forward, cos_angle),
-				vec3_multiply(right, -sin_angle));
+		new_forward = vec3_add(vec3_mul_n(forward, cos_angle),
+				vec3_mul_n(right, -sin_angle));
 	cam->lookat = vec3_add(cam->lookfrom, new_forward);
 }
 

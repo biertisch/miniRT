@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 14:50:24 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 17:59:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,15 +78,15 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_memset(&wld, 0, sizeof(t_world));
-	if (!use_test_scene(&wld, 0))
+	if (!use_test_scene(&wld, 9))
 	{
 		if (!parser(&wld, argv[1]))
 			return (1);
 	}
 	camera_light_initialize(&wld);
 	wld.mlx = mlx_init();
-	wld.win = mlx_new_window(wld.mlx, wld.camera.image_width,
-			wld.camera.image_height, "MiniRT");
+	wld.win = mlx_new_window(wld.mlx, wld.camera.img_w,
+			wld.camera.img_h, "MiniRT");
 	reg_hook(&wld);
 	camera_render(&(wld.camera), &wld);
 	setup_controls(&wld);

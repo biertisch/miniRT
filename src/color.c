@@ -61,7 +61,7 @@ t_color	color_add(t_color a, t_color b)
 	result.b = a.b + b.b;
 	return (result);
 }
-t_color	color_multiply_number(t_color color, double scalar)
+t_color	color_multi_num(t_color color, double scalar)
 {
 	t_color	result;
 
@@ -70,7 +70,7 @@ t_color	color_multiply_number(t_color color, double scalar)
 	result.b = color.b * scalar;
 	return (result);
 }
-t_color	color_multiply_vector(t_color a, t_color b)
+t_color	color_mult_color(t_color a, t_color b)
 {
 	t_color	result;
 

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:09:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 12:16:10 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 17:10:56 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ t_ray	get_ray_with_screenxy(int pixel_x, int pixel_y, t_camera *camera)
 	t_vec3	pixel_sample;
 	t_vec3	ray_direction;
 
-	pixel_sample = vec3_add(camera->pixel00_loc,
-			vec3_add(vec3_multiply(camera->pixel_delta_u, pixel_x),
-				vec3_multiply(camera->pixel_delta_v, pixel_y)));
-	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
+	pixel_sample = vec3_add(camera->pix00_loc,
+			vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
+				vec3_mul_n(camera->pix_delta_v, pixel_y)));
+	ray_direction = vec3_sub(pixel_sample, camera->lookfrom);
 	return (rt_ray(camera->lookfrom, ray_direction));
 }
 

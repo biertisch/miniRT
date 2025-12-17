@@ -6,13 +6,8 @@ int	lambertian_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t
 
 	(void)ray_in;
 	t_onb	uvw = onb_new(rec->normal);
-	// scatter_direction = vec3_add(rec->normal, random_unit_vec3());
 	scatter_direction = onb_transform(uvw, random_cosine_direction());
-	// if (vec3_near_zero(scatter_direction))
-	// 	scatter_direction = rec->normal;
 	*scattered = rt_ray(rec->p, unit_vector(scatter_direction));
-	// printf("in lambertian_scatter %p\n",rec->mat.data.lamb.tex->value);
-	// *attenuation = rec->mat.albedo;
 	*attenuation = rec->mat.data.lamb.tex->value(rec->mat.data.lamb.tex, rec->u, rec->v, rec->p);
 	*pdf = vec3_dot(onb_w(uvw), scattered->direction) / M_PI;
 	return (1);
@@ -39,9 +34,9 @@ t_color	default_emitted(t_material *self,t_ray r_in,t_hit_record *rec, double u,
 	switch(self->type)
 	{
 		case LAMBERTIAN:
-			return color_multiply_number(self->data.lamb.tex->value(self->data.lamb.tex, u, v, p),0.3);
+			return color_multi_num(self->data.lamb.tex->value(self->data.lamb.tex, u, v, p),0.3);
 		case METAL:
-			return color_multiply_number(self->data.metal.tex->value(self->data.metal.tex, u, v, p),0.3);
+			return color_multi_num(self->data.metal.tex->value(self->data.metal.tex, u, v, p),0.3);
 		case DIELECTRIC:
 			return (get_color(0.0, 0.0, 0.0));
 		default:
@@ -65,7 +60,7 @@ int	metal_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray 
 	t_vec3	reflected;
 
 	reflected = vec3_reflect(ray_in->direction, rec->normal);
-	reflected = vec3_add(unit_vector(reflected), vec3_multiply(random_unit_vec3(), rec->mat.data.metal.fuzz));
+	reflected = vec3_add(unit_vector(reflected), vec3_mul_n(random_unit_vec3(), rec->mat.data.metal.fuzz));
 	*scattered = rt_ray(rec->p, reflected);
 	*attenuation = rec->mat.data.metal.tex->value(rec->mat.data.metal.tex, rec->u, rec->v, rec->p);
 	return (vec3_dot(scattered->direction, rec->normal) > 0);
@@ -89,7 +84,7 @@ int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t
 	else
 		ri = rec->mat.data.dielect.ref_idx;
 	t_vec3	unit_direction = unit_vector(ray_in->direction);
-	double	cos_theta = fmin(vec3_dot(vec3_multiply(unit_direction, -1), rec->normal), 1.0);
+	double	cos_theta = fmin(vec3_dot(vec3_mul_n(unit_direction, -1), rec->normal), 1.0);
 	double	sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 	int		cannot_refract = ri * sin_theta > 1.0;
 

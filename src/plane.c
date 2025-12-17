@@ -5,7 +5,7 @@ t_plane	new_plane(t_vec3 point, t_vec3 normal, t_material mat)
 	t_plane	plane;
 
 	plane.point = point;
-	plane.normal = vec3_normalize(normal);
+	plane.normal = vec3_norm(normal);
 	plane.mat = mat;
 	return (plane);
 }
@@ -27,7 +27,7 @@ int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 		return (0);
 	
 	// Calculate t parameter for intersection
-	t = vec3_dot(vec3_subtract(plane->point, ray->origin), plane->normal) / denom;
+	t = vec3_dot(vec3_sub(plane->point, ray->origin), plane->normal) / denom;
 	// printf("Plane hit test: t = %f\n", t);
 	// Check if intersection is within the ray interval
 	if (!interval_surrounds(&ray_t, t))

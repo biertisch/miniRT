@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 16:29:07 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:07:50 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ static t_vec3	compute_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 	double	k;
 
 	theta = atan(cone->radius / cone->height);
-	parallel = vec3_multiply(axis, proj);
-	perp = vec3_subtract(v, parallel);
+	parallel = vec3_mul_n(axis, proj);
+	perp = vec3_sub(v, parallel);
 	k = vec3_length(perp) / tan(theta);
-	return (vec3_normalize(vec3_subtract(perp, vec3_multiply(axis, k))));
+	return (vec3_norm(vec3_sub(perp, vec3_mul_n(axis, k))));
 }
 
 static int	check_height(t_ray *ray, t_cone *cone, double t, t_hit_record *rec)
@@ -39,8 +39,8 @@ static int	check_height(t_ray *ray, t_cone *cone, double t, t_hit_record *rec)
 	double	proj;
 
 	p = ray_at(ray, t);
-	v = vec3_subtract(p, cone->apex);
-	axis = vec3_normalize(cone->axis);
+	v = vec3_sub(p, cone->apex);
+	axis = vec3_norm(cone->axis);
 	proj = vec3_dot(v, axis);
 	if (proj < 0 || proj > cone->height)
 		return (0);
@@ -61,17 +61,17 @@ static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone, t_hit_re
 	double	denom;
 	double	t;
 
-	axis = vec3_normalize(cone->axis);
-	d = vec3_normalize(ray->direction);
-	center = vec3_add(cone->apex, vec3_multiply(axis, cone->height));
+	axis = vec3_norm(cone->axis);
+	d = vec3_norm(ray->direction);
+	center = vec3_add(cone->apex, vec3_mul_n(axis, cone->height));
 	denom = vec3_dot(d, axis);
 	if (fabs(denom) <= 1e-8)
 		return (0);
-	t = vec3_dot(vec3_subtract(center, ray->origin), axis) / denom;
+	t = vec3_dot(vec3_sub(center, ray->origin), axis) / denom;
 	if (!interval_surrounds(ray_t, t))
 		return (0);
 	p = ray_at(ray, t);
-	v = vec3_subtract(p, center);
+	v = vec3_sub(p, center);
 	if (vec3_length_squared(v) <= cone->radius * cone->radius)
 	{
 		record->t = t;
@@ -108,9 +108,9 @@ static int	solve_cone_quadratic(t_ray *ray, t_cone *cone, double *t1, double *t2
 	double	disc;
 
 	theta = atan(cone->radius / cone->height);
-	d = vec3_normalize(ray->direction); // necessary?
-	v = vec3_normalize(cone->axis); // necessary?
-	w = vec3_subtract(ray->origin, cone->apex);
+	d = vec3_norm(ray->direction); // necessary?
+	v = vec3_norm(cone->axis); // necessary?
+	w = vec3_sub(ray->origin, cone->apex);
 	a = pow(vec3_dot(d, v), 2) - pow(cos(theta), 2);
 	b = 2 * (vec3_dot(d, v) * vec3_dot(w, v) - pow(cos(theta), 2) * vec3_dot(d, w));
 	c = pow(vec3_dot(w, v), 2) - pow(cos(theta), 2) * vec3_dot(w, w);

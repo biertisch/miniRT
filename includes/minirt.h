@@ -275,11 +275,11 @@ typedef	struct s_hitable_pdf
 typedef struct s_camera
 {
 	double	aspect_ratio;
-	int		image_width;
-	int		image_height;
-	t_vec3	pixel00_loc;
-	t_vec3	pixel_delta_u;
-	t_vec3	pixel_delta_v;
+	int		img_w;
+	int		img_h;
+	t_vec3	pix00_loc;
+	t_vec3	pix_delta_u;
+	t_vec3	pix_delta_v;
 	// int		samples_per_pixel;
 	// double	pixel_samples_scale;
 	int		max_depth;
@@ -312,6 +312,15 @@ typedef struct s_spot_light
 	t_color		light_color; //variable name can be abbreviate to color
 }	t_s_light;
 
+typedef struct s_phong
+{
+	t_color		ambient;
+	t_color		diffuse;
+	t_color		specular;
+	t_color		obj_color;
+	double		brightness;
+}	t_phong;
+
 typedef struct s_world
 {
 	void		*mlx;
@@ -330,14 +339,14 @@ typedef struct s_world
 
 //vec3.c;
 t_vec3	new_vec3(double x, double y, double z);
-t_vec3	vec3_subtract(t_vec3 a, t_vec3 b);
+t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
 t_vec3	vec3_add(t_vec3 a, t_vec3 b);
 t_vec3	vec3_cross(t_vec3 a, t_vec3 b);
 double	vec3_length_squared(t_vec3 vec);
 double	vec3_length(t_vec3 vec);
-t_vec3	vec3_normalize(t_vec3 vec);
+t_vec3	vec3_norm(t_vec3 vec);
 double	vec3_dot(t_vec3 a, t_vec3 b);
-t_vec3	vec3_multiply(t_vec3 a, double scalar);
+t_vec3	vec3_mul_n(t_vec3 a, double scalar);
 t_vec3	unit_vector(t_vec3 vec);
 t_vec3	random_unit_vec3();
 t_vec3	random_on_hemisphere(t_vec3 normal);
@@ -356,8 +365,8 @@ t_color	get_color(double r, double g, double b);
 t_color	get_normalize_color(t_color color);
 void	write_color(t_data *img, int x, int y, t_color color);
 t_color	color_add(t_color a, t_color b);
-t_color	color_multiply_number(t_color color, double scalar);
-t_color	color_multiply_vector(t_color a, t_color b);
+t_color	color_multi_num(t_color color, double scalar);
+t_color	color_mult_color(t_color a, t_color b);
 t_color color_clamp(t_color v, double min, double max);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 

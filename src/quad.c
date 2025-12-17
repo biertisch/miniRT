@@ -23,11 +23,11 @@ t_vec3	quad_random(t_object obj, t_vec3 origin)
 
 	p = vec3_add(obj.geo.quad.Q,
 			vec3_add(
-				vec3_multiply(obj.geo.quad.u, random_double()),
-				vec3_multiply(obj.geo.quad.v, random_double())
+				vec3_mul_n(obj.geo.quad.u, random_double()),
+				vec3_mul_n(obj.geo.quad.v, random_double())
 			)
 		);
-	return (vec3_subtract(p, origin));
+	return (vec3_sub(p, origin));
 }
 
 t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat)
@@ -42,7 +42,7 @@ t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat)
 	n = vec3_cross(u, v);
 	quad.normal = unit_vector(n);
 	quad.D = vec3_dot(quad.normal, Q);
-	quad.w = vec3_multiply(n, 1 / vec3_dot(n, n));
+	quad.w = vec3_mul_n(n, 1 / vec3_dot(n, n));
 
 	quad.area = vec3_length(n);
 	return (quad);
@@ -73,7 +73,7 @@ int	quad_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	if (!interval_contains(&ray_t, t))
 		return (0);
 	t_vec3	intersection = ray_at(ray, t);
-	t_vec3	planar_hitpt_vec = vec3_subtract(intersection, obj.geo.quad.Q);
+	t_vec3	planar_hitpt_vec = vec3_sub(intersection, obj.geo.quad.Q);
 	alpha = vec3_dot(obj.geo.quad.w, vec3_cross(planar_hitpt_vec, obj.geo.quad.v));
 	beta = vec3_dot(obj.geo.quad.w, vec3_cross(obj.geo.quad.u, planar_hitpt_vec));
 	if (!is_interior(alpha, beta, record))

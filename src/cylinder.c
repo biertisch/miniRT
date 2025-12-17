@@ -49,7 +49,7 @@ t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height
 	t_cylinder	cylinder;
 
 	cylinder.center = center;
-	cylinder.axis = vec3_normalize(axis);
+	cylinder.axis = vec3_norm(axis);
 	cylinder.radius = radius;
 	cylinder.height = height;
 	cylinder.mat = mat;
@@ -152,8 +152,8 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *recor
 static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_record *rec)
 {
 	t_vec3 p = ray_at(ray, t);
-	t_vec3 axis = vec3_normalize(cy->axis);
-	t_vec3 v = vec3_subtract(p, cy->center);
+	t_vec3 axis = vec3_norm(cy->axis);
+	t_vec3 v = vec3_sub(p, cy->center);
 	double half_h = cy->height / 2.0;
 	double proj = vec3_dot(v, axis);
 
@@ -162,8 +162,8 @@ static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_recor
 		return (0);
 
 	// normal
-	t_vec3 proj_point = vec3_add(cy->center, vec3_multiply(axis, proj));
-	t_vec3 outward = vec3_normalize(vec3_subtract(p, proj_point));
+	t_vec3 proj_point = vec3_add(cy->center, vec3_mul_n(axis, proj));
+	t_vec3 outward = vec3_norm(vec3_sub(p, proj_point));
 
 	rec->t = t;
 	rec->p = p;
@@ -176,8 +176,8 @@ static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_recor
 int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 {
     t_cylinder *cy = &obj.geo.cylinder;
-    t_vec3 oc = vec3_subtract(ray->origin, cy->center);
-    t_vec3 axis = vec3_normalize(cy->axis);
+    t_vec3 oc = vec3_sub(ray->origin, cy->center);
+    t_vec3 axis = vec3_norm(cy->axis);
     double a, b, c, disc, sqrt_disc;
     double t1, t2;
     t_hit_record tmp;
@@ -220,35 +220,35 @@ int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
     }
 
     // ==== Check top/bottom caps ====
-    t_vec3 half_axis = vec3_multiply(axis, cy->height / 2.0);
-    t_vec3 cap1 = vec3_subtract(cy->center, half_axis);
+    t_vec3 half_axis = vec3_mul_n(axis, cy->height / 2.0);
+    t_vec3 cap1 = vec3_sub(cy->center, half_axis);
     t_vec3 cap2 = vec3_add(cy->center, half_axis);
     double denom = vec3_dot(ray->direction, axis);
 
     if (fabs(denom) > 1e-8)
     {
         // bottom cap
-        double tcap = vec3_dot(vec3_subtract(cap1, ray->origin), axis) / denom;
+        double tcap = vec3_dot(vec3_sub(cap1, ray->origin), axis) / denom;
         if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
         {
             t_vec3 p = ray_at(ray, tcap);
-            if (vec3_length_squared(vec3_subtract(p, cap1)) <= cy->radius * cy->radius)
+            if (vec3_length_squared(vec3_sub(p, cap1)) <= cy->radius * cy->radius)
             {
                 rec->t = tcap;
                 rec->p = p;
                 rec->mat = cy->mat;
-                set_face_normal(ray, vec3_multiply(axis, -1), rec);
+                set_face_normal(ray, vec3_mul_n(axis, -1), rec);
                 closest_t = tcap;
                 hit_any = 1;
             }
         }
 
         // top cap
-        tcap = vec3_dot(vec3_subtract(cap2, ray->origin), axis) / denom;
+        tcap = vec3_dot(vec3_sub(cap2, ray->origin), axis) / denom;
         if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
         {
             t_vec3 p = ray_at(ray, tcap);
-            if (vec3_length_squared(vec3_subtract(p, cap2)) <= cy->radius * cy->radius)
+            if (vec3_length_squared(vec3_sub(p, cap2)) <= cy->radius * cy->radius)
             {
                 rec->t = tcap;
                 rec->p = p;
