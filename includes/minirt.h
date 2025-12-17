@@ -18,8 +18,9 @@
 # define ROT_SPEED 0.05
 # define ESC	65307
 # define ENTER	65293
-# define STEP_ANGLE .1f
+# define STEP_ANGLE 1.0f
 # define STEP_MOVE 3.3f
+# define MAX_PITCH 89.0f * M_PI / 180.0f
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -285,7 +286,10 @@ typedef struct s_camera
 	int		max_depth;
 	double	vfov;
 	t_vec3	lookfrom;
-	t_vec3	lookat;
+	t_vec3	forword;
+	double	pitch;
+	double	yaw;
+	// t_vec3	lookat;
 	t_vec3	vup;
 	t_vec3	u;
 	t_vec3	v;

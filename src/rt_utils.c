@@ -2,6 +2,10 @@
 
 double	degrees_to_radians(double degrees)
 {
+	if (degrees <= 0.0)
+		degrees = 1;
+	if (degrees >= 180.0)
+		degrees = 179;
 	return (degrees * M_PI / 180.0);
 }
 

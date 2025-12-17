@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 17:58:28 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 23:50:34 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ t_color	ray_color_v2(t_ray *ray, int depth, t_world *world)
 			final_color = color_add(
 				color_multi_num(final_color, 1.0 - 0.8),
 				color_multi_num(reflected_color, 0.8)
-			);
+			);// camera->lookat = vec3_add(camera->lookfrom, camera->lookat);
 		}
 		return color_clamp(color_add(phong.obj_color, color_mult_color(final_color, phong.obj_color)),0.0, 1.0);
 	}
@@ -193,7 +193,7 @@ t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
         t_color final_color = color_add(color_multiply_number(ambient, 2.2), diffuse);
         final_color = color_add(final_color, specular);
         
-        // Multiply by surface color and add emission
+        // Multiply by surface color and add emis// camera->lookat = vec3_add(camera->lookfrom, camera->lookat);sion
         return color_clamp(color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)), 0.0, 1.0);
     }
     else
@@ -255,7 +255,7 @@ void	output_camara_info(t_camera *camera)
 		return ;
 	printf("Camera Info:\n");
 	printf("  Lookfrom: (%f, %f, %f)\n", camera->lookfrom.x, camera->lookfrom.y, camera->lookfrom.z);
-	printf("  Lookat:   (%f, %f, %f)\n", camera->lookat.x, camera->lookat.y, camera->lookat.z);
+	printf("  direction:   (%f, %f, %f)\n", camera->forword.x, camera->forword.y, camera->forword.z);
 	printf("  Vup:      (%f, %f, %f)\n", camera->vup.x, camera->vup.y, camera->vup.z);
 	printf("  U:        (%f, %f, %f)\n", camera->u.x, camera->u.y, camera->u.z);
 	printf("  V:        (%f, %f, %f)\n", camera->v.x, camera->v.y, camera->v.z);
@@ -370,7 +370,7 @@ void	init_camera_viewport(t_camera *camera)
 	t_vec3	viewport_v;
 	t_vec3	viewport_u;
 
-	focal_length = vec3_length(vec3_sub(camera->lookfrom, camera->lookat));
+	focal_length =  vec3_length(camera->forword);
 	theta = degrees_to_radians(camera->vfov);
 	viewport_height = 2.0 * (tan(theta / 2)) * focal_length;
 	viewport_width = viewport_height * ((double)camera->img_w/camera->img_h);
@@ -384,6 +384,16 @@ void	init_camera_viewport(t_camera *camera)
 	camera->pix00_loc = vec3_add(viewport_upper_left, vec3_mul_n(vec3_add(camera->pix_delta_u,camera->pix_delta_v), 0.5));
 }
 
+t_vec3	choose_vup(t_vec3 forward)
+{
+	t_vec3	vup;
+
+	vup = (t_vec3){0.0, 1.0, 0.0};
+	if (fabs(vec3_dot(forward, vup)) >= 0.999)
+		vup = (t_vec3){0.0, 0.0, 1.0};
+	return (vup);
+}
+
 void	camera_light_initialize(t_world *wld)
 {
 	t_camera *camera;
@@ -394,14 +404,16 @@ void	camera_light_initialize(t_world *wld)
 	camera->max_depth = 5;
 	if (!camera->initialized)
 	{
-		camera->lookat = new_vec3(0,0,1);
+		camera->pitch = asin(camera->forword.y);
+		camera->yaw = atan2(camera->forword.z, camera->forword.x);
+		camera->vup = choose_vup(camera->forword);
 		wld->ambient = get_normalize_color(wld->ambient);
 		wld->spot_light.light_color = get_normalize_color(wld->spot_light.light_color);
 	}
 	camera->img_h = camera->img_w / camera->aspect_ratio;
 	if (camera->img_h < 1)
 		camera->img_h = 1;
-	camera->w = unit_vector(vec3_sub(camera->lookfrom, camera->lookat));
+	camera->w = vec3_mul_n(unit_vector(camera->forword), -1);
 	camera->u = unit_vector(vec3_cross(camera->vup, camera->w));
 	camera->v = vec3_cross(camera->w, camera->u);
 	init_camera_viewport(camera);

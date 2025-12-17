@@ -16,7 +16,7 @@ void checkered_spheres(t_world *wld)
 	wld->camera.max_depth = 3;
 	wld->camera.vfov = 70.0;
 	wld->camera.lookfrom = new_vec3(13, 2, 3);
-	wld->camera.lookat = new_vec3(0, 0, 0);
+	wld->camera.forword = new_vec3(0, 0, 1);
 	wld->camera.vup = new_vec3(0, 1, 0);
 
 	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
@@ -79,7 +79,7 @@ void cornel_box_scene(t_world *wld)
 	wld->camera.max_depth = 5; // default 50
 	wld->camera.vfov = 40.0;
 	wld->camera.lookfrom = new_vec3(278, 278, -800);
-	wld->camera.lookat = new_vec3(278, 278, 0);
+	wld->camera.forword = vec3_norm(vec3_sub(new_vec3(278, 278, 0), wld->camera.lookfrom));
 	wld->camera.vup = new_vec3(0, 1, 0);
 
 	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
@@ -127,7 +127,7 @@ void base_scene1(t_world *wld)
 	wld->camera.max_depth = 5; // default 50
 	wld->camera.vfov = 40.0;
 	wld->camera.lookfrom = new_vec3(278, 278, -800);
-	wld->camera.lookat = new_vec3(278, 278, 0);
+	wld->camera.forword = vec3_norm(vec3_sub(new_vec3(278, 278, 0), wld->camera.lookfrom));
 	wld->camera.vup = new_vec3(0, 1, 0);
 
 	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
@@ -165,7 +165,7 @@ void base_plane_sphere_scene(t_world *wld)
 
 	wld->camera.vfov = 30;
 	wld->camera.lookfrom = new_vec3(0, 2, -10);
-	wld->camera.lookat = new_vec3(0, 0, 1);
+	wld->camera.forword = vec3_norm(vec3_sub(new_vec3(0, 0, 1), wld->camera.lookfrom));
 	wld->camera.vup = new_vec3(0, 1, 0);
 
 	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);

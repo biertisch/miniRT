@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_acl_fields.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:28:11 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:28:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:10:48 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	parse_camera_fields(t_world *scene, const char **s, t_metadata *meta)
 	fields = meta->rule->fields;
 	if (!parse_vec3(&scene->camera.lookfrom, s, &fields[0], meta))
 		return (0);
-	if (!parse_vec3(&scene->camera.vup, s, &fields[1], meta))
+	if (!parse_vec3(&scene->camera.forword, s, &fields[1], meta))
 		return (0);
 	if (!parse_int(&fov, s, &fields[2], meta))
 		return (0);

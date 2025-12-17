@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 17:59:58 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 21:30:20 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_memset(&wld, 0, sizeof(t_world));
-	if (!use_test_scene(&wld, 9))
+	if (!use_test_scene(&wld, 0))
 	{
 		if (!parser(&wld, argv[1]))
 			return (1);
