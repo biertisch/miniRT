@@ -386,8 +386,8 @@ int		world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
 //quad.c
 t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
 int	quad_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-double	quad_pdf_value(t_object obj, t_vec3 origin, t_vec3 direction);
-t_vec3	quad_random(t_object obj, t_vec3 origin);
+// double	quad_pdf_value(t_object obj, t_vec3 origin, t_vec3 direction);
+// t_vec3	quad_random(t_object obj, t_vec3 origin);
 
 //sphere.c
 int			sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);

@@ -1,49 +1,5 @@
 #include "minirt.h"
 
-// t_aabb cylinder_bbox(t_cylinder *cy)
-// {
-//     t_vec3 half_axis = vec3_multiply(cy->axis, cy->height / 2.0);
-//     t_vec3 p1 = vec3_subtract(cy->center, half_axis);
-//     t_vec3 p2 = vec3_add(cy->center, half_axis);
-
-//     t_aabb box;
-//     box.x.min = fmin(p1.x, p2.x) - cy->radius;
-//     box.x.max = fmax(p1.x, p2.x) + cy->radius;
-//     box.y.min = fmin(p1.y, p2.y) - cy->radius;
-//     box.y.max = fmax(p1.y, p2.y) + cy->radius;
-//     box.z.min = fmin(p1.z, p2.z) - cy->radius;
-//     box.z.max = fmax(p1.z, p2.z) + cy->radius;
-
-//     return box;
-// }
-
-// t_aabb	cylinder_compute_bbox(t_cylinder *cy)
-// {
-// 	t_vec3	p1;
-// 	t_vec3	p2;
-// 	t_vec3	half_axis;
-// 	t_aabb	bbox;
-
-// 	// 半高方向向量
-// 	half_axis = vec3_multiply(cy->axis, cy->height / 2.0);
-// 	// 上下端点
-// 	p1 = vec3_subtract(cy->center, half_axis);
-// 	p2 = vec3_add(cy->center, half_axis);
-
-// 	// X 轴范围
-// 	bbox.x.min = fmin(p1.x, p2.x) - cy->radius;
-// 	bbox.x.max = fmax(p1.x, p2.x) + cy->radius;
-
-// 	// Y 轴范围
-// 	bbox.y.min = fmin(p1.y, p2.y) - cy->radius;
-// 	bbox.y.max = fmax(p1.y, p2.y) + cy->radius;
-
-// 	// Z 轴范围
-// 	bbox.z.min = fmin(p1.z, p2.z) - cy->radius;
-// 	bbox.z.max = fmax(p1.z, p2.z) + cy->radius;
-// 	return (bbox);
-// }
-
 t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height, t_material mat)
 {
 	t_cylinder	cylinder;
@@ -53,10 +9,170 @@ t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height
 	cylinder.radius = radius;
 	cylinder.height = height;
 	cylinder.mat = mat;
-	// cylinder.bbox = cylinder_compute_bbox(&cylinder);
 	return (cylinder);
 }
+
+static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_record *rec)
+{
+	t_vec3 p;
+	t_vec3 axis;
+	t_vec3 v;
+	double half_h;
+	double proj;
+	t_vec3 proj_point;
+	t_vec3 outward;
+
+	p = ray_at(ray, t);
+	axis = vec3_norm(cy->axis);
+	v = vec3_sub(p, cy->center);
+	half_h = cy->height / 2.0;
+	proj = vec3_dot(v, axis);
+	if (proj < -half_h || proj > half_h)
+		return (0);
+	proj_point = vec3_add(cy->center, vec3_mul_n(axis, proj));
+	outward = vec3_norm(vec3_sub(p, proj_point));
+	rec->t = t;
+	rec->p = p;
+	rec->mat = cy->mat;
+	set_face_normal(ray, outward, rec);
+	return (1);
+}
+
+int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
+{
+    t_cylinder *cy = &obj.geo.cylinder;
+    t_vec3 oc = vec3_sub(ray->origin, cy->center);
+    t_vec3 axis = vec3_norm(cy->axis);
+    double a, b, c, disc, sqrt_disc;
+    double t1, t2;
+    t_hit_record tmp;
+    int hit_any = 0;
+    double closest_t = ray_t.max;  // Track closest hit instead of modifying ray_t
+
+    // ==== Solve for side surface ====
+    t_vec3 d_cross_a = vec3_cross(ray->direction, axis);
+    t_vec3 oc_cross_a = vec3_cross(oc, axis);
+    a = vec3_dot(d_cross_a, d_cross_a);
+    b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
+    c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
+    disc = b * b - 4 * a * c;
+    
+    if (disc >= 0)
+    {
+        sqrt_disc = sqrt(disc);
+        t1 = (-b - sqrt_disc) / (2 * a);
+        t2 = (-b + sqrt_disc) / (2 * a);
+        if (t1 >= ray_t.min && t1 < closest_t)
+        {
+            if (check_cylinder_side(ray, cy, t1, &tmp))
+            {
+                *rec = tmp;
+                closest_t = tmp.t;
+                hit_any = 1;
+            }
+        }
+        if (t2 >= ray_t.min && t2 < closest_t)
+        {
+            if (check_cylinder_side(ray, cy, t2, &tmp))
+            {
+                *rec = tmp;
+                closest_t = tmp.t;
+                hit_any = 1;
+            }
+        }
+    }
+
+    // ==== Check top/bottom caps ====
+    t_vec3 half_axis = vec3_mul_n(axis, cy->height / 2.0);
+    t_vec3 cap1 = vec3_sub(cy->center, half_axis);
+    t_vec3 cap2 = vec3_add(cy->center, half_axis);
+    double denom = vec3_dot(ray->direction, axis);
+
+    if (fabs(denom) > 1e-8)
+    {
+        // bottom cap
+        double tcap = vec3_dot(vec3_sub(cap1, ray->origin), axis) / denom;
+        if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
+        {
+            t_vec3 p = ray_at(ray, tcap);
+            if (vec3_length_squared(vec3_sub(p, cap1)) <= cy->radius * cy->radius)
+            {
+                rec->t = tcap;
+                rec->p = p;
+                rec->mat = cy->mat;
+                set_face_normal(ray, vec3_mul_n(axis, -1), rec);
+                closest_t = tcap;
+                hit_any = 1;
+            }
+        }
+
+        // top cap
+        tcap = vec3_dot(vec3_sub(cap2, ray->origin), axis) / denom;
+        if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
+        {
+            t_vec3 p = ray_at(ray, tcap);
+            if (vec3_length_squared(vec3_sub(p, cap2)) <= cy->radius * cy->radius)
+            {
+                rec->t = tcap;
+                rec->p = p;
+                rec->mat = cy->mat;
+                set_face_normal(ray, axis, rec);
+                closest_t = tcap;
+                hit_any = 1;
+            }
+        }
+    }
+	if (hit_any)
+		rec->hit_obj = &obj;
+
+    return (hit_any);
+}
 /*
+
+t_aabb cylinder_bbox(t_cylinder *cy)
+{
+	t_vec3 half_axis = vec3_multiply(cy->axis, cy->height / 2.0);
+	t_vec3 p1 = vec3_subtract(cy->center, half_axis);
+	t_vec3 p2 = vec3_add(cy->center, half_axis);
+
+	t_aabb box;
+	box.x.min = fmin(p1.x, p2.x) - cy->radius;
+	box.x.max = fmax(p1.x, p2.x) + cy->radius;
+	box.y.min = fmin(p1.y, p2.y) - cy->radius;
+	box.y.max = fmax(p1.y, p2.y) + cy->radius;
+	box.z.min = fmin(p1.z, p2.z) - cy->radius;
+	box.z.max = fmax(p1.z, p2.z) + cy->radius;
+
+	return box;
+}
+
+t_aabb	cylinder_compute_bbox(t_cylinder *cy)
+{
+	t_vec3	p1;
+	t_vec3	p2;
+	t_vec3	half_axis;
+	t_aabb	bbox;
+
+	// 半高方向向量
+	half_axis = vec3_multiply(cy->axis, cy->height / 2.0);
+	// 上下端点
+	p1 = vec3_subtract(cy->center, half_axis);
+	p2 = vec3_add(cy->center, half_axis);
+
+	// X 轴范围
+	bbox.x.min = fmin(p1.x, p2.x) - cy->radius;
+	bbox.x.max = fmax(p1.x, p2.x) + cy->radius;
+
+	// Y 轴范围
+	bbox.y.min = fmin(p1.y, p2.y) - cy->radius;
+	bbox.y.max = fmax(p1.y, p2.y) + cy->radius;
+
+	// Z 轴范围
+	bbox.z.min = fmin(p1.z, p2.z) - cy->radius;
+	bbox.z.max = fmax(p1.z, p2.z) + cy->radius;
+	return (bbox);
+}
+
 static int	check_cylinder_caps(t_ray *ray, t_cylinder *cylinder, double t, t_hit_record *record)
 {
 	t_vec3	hit_point;
@@ -148,123 +264,7 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *recor
 	
 	return (0);
 }
-*/
-static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_record *rec)
-{
-	t_vec3 p = ray_at(ray, t);
-	t_vec3 axis = vec3_norm(cy->axis);
-	t_vec3 v = vec3_sub(p, cy->center);
-	double half_h = cy->height / 2.0;
-	double proj = vec3_dot(v, axis);
 
-	// check if within height range
-	if (proj < -half_h || proj > half_h)
-		return (0);
-
-	// normal
-	t_vec3 proj_point = vec3_add(cy->center, vec3_mul_n(axis, proj));
-	t_vec3 outward = vec3_norm(vec3_sub(p, proj_point));
-
-	rec->t = t;
-	rec->p = p;
-	rec->mat = cy->mat;
-	set_face_normal(ray, outward, rec);
-	return (1);
-}
-
-
-int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
-{
-    t_cylinder *cy = &obj.geo.cylinder;
-    t_vec3 oc = vec3_sub(ray->origin, cy->center);
-    t_vec3 axis = vec3_norm(cy->axis);
-    double a, b, c, disc, sqrt_disc;
-    double t1, t2;
-    t_hit_record tmp;
-    int hit_any = 0;
-    double closest_t = ray_t.max;  // Track closest hit instead of modifying ray_t
-
-    // ==== Solve for side surface ====
-    t_vec3 d_cross_a = vec3_cross(ray->direction, axis);
-    t_vec3 oc_cross_a = vec3_cross(oc, axis);
-    a = vec3_dot(d_cross_a, d_cross_a);
-    b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
-    c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
-    disc = b * b - 4 * a * c;
-    
-    if (disc >= 0)
-    {
-        sqrt_disc = sqrt(disc);
-        t1 = (-b - sqrt_disc) / (2 * a);
-        t2 = (-b + sqrt_disc) / (2 * a);
-
-        // Check both intersections (side) - use closest_t instead of ray_t.max
-        if (t1 >= ray_t.min && t1 < closest_t)
-        {
-            if (check_cylinder_side(ray, cy, t1, &tmp))
-            {
-                *rec = tmp;
-                closest_t = tmp.t;
-                hit_any = 1;
-            }
-        }
-        if (t2 >= ray_t.min && t2 < closest_t)
-        {
-            if (check_cylinder_side(ray, cy, t2, &tmp))
-            {
-                *rec = tmp;
-                closest_t = tmp.t;
-                hit_any = 1;
-            }
-        }
-    }
-
-    // ==== Check top/bottom caps ====
-    t_vec3 half_axis = vec3_mul_n(axis, cy->height / 2.0);
-    t_vec3 cap1 = vec3_sub(cy->center, half_axis);
-    t_vec3 cap2 = vec3_add(cy->center, half_axis);
-    double denom = vec3_dot(ray->direction, axis);
-
-    if (fabs(denom) > 1e-8)
-    {
-        // bottom cap
-        double tcap = vec3_dot(vec3_sub(cap1, ray->origin), axis) / denom;
-        if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
-        {
-            t_vec3 p = ray_at(ray, tcap);
-            if (vec3_length_squared(vec3_sub(p, cap1)) <= cy->radius * cy->radius)
-            {
-                rec->t = tcap;
-                rec->p = p;
-                rec->mat = cy->mat;
-                set_face_normal(ray, vec3_mul_n(axis, -1), rec);
-                closest_t = tcap;
-                hit_any = 1;
-            }
-        }
-
-        // top cap
-        tcap = vec3_dot(vec3_sub(cap2, ray->origin), axis) / denom;
-        if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
-        {
-            t_vec3 p = ray_at(ray, tcap);
-            if (vec3_length_squared(vec3_sub(p, cap2)) <= cy->radius * cy->radius)
-            {
-                rec->t = tcap;
-                rec->p = p;
-                rec->mat = cy->mat;
-                set_face_normal(ray, axis, rec);
-                closest_t = tcap;
-                hit_any = 1;
-            }
-        }
-    }
-	if (hit_any)
-		rec->hit_obj = &obj;
-
-    return (hit_any);
-}
-/*
 int	cylinder_hit_old(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 {
 	t_cylinder	*cy = &obj.geo.cylinder;
