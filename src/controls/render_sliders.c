@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_sliders.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 16:37:57 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:03:21 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	render_values(t_panel *panel, t_world *scene, t_slider *slider,
 	{
 		curr = 0;
 		max = RANGE_RT / 2;
-		min = RANGE_RT / 2;
+		min = -RANGE_RT / 2;
 	}
 	else if (slider->type == RESIZE_D || slider->type == RESIZE_H)
 	{
