@@ -6,32 +6,61 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/17 17:07:50 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/18 19:04:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat)
+// remove?
+t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height,
+	t_material mat)
 {
 	return ((t_cone){apex, axis, radius, height, mat});
 }
 
-static t_vec3	compute_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
+static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 {
-	t_vec3	parallel;
-	t_vec3	perp;
-	double	theta;
-	double	k;
+	t_vec3	m;
+	t_vec3	outward;
 
-	theta = atan(cone->radius / cone->height);
-	parallel = vec3_mul_n(axis, proj);
-	perp = vec3_sub(v, parallel);
-	k = vec3_length(perp) / tan(theta);
-	return (vec3_norm(vec3_sub(perp, vec3_mul_n(axis, k))));
+	m = vec3_mul_n(axis, proj);
+	outward = vec3_sub(v, m);
+	return (vec3_norm(outward));
 }
 
-static int	check_height(t_ray *ray, t_cone *cone, double t, t_hit_record *rec)
+static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
+	t_hit_record *rec)
+{
+	t_vec3	center;
+	t_vec3	axis;
+	t_vec3	p;
+	double	denom;
+	double	t;
+
+	axis = vec3_mul_n(vec3_norm(cone->axis), -1);
+	center = vec3_add(cone->apex, vec3_mul_n(axis, cone->height));
+	denom = vec3_dot(ray->direction, axis);
+	if (fabs(denom) <= 1e-8)
+		return (0);
+	t = vec3_dot(vec3_sub(center, ray->origin), axis) / denom;
+	if (t < ray_t->min || t > ray_t->max)
+		return (0);
+	p = ray_at(ray, t);
+	if (vec3_length_squared(vec3_sub(p, center))
+		> cone->radius * cone->radius)
+		return (0);
+	rec->t = t;
+	rec->p = p;
+	rec->mat = cone->mat;
+	rec->normal = axis;
+	set_face_normal(ray, axis, rec);
+	ray_t->max = t;
+	return (1);
+}
+
+static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
+	double t)
 {
 	t_vec3	p;
 	t_vec3	v;
@@ -40,105 +69,42 @@ static int	check_height(t_ray *ray, t_cone *cone, double t, t_hit_record *rec)
 
 	p = ray_at(ray, t);
 	v = vec3_sub(p, cone->apex);
-	axis = vec3_norm(cone->axis);
+	axis = vec3_mul_n(vec3_norm(cone->axis), -1);
 	proj = vec3_dot(v, axis);
 	if (proj < 0 || proj > cone->height)
 		return (0);
 	rec->t = t;
 	rec->p = p;
-	//store color?
-	rec->normal = compute_normal(cone, v, axis, proj);
+	rec->mat = cone->mat;
+	rec->normal = cone_normal(cone, v, axis, proj);
+	set_face_normal(ray, rec->normal, rec);
 	return (1);
 }
 
-static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone, t_hit_record *record)
+int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 {
-	t_vec3	center;
-	t_vec3	axis;
-	t_vec3	d;
-	t_vec3	p;
-	t_vec3	v;
-	double	denom;
-	double	t;
-
-	axis = vec3_norm(cone->axis);
-	d = vec3_norm(ray->direction);
-	center = vec3_add(cone->apex, vec3_mul_n(axis, cone->height));
-	denom = vec3_dot(d, axis);
-	if (fabs(denom) <= 1e-8)
-		return (0);
-	t = vec3_dot(vec3_sub(center, ray->origin), axis) / denom;
-	if (!interval_surrounds(ray_t, t))
-		return (0);
-	p = ray_at(ray, t);
-	v = vec3_sub(p, center);
-	if (vec3_length_squared(v) <= cone->radius * cone->radius)
-	{
-		record->t = t;
-		record->p = p;
-		record->normal = axis;
-		ray_t->max = t;
-		return (1);
-	}
-	return (0);
-}
-
-static int	check_cone_side(t_ray *ray, t_interval *ray_t, t_cone *cone, t_hit_record *record, double t)
-{
-	t_hit_record	tmp;
-
-	if (interval_surrounds(ray_t, t) && check_height(ray, cone, t, &tmp))
-	{
-		*record = tmp;
-		ray_t->max = tmp.t;
-		return (1);
-	}
-	return (0);
-}
-
-static int	solve_cone_quadratic(t_ray *ray, t_cone *cone, double *t1, double *t2)
-{
-	t_vec3	d;
-	t_vec3	v;
-	t_vec3	w;
-	double	theta;
-	double	a;
-	double	b;
-	double	c;
-	double	disc;
-
-	theta = atan(cone->radius / cone->height);
-	d = vec3_norm(ray->direction); // necessary?
-	v = vec3_norm(cone->axis); // necessary?
-	w = vec3_sub(ray->origin, cone->apex);
-	a = pow(vec3_dot(d, v), 2) - pow(cos(theta), 2);
-	b = 2 * (vec3_dot(d, v) * vec3_dot(w, v) - pow(cos(theta), 2) * vec3_dot(d, w));
-	c = pow(vec3_dot(w, v), 2) - pow(cos(theta), 2) * vec3_dot(w, w);
-	disc =	pow(b, 2) - 4 * a * c;
-	if (disc < 0)
-		return (0);
-	*t1 = (-b - sqrt(disc)) / (2 * a);
-	*t2 = (-b + sqrt(disc)) / (2 * a);
-	return (1);
-}
-
-int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
-{
-	t_cone			*cone;
+	t_cone			*c;
 	double			t1;
 	double			t2;
 	int				hit_any;
 
-	cone = &obj.geo.cone;
-	if (!solve_cone_quadratic(ray, cone, &t1, &t2))
+	c = &obj.geo.cone;
+	if (!solve_cone_quadratic(ray, c, &t1, &t2))
 		return (0);
-
 	hit_any = 0;
-	if (check_cone_side(ray, &ray_t, cone, record, t1))
+	if (t1 >= ray_t.min && t1 <= ray_t.max && check_cone_side(ray, c, rec, t1))
+	{
+		ray_t.max = t1;
 		hit_any = 1;
-	if (check_cone_side(ray, &ray_t, cone, record, t2))
+	}
+	if (t2 >= ray_t.min && t2 <= ray_t.max && check_cone_side(ray, c, rec, t2))
+	{
+		ray_t.max = t2;
 		hit_any = 1;
-	if (check_cone_base(ray, &ray_t, cone, record))
+	}
+	if (check_cone_base(ray, &ray_t, c, rec))
 		hit_any = 1;
+	if (hit_any)
+		rec->hit_obj = &obj;
 	return (hit_any);
 }

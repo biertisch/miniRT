@@ -459,7 +459,11 @@ t_cosine_pdf	cosine_pdf_new(t_vec3 w);
 t_hitable_pdf	hitable_pdf_new(t_object *obj, t_vec3 origin);
 
 //cone.c
-t_cone			new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
+t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
+int		cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
+
+//cone_quadratic.c
+int		solve_cone_quadratic(t_ray *ray, t_cone *cone, double *t1, double *t2);
 
 //scene.c
 int		use_test_scene(t_world *wld, int scene_no);

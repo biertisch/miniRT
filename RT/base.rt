@@ -14,5 +14,7 @@ sp 0,0,20 20 255,0,0
 cy 50.0,0.0,20.6 0,0,1.0 14.2 21.42 10,0,255
 
 # BONUS
-co 2,5,0 0,1,0 3 5 172,39,62
+# Cone (name:char:co apex:vector[x,y,z] axis:vector:[-1,1] diameter:double height:double color:vector:[0-255,0-255,0-255])
+co 3,1,0 0,1,0 3 3 172,39,62
+# Checker pattern
 sp 0,-3,20 2 29,172,124 c
