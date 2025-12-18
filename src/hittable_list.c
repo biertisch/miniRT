@@ -78,15 +78,15 @@ int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 	int				hit_anything;
 	double			closest_so_far;
 	t_object		*current;
+	int				i;
 
 	hit_anything = 0;
 	closest_so_far = ray_t.max;
-	int i = 0;
+	i = 0;
 	while (i < world->num_objects)
 	{
 		current = world->objects[i];
 		ray_t.max = closest_so_far;
-
 		if (current->hit && current->hit(ray, ray_t, *current, &temp_rec))
 		{
 			hit_anything = 1;

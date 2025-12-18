@@ -21,6 +21,7 @@
 # define STEP_ANGLE 1.0f
 # define STEP_MOVE 3.3f
 # define MAX_PITCH 89.0f * M_PI / 180.0f
+# define SURFACE_EPS 1e-4
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -473,5 +474,8 @@ int		mouse_press(int button, int x, int y, void *param);
 
 //worldfree.c
 void	free_all_the_world(t_world *wld);
+
+//surfacechecker.c
+int	is_camera_on_surface(t_camera *cam, t_world *world);
 
 #endif

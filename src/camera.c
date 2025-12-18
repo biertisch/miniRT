@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 23:50:34 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/18 20:23:23 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,6 +418,11 @@ void	camera_light_initialize(t_world *wld)
 	camera->v = vec3_cross(camera->w, camera->u);
 	init_camera_viewport(camera);
 	camera->initialized = 1;
+	if (is_camera_on_surface(camera, wld))
+	{
+		free_all_the_world(wld);
+		exit(EXIT_FAILURE);
+	}
 	output_camara_info(camera);
 }
 
@@ -432,21 +437,6 @@ static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
 	ray_direction = vec3_norm(vec3_sub(pixel_point, camera->lookfrom));
 	return (rt_ray(camera->lookfrom, ray_direction));
 }
-/*
-t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
-{
-	t_vec3	offset;
-	t_vec3	pixel_sample;
-	t_vec3	ray_direction;
-
-	offset = sample_square_stratified(s_i, s_j, camera);
-	pixel_sample = vec3_add(camera->pixel00_loc,
-					vec3_add(vec3_multiply(camera->pixel_delta_u, pixel_x + offset.x),
-							 vec3_multiply(camera->pixel_delta_v, pixel_y + offset.y)));
-	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
-	return (rt_ray(camera->lookfrom, ray_direction));
-}
-*/
 
 void	camera_render(t_camera *cam, t_world *wld)
 {
@@ -478,6 +468,20 @@ void	camera_render(t_camera *cam, t_world *wld)
 }
 
 /*
+t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
+{
+	t_vec3	offset;
+	t_vec3	pixel_sample;
+	t_vec3	ray_direction;
+
+	offset = sample_square_stratified(s_i, s_j, camera);
+	pixel_sample = vec3_add(camera->pixel00_loc,
+					vec3_add(vec3_multiply(camera->pixel_delta_u, pixel_x + offset.x),
+							 vec3_multiply(camera->pixel_delta_v, pixel_y + offset.y)));
+	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
+	return (rt_ray(camera->lookfrom, ray_direction));
+}
+	
 void	camera_render_v0(t_camera *camera, t_world *wld)
 {
 	t_data img;
