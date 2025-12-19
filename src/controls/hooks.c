@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:16:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 11:17:26 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:11:50 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int	controls_key_release(int keycode, void *param)
 		transform_scene(scene->panel, scene);
 		render_controls(scene->panel, scene);
 	}
-	// else
-	// 	do_action(keycode, scene);
+	else
+		do_action(keycode, scene);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/18 20:23:23 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 14:23:06 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -407,8 +407,6 @@ void	camera_light_initialize(t_world *wld)
 		camera->pitch = asin(camera->forword.y);
 		camera->yaw = atan2(camera->forword.z, camera->forword.x);
 		camera->vup = choose_vup(camera->forword);
-		wld->ambient = get_normalize_color(wld->ambient);
-		wld->spot_light.light_color = get_normalize_color(wld->spot_light.light_color);
 	}
 	camera->img_h = camera->img_w / camera->aspect_ratio;
 	if (camera->img_h < 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_acl_fields.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:28:11 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/17 22:10:48 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 14:21:59 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	parse_ambient_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	if (!parse_color(&scene->ambient, s, &fields[1], meta))
 		return (0);
+	scene->ambient = get_normalize_color(scene->ambient);
 	return (1);
 }
 
@@ -51,5 +52,6 @@ int	parse_light_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	if (!parse_color(&scene->spot_light.light_color, s, &fields[2], meta))
 		return (0);
+	scene->spot_light.light_color = get_normalize_color(scene->spot_light.light_color);
 	return (1);
 }
