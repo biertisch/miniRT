@@ -6,11 +6,24 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 14:43:49 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:19:56 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+void	free_panel(t_world *scene, t_panel *panel)
+{
+	if (!scene || !panel)
+		return ;
+	if (scene->mlx && panel->win)
+		mlx_destroy_window(scene->mlx, panel->win);
+	free_sliders(&panel->sliders, panel->total);
+	if (panel->buffer->img)
+		mlx_destroy_image(scene->mlx, panel->buffer->img);
+	free(panel->buffer);
+	free(panel);
+}
 
 static int	create_buffer(t_panel *panel, t_world *scene)
 {
@@ -48,7 +61,7 @@ static void	init_panel(t_panel *panel, t_world *scene)
 	panel->camera_initial_fov = scene->camera.vfov;
 	panel->camera_initial_origin = scene->camera.lookfrom;
 	panel->camera_initial_direction = scene->camera.forword;
-	init_sliders(panel->sliders, scene);
+	init_sliders(panel->sliders, panel->total, scene);
 }
 
 static void	allocate_panel(t_world *scene)
@@ -58,13 +71,14 @@ static void	allocate_panel(t_world *scene)
 	scene->panel = malloc(sizeof(*(scene->panel)));
 	if (!scene->panel)
 		error_exit(scene, "Error\nmalloc");
-	scene->panel->sliders = malloc(sizeof(t_slider *) * scene->num_objects + 1); // light count
+	scene->panel->total = scene->num_objects + 1; // light count
+	scene->panel->sliders = ft_calloc(sizeof(t_slider *), scene->panel->total); 
 	if (!scene->panel->sliders)
 		error_exit(scene, "Error\nmalloc");
 	i = 0;
-	while (i < scene->num_objects + 1) // light count
+	while (i < scene->panel->total)
 	{
-		scene->panel->sliders[i] = malloc(sizeof(t_slider) * SLIDER_COUNT);
+		scene->panel->sliders[i] = ft_calloc(sizeof(t_slider), SLIDER_COUNT);
 		if (!scene->panel->sliders[i])
 		{
 			free_sliders(&scene->panel->sliders, i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:39:46 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:09:52 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:33:54 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ int	parser(t_world *scene, char *file)
 		return (0);
 	}
 	if (!validate_config_file(scene, fd))
+	{
+		free_all_the_world(scene);
 		return (0);
+	}
 	return (1);
 }

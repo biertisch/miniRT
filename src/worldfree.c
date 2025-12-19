@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 17:54:41 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 19:21:19 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,7 @@ void	free_all_the_world(t_world *wld)
 		if (wld->mlx && wld->win)
 			mlx_destroy_window(wld->mlx, wld->win);
 		if (wld->panel)
-		{
-			if (wld->mlx && wld->panel->win)
-				mlx_destroy_window(wld->mlx, wld->panel->win);
-			free_sliders(&wld->panel->sliders, wld->num_objects + 1);
-			free(wld->panel->buffer);
-			free(wld->panel);
-		}
+			free_panel(wld, wld->panel);
 		if (wld->mlx)
 		{
 			mlx_destroy_display(wld->mlx);

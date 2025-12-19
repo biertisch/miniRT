@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   scroll.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:22:46 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/18 22:18:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:16:12 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "controls.h"
 
-void	scroll_down(t_panel *panel, int object_count)
+void	scroll_down(t_panel *panel)
 {
 	int	max_offset;
 
-	max_offset = object_count + 1 - panel->visible_objs;
+	max_offset = panel->total - panel->visible_objs;
 	if (max_offset < 0)
 		max_offset = 0;
 	if (panel->scroll_offset < max_offset)
@@ -29,7 +29,7 @@ void	scroll_up(t_panel *panel)
 		panel->scroll_offset--;
 }
 
-void	select_object(t_panel *panel, int object_count, int y)
+void	select_object(t_panel *panel, int y)
 {
 	int	y_start;
 	int	row;
@@ -42,7 +42,7 @@ void	select_object(t_panel *panel, int object_count, int y)
 	if (row < 0 || row >= panel->visible_objs)
 		return ;
 	index = panel->scroll_offset + row;
-	if (index >= object_count + 2)
+	if (index >= panel->total)
 		return ;
 	panel->active_obj = index;
 }

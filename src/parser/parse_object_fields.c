@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:12:13 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 19:20:28 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_material	parse_material(const char **s, t_color color)
 	t_checker_tex	*checker;
 
 	skip_spaces(s);
-	if (**s == 'c')
+	if (ft_strcmp(*s, "c") == 0)
 	{
 		(*s)++;
 		checker = checker_texture_colors(0.99, color, (t_color){232, 232, 228});

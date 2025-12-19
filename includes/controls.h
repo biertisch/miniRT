@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 11:11:22 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:19:04 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,11 @@ typedef struct s_panel
 	int			dragging;
 	int			drag_start_x;
 	double		drag_start_norm;
+	t_slider	**sliders;
+	int			total;
 	double		camera_initial_fov;
 	t_vec3		camera_initial_origin;
 	t_vec3		camera_initial_direction;
-	t_slider	**sliders;
 }	t_panel;
 
 // bitmaps.c
@@ -128,6 +129,7 @@ int		get_symbol(char c, int row);
 
 // controls.c
 int		setup_controls(t_world *scene);
+void	free_panel(t_world *scene, t_panel *panel);
 
 // drag.c
 void	begin_drag(t_panel *panel, int x);
@@ -171,13 +173,13 @@ void	apply_resize(t_slider *sliders, double *radius, double *height);
 void	apply_rotation(t_slider *sliders, t_vec3 *direction);
 
 // scroll.c
-void	select_object(t_panel *panel, int object_count, int y);
+void	select_object(t_panel *panel, int y);
 void	scroll_up(t_panel *panel);
-void	scroll_down(t_panel *panel, int object_count);
+void	scroll_down(t_panel *panel);
 
 // sliders_utils.c
-void	init_sliders(t_slider **sliders, t_world *scene);
-void	reset_sliders(t_slider **sliders, int object_count);
+void	init_sliders(t_slider **sliders, int size, t_world *scene);
+void	reset_sliders(t_slider **sliders, int size);
 int		free_sliders(t_slider ***sliders, int size);
 void	get_block_start_and_end(char *header, int *start, int *end);
 int		slider_to_axis(int slider);

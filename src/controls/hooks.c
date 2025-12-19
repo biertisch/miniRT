@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:16:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 14:11:50 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:16:32 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	controls_mouse_release(int button, int x, int y, void *param)
 		if (y >= BUTTON_Y + PADD_Y / 2 && y < BUTTON_Y + PADD_Y / 2 + BUTTON_H)
 			check_button(scene, x);
 		if (y >= OBJ_Y && y < TRANSF_Y)
-			select_object(scene->panel, scene->num_objects, y);
+			select_object(scene->panel, y);
 	}
 	render_controls(scene->panel, scene);
 	return (0);
@@ -78,7 +78,7 @@ int	controls_mouse_hook(int button, int x, int y, void *param)
 	else if (button == 4 && (y >= OBJ_Y && y < TRANSF_Y))
 		scroll_up(scene->panel);
 	else if (button == 5 && (y >= OBJ_Y && y < TRANSF_Y))
-		scroll_down(scene->panel, scene->num_objects);
+		scroll_down(scene->panel);
 	render_controls(scene->panel, scene);
 	return (0);
 }
