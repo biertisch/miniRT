@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:22:46 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 15:23:22 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/18 22:18:55 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	scroll_down(t_panel *panel, int object_count)
 {
 	int	max_offset;
 
-	max_offset = object_count - panel->visible_objs;
+	max_offset = object_count + 1 - panel->visible_objs;
 	if (max_offset < 0)
 		max_offset = 0;
 	if (panel->scroll_offset < max_offset)
