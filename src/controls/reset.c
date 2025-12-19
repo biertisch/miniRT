@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 16:14:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 16:23:38 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 11:16:02 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,10 @@ void	reset_scene(t_panel *panel, t_world *scene)
 		reset_object(panel->sliders[i + 1], scene->objects[i]); // light count
 		i++;
 	}
+	// scene->camera.vfov = panel->camera_initial_fov;
+	// scene->camera.lookfrom = panel->camera_initial_origin;
+	// scene->camera.forword = panel->camera_initial_direction;
+	// scene->camera.initialized = 0;
+	// camera_light_initialize(scene);
 	camera_render(&scene->camera, scene);
 }

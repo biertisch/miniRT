@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 16:02:23 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 11:13:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ static void	init_panel(t_panel *panel, t_world *scene)
 	panel->dragging = 0;
 	panel->drag_start_x = PANEL_W / 2;
 	panel->drag_start_norm = 0.5;
+	panel->camera_initial_fov = scene->camera.vfov;
+	panel->camera_initial_origin = scene->camera.lookfrom;
+	panel->camera_initial_direction = scene->camera.forword;
 	init_sliders(panel->sliders, scene);
 }
 
