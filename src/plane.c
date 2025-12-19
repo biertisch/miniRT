@@ -1,5 +1,6 @@
 #include "minirt.h"
 
+// unnecessary for parser
 t_plane	new_plane(t_vec3 point, t_vec3 normal, t_material mat)
 {
 	t_plane	plane;

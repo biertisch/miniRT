@@ -367,7 +367,7 @@ void 	free_all_the_world(t_world *wld);
 
 // color.c
 t_color	get_color(double r, double g, double b);
-t_color	get_normalize_color(t_color color);
+t_color	norm_color(t_color color);
 void	write_color(t_data *img, int x, int y, t_color color);
 t_color	color_add(t_color a, t_color b);
 t_color	color_multi_num(t_color color, double scalar);
@@ -474,6 +474,7 @@ int		mouse_press(int button, int x, int y, void *param);
 
 //worldfree.c
 void	free_all_the_world(t_world *wld);
+void	error_exit(t_world *wld, char *message);
 
 //surfacechecker.c
 int	is_camera_on_surface(t_camera *cam, t_world *world);

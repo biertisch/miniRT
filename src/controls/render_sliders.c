@@ -6,21 +6,21 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/18 13:03:21 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:46:52 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "controls.h"
 
-static void	draw_value(t_panel *panel, double value, int y, int pos)
+static int	draw_value(t_panel *panel, double value, int y, int pos)
 {
 	char	*str;
 	int		len;
 	int		x;
 
 	str = ft_ftoa(value, 1);
-	if (!str) // issue warning?
-		return ;
+	if (!str)
+		return (0);
 	len = ft_strlen(str);
 	if (pos == 0)
 		x = (PANEL_W - len * CHAR_W) / 2;
@@ -30,6 +30,7 @@ static void	draw_value(t_panel *panel, double value, int y, int pos)
 		x = PANEL_W - PADD_X - len * CHAR_W;
 	draw_string(panel->buffer, str, (t_point){x, y}, WHITE);
 	free(str);
+	return (1);
 }
 
 static void	render_values(t_panel *panel, t_world *scene, t_slider *slider,
@@ -57,9 +58,9 @@ static void	render_values(t_panel *panel, t_world *scene, t_slider *slider,
 		min = 0.5;
 		max = 2;
 	}
-	draw_value(panel, min, y, -1); // check return for failed malloc?
-	draw_value(panel, curr, y, 0);
-	draw_value(panel, max, y, 1);
+	if (!draw_value(panel, min, y, -1) || !draw_value(panel, curr, y, 0)
+		|| !draw_value(panel, max, y, 1))
+		error_exit(scene, "Error\nmalloc");
 }
 
 static void	render_slider_block(t_panel *panel, t_world *scene, char *header,

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/18 10:07:55 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 14:26:51 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
+// unnecessary for parser
 t_sphere	new_sphere(t_vec3 center, double radius, t_material mat)
 {
 	t_sphere	sphere;

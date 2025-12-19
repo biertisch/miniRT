@@ -103,7 +103,7 @@ t_material get_material(t_mat_type type, t_color albedo, double fuz_ridx)
 	t_solid_color_tex	*tex;
 
 	mat.type = type;
-	albedo = get_normalize_color(albedo);
+	albedo = norm_color(albedo);
 	tex = malloc(sizeof(t_solid_color_tex));
 	if (type == LAMBERTIAN)
 	{

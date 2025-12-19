@@ -6,11 +6,18 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 11:12:47 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 17:54:41 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+void	error_exit(t_world *wld, char *message)
+{
+	perror(message); // replace with ft_putstr_fd if needed for non-system failures
+	free_all_the_world(wld);
+	exit(EXIT_FAILURE);
+}
 
 void	free_object(t_object *obj)
 {

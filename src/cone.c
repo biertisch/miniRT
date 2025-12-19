@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/18 19:04:03 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 14:26:40 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-// remove?
+// unnecessary for parser
 t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height,
 	t_material mat)
 {

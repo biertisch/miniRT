@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/18 13:45:30 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 11:11:22 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,9 @@ typedef struct s_panel
 	int			dragging;
 	int			drag_start_x;
 	double		drag_start_norm;
+	double		camera_initial_fov;
+	t_vec3		camera_initial_origin;
+	t_vec3		camera_initial_direction;
 	t_slider	**sliders;
 }	t_panel;
 

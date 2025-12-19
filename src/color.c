@@ -42,7 +42,7 @@ t_color	get_color(double r, double g, double b)
 	return (color);
 }
 
-t_color	get_normalize_color(t_color color)
+t_color	norm_color(t_color color)
 {
 	t_color	norm_color;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_objects.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/16 13:04:01 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:44:42 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ static void	draw_object_row(t_panel *panel, t_world *scene, int index, int y)
 	char	*index_str;
 
 	index_str = ft_itoa(index);
-	if (!index_str) //issue warning?
-		return ;
+	if (!index_str)
+		error_exit(scene, "Error\nmalloc");
 	ft_strlcpy(name, index_str, BUFF_SIZE);
 	free(index_str);
 	ft_strlcat(name, " ", BUFF_SIZE);

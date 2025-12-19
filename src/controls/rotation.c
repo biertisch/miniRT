@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:55:23 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 10:16:07 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 17:21:42 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ static void	commit_rotation(t_slider *slider)
 {
 	double	delta;
 
-	delta = degrees_to_radians(-(slider->knob_pos - 0.5) * RANGE_RT);
+	delta = -(slider->knob_pos - 0.5) * RANGE_RT;
+	delta = delta * M_PI / 180.0;
 	slider->base_value += delta;
 	slider->knob_pos = 0.5;
 }
