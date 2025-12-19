@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 19:11:10 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/19 19:16:50 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	main(int argc, char **argv)
 	}
 	ft_memset(&wld, 0, sizeof(t_world));
 	if (!parser(&wld, argv[1]))
-			return (1);
+		return (1);
 	camera_light_initialize(&wld);
 	wld.mlx = mlx_init();
 	wld.win = mlx_new_window(wld.mlx, wld.camera.img_w,

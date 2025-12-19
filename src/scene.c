@@ -1,5 +1,5 @@
 #include "minirt.h"
-
+/*
 void checkered_spheres(t_world *wld)
 {
 	t_checker_tex *checker_tex = checker_texture_colors(0.99, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
@@ -25,7 +25,7 @@ void checkered_spheres(t_world *wld)
 	wld->spot_light.brightness = 1;
 	wld->spot_light.light_color = get_color(1.0, 1.0, 1.0);
 }
-/*
+
 void cornel_box_scene(t_world *wld)
 {
 	t_material red = get_material(LAMBERTIAN, get_color(0.65, 0.05, 0.05), 0.0);
@@ -90,7 +90,7 @@ void cornel_box_scene(t_world *wld)
 	wld->spot_light.brightness = 1;
 	wld->spot_light.light_color = get_color(1.0, 1.0, 1.0);
 }
-*/
+
 void base_scene1(t_world *wld)
 {
 	// Implement the mandatory base scene setup here
@@ -196,3 +196,4 @@ int	use_test_scene(t_world *wld, int scene_id)
 	else
 		return (0);
 }
+*/
