@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_object_fields.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 18:50:32 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:37:41 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_material	parse_material(const char **s, t_color color)
 	t_checker_texture	*checker;
 
 	skip_spaces(s);
-	if (**s == 'c')
+	if (ft_strcmp(*s, "c") == 0)
 	{
 		(*s)++;
 		checker = checker_texture_colors(0.99, color, (t_color){232, 232, 228});
