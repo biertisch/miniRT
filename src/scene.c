@@ -2,7 +2,7 @@
 
 void checkered_spheres(t_world *wld)
 {
-	t_checker_texture *checker_tex = checker_texture_colors(0.99, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
+	t_checker_tex *checker_tex = checker_texture_colors(0.99, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
 	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
 	t_sphere sphere1 = new_sphere((t_vec3){0, -10, 0}, 10.0, material_checker);
 	t_sphere sphere2 = new_sphere((t_vec3){0, 10, 0}, 10.0, material_checker);
@@ -112,7 +112,7 @@ void base_scene1(t_world *wld)
 	add_object_to_world(wld, SPHERE, &light_sphere);
 
 	// Ground plane
-	t_checker_texture *checker_tex = checker_texture_colors(0.011, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
+	t_checker_tex *checker_tex = checker_texture_colors(0.011, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
 	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
 	t_material mat_ground = get_material(LAMBERTIAN, get_color(1, 1, 1), 0.0);
 	t_plane ground_plane = new_plane(new_vec3(0, -2, 0), new_vec3(0, 1, 0), material_checker);
@@ -150,7 +150,7 @@ void base_plane_sphere_scene(t_world *wld)
 	add_object_to_world(wld, CYLINDER, &cyl);
 
 	// Ground plane
-	t_checker_texture *checker_tex = checker_texture_colors(0.99, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
+	t_checker_tex *checker_tex = checker_texture_colors(0.99, get_color(0.2, 0.3, 0.1), get_color(0.9, 0.9, 0.9));
 	t_material material_checker = get_material_texture(LAMBERTIAN, (t_texture *)checker_tex, 0.0);
 
 	t_sphere checker_sphere1 = new_sphere(new_vec3(0, 3, 0), 1, material_checker);

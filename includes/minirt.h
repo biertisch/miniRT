@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/19 18:52:26 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINIRT_H
 # define MINIRT_H
 
@@ -19,8 +31,8 @@
 # define ESC	65307
 # define ENTER	65293
 # define STEP_ANGLE 1.0f
-# define STEP_MOVE 3.3f
-# define MAX_PITCH 89.0f * M_PI / 180.0f
+# define STEP_MOVE 1.1f
+# define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-4
 
 # ifndef DEBUG
@@ -52,15 +64,17 @@ typedef enum e_direction
 	FORWARD_BACKWARD,
 	LEFT_RIGHT,
 	UP_DOWN
-} t_direction;
+}	t_direction;
 
-typedef struct s_panel t_panel;
+typedef struct s_panel		t_panel;
 
-typedef struct s_mat3 {
-    double m[3][3];
-} t_mat3;
+typedef struct s_mat3
+{
+	double	m[3][3];
+}	t_mat3;
 
-typedef struct	s_data {
+typedef struct s_data
+{
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -75,15 +89,15 @@ typedef struct s_ray
 }	t_ray;
 
 //texture_begin
-typedef struct s_texture t_texture;
+typedef struct s_texture	t_texture;
 // typedef struct s_texture_vtable t_texture_vtable;
 
 struct s_texture
 {
-	t_color	(*value)(t_texture *self, double u, double v, t_vec3 p);
+	t_color	(*value)(t_texture * self, double u, double v, t_vec3 p);
 };
 
-t_color	texture_value(t_texture *self, double u, double v, t_vec3 p);
+t_color				texture_value(t_texture *tex, double u, double v, t_vec3 p);
 
 typedef struct s_soldid_color_tex
 {
@@ -97,9 +111,9 @@ typedef struct s_checker_texture
 	double		inv_scale;
 	t_texture	*even;
 	t_texture	*odd;
-}	t_checker_texture;
+}	t_checker_tex;
 
-t_checker_texture	checker_texture(double scale, t_texture *even, t_texture *odd);
+t_checker_tex		checker_texture(double s, t_texture *even, t_texture *odd);
 
 //texture_end
 
@@ -109,7 +123,7 @@ typedef enum e_material_type
 	METAL,
 	DIELECTRIC,
 	DIFFUSE_LIGHT
-} t_mat_type;
+}	t_mat_type;
 
 typedef struct s_mat_lamb
 {
@@ -139,17 +153,19 @@ typedef union u_mat_data
 	t_mat_metal		metal;
 	t_mat_dielect	dielect;
 	t_diffuse_light	diffuse_light;
-} t_mat_data;
+}	t_mat_data;
 
-typedef struct s_material t_material;
-typedef struct s_hit_record t_hit_record;
+typedef struct s_material	t_material;
+typedef struct s_hit_record	t_hit_record;
 
 struct s_material
 {
 	t_mat_type	type;
 	t_mat_data	data;
-	t_color		(*emitted)(t_material *self,t_ray r_in, t_hit_record *rec, double u, double v, t_vec3 p);
-	double		(*scattering_pdf)(t_ray *ray_in, t_hit_record *rec, t_ray *scattered);
+	t_color		(*emitted)(t_material * self, t_ray r_in, t_hit_record * rec,
+		double u, double v, t_vec3 p);
+	double		(*scattering_pdf)(t_ray *ray_in, t_hit_record *rec,
+			t_ray *scattered);
 };
 
 typedef struct s_interval
@@ -170,12 +186,11 @@ typedef struct s_onb
 	t_vec3	axis[3];
 }	t_onb;
 
-
-typedef	struct	s_pdf t_pdf;
+typedef struct s_pdf		t_pdf;
 struct	s_pdf
 {
 	double	(*value)(t_pdf *self, t_vec3 direction);
-	t_vec3	(*generate)(t_pdf *self);
+	t_vec3	(*generate)(t_pdf * self);
 };
 
 typedef struct s_phere_pdf
@@ -197,26 +212,26 @@ typedef enum e_geometry_type
 	BVH_NODE,
 	QUAD,
 	CONE
-} t_geo_type;
+}	t_geo_type;
 
 typedef struct s_quad
 {
-	t_vec3		Q;
+	t_vec3		q;
 	t_vec3		u;
 	t_vec3		v;
 	t_vec3		w;
 	t_material	mat;
 	t_vec3		normal;
-	double		D;
+	double		d;
 	double		area;
-} t_quad;
+}	t_quad;
 
 typedef struct s_plane
 {
-    t_vec3 point;
-    t_vec3 normal;
-    t_material mat;
-} t_plane;
+	t_vec3		point;
+	t_vec3		normal;
+	t_material	mat;
+}	t_plane;
 
 typedef struct s_cylinder
 {
@@ -225,7 +240,7 @@ typedef struct s_cylinder
 	double		radius;
 	double		height;
 	t_material	mat;
-} t_cylinder;
+}	t_cylinder;
 
 typedef struct s_sphere
 {
@@ -243,7 +258,7 @@ typedef struct s_cone
 	t_material	mat;
 }	t_cone;
 
-typedef struct s_object t_object;
+typedef struct s_object		t_object;
 
 typedef union u_geo_data
 {
@@ -254,20 +269,19 @@ typedef union u_geo_data
 	t_cone		cone;
 }	t_geo_data;
 
-
 struct s_hit_record
 {
-	t_vec3	p;
-	t_vec3	normal;
+	t_vec3		p;
+	t_vec3		normal;
 	t_material	mat;
 	t_object	*hit_obj;
-	double	t;
-	double	u;
-	double	v;
-	int		front_face;
+	double		t;
+	double		u;
+	double		v;
+	int			front_face;
 };
 
-typedef	struct s_hitable_pdf
+typedef struct s_hitable_pdf
 {
 	t_pdf		base;
 	t_object	*objects;
@@ -304,9 +318,10 @@ struct s_object
 {
 	t_geo_data		geo;
 	t_geo_type		type;
-	int 			(*hit)(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-	double 			(*pdf_value)(t_object obj, t_vec3 origin, t_vec3 direction);
-	t_vec3 			(*random)(t_object obj, t_vec3 origin);
+	int				(*hit)(t_ray *ray, t_interval ray_t, t_object obj,
+			t_hit_record *record);
+	double			(*pdf_value)(t_object obj, t_vec3 origin, t_vec3 direction);
+	t_vec3			(*random)(t_object obj, t_vec3 origin);
 	struct s_object	*next;
 };
 
@@ -343,140 +358,155 @@ typedef struct s_world
 }	t_world;
 
 //vec3.c;
-t_vec3	new_vec3(double x, double y, double z);
-t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
-t_vec3	vec3_add(t_vec3 a, t_vec3 b);
-t_vec3	vec3_cross(t_vec3 a, t_vec3 b);
-double	vec3_length_squared(t_vec3 vec);
-double	vec3_length(t_vec3 vec);
-t_vec3	vec3_norm(t_vec3 vec);
-double	vec3_dot(t_vec3 a, t_vec3 b);
-t_vec3	vec3_mul_n(t_vec3 a, double scalar);
-t_vec3	unit_vector(t_vec3 vec);
-t_vec3	random_unit_vec3();
-t_vec3	random_on_hemisphere(t_vec3 normal);
-int		vec3_near_zero(t_vec3 vec);
-t_vec3	vec3_reflect(t_vec3 v, t_vec3 n);
-t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
-t_vec3	random_cosine_direction();
-t_vec3	vec3_clamp(t_vec3 v, double min, double max);
+t_vec3				new_vec3(double x, double y, double z);
+t_vec3				vec3_sub(t_vec3 a, t_vec3 b);
+t_vec3				vec3_add(t_vec3 a, t_vec3 b);
+t_vec3				vec3_cross(t_vec3 a, t_vec3 b);
+double				vec3_length_squared(t_vec3 vec);
+double				vec3_length(t_vec3 vec);
+t_vec3				vec3_norm(t_vec3 vec);
+double				vec3_dot(t_vec3 a, t_vec3 b);
+t_vec3				vec3_mul_n(t_vec3 a, double scalar);
+t_vec3				unit_vector(t_vec3 vec);
+t_vec3				random_unit_vec3(void);
+t_vec3				random_on_hemisphere(t_vec3 normal);
+int					vec3_near_zero(t_vec3 vec);
+t_vec3				vec3_reflect(t_vec3 v, t_vec3 n);
+t_vec3				vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
+t_vec3				random_cosine_direction(void);
+t_vec3				vec3_clamp(t_vec3 v, double min, double max);
 
 //main.c
-int		handle_destroy(void *param);
-void 	free_all_the_world(t_world *wld);
+int					handle_destroy(void *param);
+void				free_all_the_world(t_world *wld);
 
 // color.c
-t_color	get_color(double r, double g, double b);
-t_color	norm_color(t_color color);
-void	write_color(t_data *img, int x, int y, t_color color);
-t_color	color_add(t_color a, t_color b);
-t_color	color_multi_num(t_color color, double scalar);
-t_color	color_mult_color(t_color a, t_color b);
-t_color color_clamp(t_color v, double min, double max);
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+t_color				get_color(double r, double g, double b);
+t_color				norm_color(t_color color);
+void				write_color(t_data *img, int x, int y, t_color color);
+t_color				color_add(t_color a, t_color b);
+t_color				color_multi_num(t_color color, double scalar);
+t_color				color_mult_color(t_color a, t_color b);
+t_color				color_clamp(t_color v, double min, double max);
+void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //ray.c
-t_ray	rt_ray(t_vec3 origin, t_vec3 direction);
-t_vec3	ray_at(t_ray *ray, double t);
+t_ray				rt_ray(t_vec3 origin, t_vec3 direction);
+t_vec3				ray_at(t_ray *ray, double t);
 
 //hittable_list.c
-void	add_object_to_world(t_world *world, t_geo_type geo_type, void *sphere);
-// int		world_hit(t_object *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
-int		world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec);
+void				add_object_to_world(t_world *world, t_geo_type geo_type,
+						void *sphere);
+int					world_hit(t_world *world, t_ray *ray, t_interval ray_t,
+						t_hit_record *rec);
 
 //quad.c
-t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
-int	quad_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
+t_quad				new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
+int					quad_hit(t_ray *ray, t_interval ray_t, t_object obj,
+						t_hit_record *record);
 // double	quad_pdf_value(t_object obj, t_vec3 origin, t_vec3 direction);
 // t_vec3	quad_random(t_object obj, t_vec3 origin);
 
 //sphere.c
-int			sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-t_sphere	new_sphere(t_vec3 center, double radius, t_material mat);
-void		set_face_normal(t_ray *ray, t_vec3 outward_normal, t_hit_record *record);
+int					sphere_hit(t_ray *ray, t_interval ray_t, t_object obj,
+						t_hit_record *record);
+t_sphere			new_sphere(t_vec3 center, double radius, t_material mat);
+void				set_face_normal(t_ray *ray, t_vec3 outward_normal,
+						t_hit_record *record);
 
 //plane.c
-int			plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-t_plane		new_plane(t_vec3 point, t_vec3 normal, t_material mat);
+int					plane_hit(t_ray *ray, t_interval ray_t, t_object obj,
+						t_hit_record *record);
+t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 
 //cylinder.c
-int			cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height, t_material mat);
+int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
+						t_hit_record *record);
+t_cylinder			new_cylinder(t_vec3 center, t_vec3 axis, double radius,
+						double height, t_material mat);
 
 //interval.c
-t_interval	new_interval(double min, double max);
-int	interval_surrounds(t_interval *interval, double value);
-double	interval_clamp(t_interval *interval, double value);
-t_interval	interval_union(t_interval *a, t_interval *b);
-double	interval_size(t_interval *interval);
-t_interval	interval_expand(t_interval *interval, double delta);
-int	interval_contains(t_interval *interval, double value);
-
+t_interval			new_interval(double min, double max);
+int					interval_surrounds(t_interval *interval, double value);
+double				interval_clamp(t_interval *interval, double value);
+t_interval			interval_union(t_interval *a, t_interval *b);
+double				interval_size(t_interval *interval);
+t_interval			interval_expand(t_interval *interval, double delta);
+int					interval_contains(t_interval *interval, double value);
 //camera.c
-t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
-void	camera_light_initialize(t_world *wld);
-void	camera_render(t_camera *camera, t_world *wld);
-// t_ray	get_ray(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera);
+// t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
+void				camera_light_initialize(t_world *wld);
+void				camera_render(t_camera *camera, t_world *wld);
 
 //rt_utils.c
-double	degrees_to_radians(double degrees);
-double	random_double(void);
-double	random_double_range(double min, double max);
-int		random_int(int min, int max);
+double				degrees_to_radians(double degrees);
+double				random_double(void);
+double				random_double_range(double min, double max);
+int					random_int(int min, int max);
 
 //material.c
-t_material get_material(t_mat_type type, t_color albedo, double fuzz);
-t_material	get_material_texture(t_mat_type type, t_texture *tex, double fuzz_or_refidx);
-int	lambertian_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
-int	metal_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
-int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
+t_material			get_material(t_mat_type type, t_color albedo, double fuzz);
+t_material			get_material_texture(t_mat_type type, t_texture *tex,
+						double fuzz_or_refidx);
+int					lambertian_scatter(t_ray *ray_in, t_hit_record *rec,
+						t_color *attenuation, t_ray *scattered, double *pdf);
+int					metal_scatter(t_ray *ray_in, t_hit_record *rec,
+						t_color *attenuation, t_ray *scattered, double *pdf);
+int					dielectric_scatter(t_ray *ray_in, t_hit_record *rec,
+						t_color *attenuation, t_ray *scattered, double *pdf);
 
 //action.c
-void	do_action(int keycode, t_world *wld);
+void				do_action(int keycode, t_world *wld);
 
 //texture_solid_color.c
 t_solid_color_tex	solid_color_texture(t_color color);
-t_color	solid_color_value(t_texture *texture, double u, double v, t_vec3 p);
+t_color				solid_color_value(t_texture *texture, double u,
+						double v, t_vec3 p);
 t_solid_color_tex	*solid_color_texture_ptr(t_color color);
 
 //texture_checker.c
-t_checker_texture	*checker_texture_colors(double scale, t_color even_color, t_color odd_color);
-t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p);
+t_checker_tex		*checker_texture_colors(double scale,
+						t_color even_color, t_color odd_color);
+t_color				checker_texture_value(t_texture *texture,
+						double u, double v, t_vec3 p);
 
 //diffuse_light.c
-t_diffuse_light	new_diffuse_light(t_texture *tex);
-t_diffuse_light	new_diffuse_light_color(t_color color);
-t_color	diffuse_light_emitted(t_material *self, t_ray rin,t_hit_record *rec, double u, double v, t_vec3 p);
+t_diffuse_light		new_diffuse_light(t_texture *tex);
+t_diffuse_light		new_diffuse_light_color(t_color color);
+t_color				diffuse_light_emitted(t_material *self, t_ray rin,
+						t_hit_record *rec, double u, double v, t_vec3 p);
 
 //onb.c
-t_onb	onb_new(t_vec3 n);
-t_vec3	onb_transform(t_onb onb, t_vec3 v);
-t_vec3	onb_u(t_onb onb);
-t_vec3	onb_v(t_onb onb);
-t_vec3	onb_w(t_onb onb);
+t_onb				onb_new(t_vec3 n);
+t_vec3				onb_transform(t_onb onb, t_vec3 v);
+t_vec3				onb_u(t_onb onb);
+t_vec3				onb_v(t_onb onb);
+t_vec3				onb_w(t_onb onb);
 
 //pdf.c
-t_cosine_pdf	cosine_pdf_new(t_vec3 w);
-t_hitable_pdf	hitable_pdf_new(t_object *obj, t_vec3 origin);
+t_cosine_pdf		cosine_pdf_new(t_vec3 w);
+t_hitable_pdf		hitable_pdf_new(t_object *obj, t_vec3 origin);
 
 //cone.c
-t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height, t_material mat);
-int		cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record);
-
+t_cone				new_cone(t_vec3 apex, t_vec3 axis,
+						double radius, double height, t_material mat);
+int					cone_hit(t_ray *ray, t_interval ray_t,
+						t_object obj, t_hit_record *record);
 //cone_quadratic.c
-int		solve_cone_quadratic(t_ray *ray, t_cone *cone, double *t1, double *t2);
+int					solve_cone_quadratic(t_ray *ray, t_cone *cone,
+						double *t1, double *t2);
 
 //scene.c
-int		use_test_scene(t_world *wld, int scene_no);
+int					use_test_scene(t_world *wld, int scene_no);
 
 //mouseselect.c
-int		mouse_press(int button, int x, int y, void *param);
+int					mouse_press(int button, int x, int y, void *param);
 
 //worldfree.c
-void	free_all_the_world(t_world *wld);
-void	error_exit(t_world *wld, char *message);
+void				free_all_the_world(t_world *wld);
+void				error_exit(t_world *wld, char *message);
 
 //surfacechecker.c
-int	is_camera_on_surface(t_camera *cam, t_world *world);
+int					is_camera_on_surface(t_camera *cam, t_world *world);
 
 #endif

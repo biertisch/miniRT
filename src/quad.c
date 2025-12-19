@@ -6,13 +6,13 @@ t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat)
 	t_quad	quad;
 	t_vec3	n;
 
-	quad.Q = Q;
+	quad.q = Q;
 	quad.u = u;
 	quad.v = v;
 	quad.mat = mat;
 	n = vec3_cross(u, v);
 	quad.normal = unit_vector(n);
-	quad.D = vec3_dot(quad.normal, Q);
+	quad.d = vec3_dot(quad.normal, Q);
 	quad.w = vec3_mul_n(n, 1 / vec3_dot(n, n));
 
 	quad.area = vec3_length(n);
@@ -42,11 +42,11 @@ int	quad_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	denom = vec3_dot(obj.geo.quad.normal, ray->direction);
 	if (fabs(denom) < 1e-8)
 		return (0);
-	t = (obj.geo.quad.D - vec3_dot(obj.geo.quad.normal, ray->origin)) / denom;
+	t = (obj.geo.quad.d - vec3_dot(obj.geo.quad.normal, ray->origin)) / denom;
 	if (!interval_contains(&ray_t, t))
 		return (0);
 	intersection = ray_at(ray, t);
-	planar_hitpt_vec = vec3_sub(intersection, obj.geo.quad.Q);
+	planar_hitpt_vec = vec3_sub(intersection, obj.geo.quad.q);
 	alpha = vec3_dot(obj.geo.quad.w, vec3_cross(planar_hitpt_vec, obj.geo.quad.v));
 	beta = vec3_dot(obj.geo.quad.w, vec3_cross(obj.geo.quad.u, planar_hitpt_vec));
 	if (!is_interior(alpha, beta, record))

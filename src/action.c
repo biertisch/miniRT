@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:59:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 10:16:13 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:03:59 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,18 @@ static void camera_update_basis(t_camera *cam)
 
 static	void	camera_rotate_pitch(t_camera *cam, t_direction dir, float angle)
 {
-	double step;
+	double	step;
+	double	max_pitch;
 
 	step = get_rota_step(cam->vfov) * angle;
+	max_pitch = MAX_PITCH_ANGLE * M_PI / 180.0;
 	if (dir == UP_DOWN)
 	{
 		cam->pitch += step;
-		if (cam->pitch > MAX_PITCH)
-			cam->pitch = MAX_PITCH;
-		if (cam->pitch < -MAX_PITCH)
-			cam->pitch = -MAX_PITCH;
+		if (cam->pitch > MAX_PITCH_ANGLE)
+			cam->pitch = MAX_PITCH_ANGLE;
+		if (cam->pitch < -MAX_PITCH_ANGLE)
+			cam->pitch = -MAX_PITCH_ANGLE;
 	}
 	else if (dir == LEFT_RIGHT)
 		cam->yaw += step;

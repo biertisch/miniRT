@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 14:26:51 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 17:58:34 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,32 +77,11 @@ static int	root_calc(t_sphere *sphere, t_ray *ray, t_interval ray_t, double *roo
 
 int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 {
-	// t_vec3		oc;
-	// double		a;
-	// double		h;
-	// double		c;
-	// double		discriminant;
 	t_sphere	*sphere;
-	// double		sqrtd;
 	double		root;
 	t_vec3		outward_normal;
 
 	sphere = &obj.geo.sphere;
-	// oc = vec3_sub(sphere->center, ray->origin);
-	// a = vec3_dot(ray->direction, ray->direction);
-	// h = vec3_dot(oc, ray->direction);
-	// c = vec3_dot(oc, oc) - (sphere->radius * sphere->radius);
-	// discriminant = h * h - a * c;
-	// if (discriminant < 0)
-	// 	return (0);
-	// sqrtd = sqrt(discriminant);
-	// root = (h - sqrtd) / a;
-	// if (!interval_surrounds(&ray_t, root))
-	// {
-	// 	root = (h + sqrtd) / a;
-	// 	if (!interval_surrounds(&ray_t, root))
-	// 		return (0);
-	// }
 	if (!root_calc(sphere, ray, ray_t, &root))
 		return (0);
 	record->t = root;
