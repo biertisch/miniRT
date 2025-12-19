@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 14:44:42 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:14:08 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	render_object_list(t_panel *panel, t_world *scene)
 	while (row < panel->visible_objs)
 	{
 		obj_index = panel->scroll_offset + row;
-		if (obj_index >= scene->num_objects + 1) // light count
+		if (obj_index >= panel->total)
 			break ;
 		y = OBJ_Y + PADD_Y + ROW_H + row * ROW_H;
 		if (obj_index == panel->active_obj)

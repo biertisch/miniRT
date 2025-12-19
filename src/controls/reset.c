@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 16:14:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 14:13:40 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:12:02 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	reset_scene(t_panel *panel, t_world *scene)
 	panel->dragging = 0;
 	panel->drag_start_x = PANEL_W / 2;
 	panel->drag_start_norm = 0.5;
-	reset_sliders(panel->sliders, scene->num_objects);
+	reset_sliders(panel->sliders, panel->total);
 	reset_position(panel->sliders[0], &scene->spot_light.position);
 	i = 0;
 	while (i < scene->num_objects)

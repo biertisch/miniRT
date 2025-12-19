@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:36:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 10:12:39 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:11:36 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ int	free_sliders(t_slider ***sliders, int size)
 	return (0);
 }
 
-void	reset_sliders(t_slider **sliders, int object_count)
+void	reset_sliders(t_slider **sliders, int size)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < object_count + 1) // light count
+	while (i < size)
 	{
 		j = 0;
 		while (j < SLIDER_COUNT)
@@ -87,13 +87,13 @@ void	reset_sliders(t_slider **sliders, int object_count)
 }
 
 // slider.y is defined when rendering, depending on object type
-void	init_sliders(t_slider **sliders, t_world *scene)
+void	init_sliders(t_slider **sliders, int size, t_world *scene)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < scene->num_objects + 1) // light count
+	while (i < size)
 	{
 		j = 0;
 		while (j < SLIDER_COUNT)

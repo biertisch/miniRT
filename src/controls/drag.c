@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   drag.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:20:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/14 23:02:33 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 18:13:34 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	detect_active_slider(t_panel *panel, int x, int y)
 {
 	int	i;
 
-	if (panel->active_obj < 0)
+	if (panel->active_obj < 0 || panel->active_obj >= panel->total)
 		return ;
 	i = 0;
 	while (i < SLIDER_COUNT)
