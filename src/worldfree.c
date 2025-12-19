@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   worldfree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 11:02:14 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 11:12:47 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	free_all_the_world(t_world *wld)
 			if (wld->mlx && wld->panel->win)
 				mlx_destroy_window(wld->mlx, wld->panel->win);
 			free_sliders(&wld->panel->sliders, wld->num_objects + 1);
+			free(wld->panel->buffer);
 			free(wld->panel);
 		}
 		if (wld->mlx)
