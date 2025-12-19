@@ -18,9 +18,9 @@ t_vec3	onb_transform(t_onb onb, t_vec3 v)
 {
 	t_vec3	result;
 
-	result = vec3_multiply(onb.axis[0], v.x);
-	result = vec3_add(result, vec3_multiply(onb.axis[1], v.y));
-	result = vec3_add(result, vec3_multiply(onb.axis[2], v.z));
+	result = vec3_mul_n(onb.axis[0], v.x);
+	result = vec3_add(result, vec3_mul_n(onb.axis[1], v.y));
+	result = vec3_add(result, vec3_mul_n(onb.axis[2], v.z));
 	return (result);
 }
 

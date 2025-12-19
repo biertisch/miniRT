@@ -11,7 +11,7 @@ SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c int
 						controls/bitmaps.c controls/render_utils.c controls/render.c controls/scroll.c\
 						controls/sliders_utils.c controls/values.c controls/transform.c\
 						controls/rotation.c controls/translation.c controls/resize.c controls/reset.c\
-						cone_quadratic.c mouseselect.c scene.c worldfree.c)
+						cone_quadratic.c mouseselect.c scene.c worldfree.c surfacechecker.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/17 17:03:22 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/18 19:04:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 	t_vec3	m;
 	t_vec3	outward;
 
-	m = vec3_multiply(axis, proj);
-	outward = vec3_subtract(v, m);
-	return (vec3_normalize(outward));
+	m = vec3_mul_n(axis, proj);
+	outward = vec3_sub(v, m);
+	return (vec3_norm(outward));
 }
 
 static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
@@ -38,16 +38,16 @@ static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
 	double	denom;
 	double	t;
 
-	axis = vec3_multiply(vec3_normalize(cone->axis), -1);
-	center = vec3_add(cone->apex, vec3_multiply(axis, cone->height));
+	axis = vec3_mul_n(vec3_norm(cone->axis), -1);
+	center = vec3_add(cone->apex, vec3_mul_n(axis, cone->height));
 	denom = vec3_dot(ray->direction, axis);
 	if (fabs(denom) <= 1e-8)
 		return (0);
-	t = vec3_dot(vec3_subtract(center, ray->origin), axis) / denom;
+	t = vec3_dot(vec3_sub(center, ray->origin), axis) / denom;
 	if (t < ray_t->min || t > ray_t->max)
 		return (0);
 	p = ray_at(ray, t);
-	if (vec3_length_squared(vec3_subtract(p, center))
+	if (vec3_length_squared(vec3_sub(p, center))
 		> cone->radius * cone->radius)
 		return (0);
 	rec->t = t;
@@ -68,8 +68,8 @@ static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
 	double	proj;
 
 	p = ray_at(ray, t);
-	v = vec3_subtract(p, cone->apex);
-	axis = vec3_multiply(vec3_normalize(cone->axis), -1);
+	v = vec3_sub(p, cone->apex);
+	axis = vec3_mul_n(vec3_norm(cone->axis), -1);
 	proj = vec3_dot(v, axis);
 	if (proj < 0 || proj > cone->height)
 		return (0);

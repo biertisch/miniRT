@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 11:55:23 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 10:12:19 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 10:16:07 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,5 @@ void	apply_rotation(t_slider *sliders, t_vec3 *direction)
 	tmp = rotate_x(tmp, sliders[ROTATE_X].base_value);
 	tmp = rotate_y(tmp, sliders[ROTATE_Y].base_value);
 	tmp = rotate_z(tmp, sliders[ROTATE_Z].base_value);
-	*direction = vec3_normalize(tmp);
+	*direction = vec3_norm(tmp);
 }

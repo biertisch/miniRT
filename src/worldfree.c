@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 13:58:00 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/17 18:13:34 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,31 @@
 
 void	free_object(t_object *obj)
 {
-	if (obj->type == SPHERE)
+	if (obj->type == SPHERE && obj->geo.sphere.mat.data.lamb.tex)
+	{
 		free(obj->geo.sphere.mat.data.lamb.tex);
-	else if (obj->type == PLANE)
+		obj->geo.sphere.mat.data.lamb.tex = NULL;
+	}
+	else if (obj->type == PLANE && obj->geo.plane.mat.data.lamb.tex)
+	{
 		free(obj->geo.plane.mat.data.lamb.tex);
-	else if (obj->type == CYLINDER)
+		obj->geo.plane.mat.data.lamb.tex = NULL;
+	}
+	else if (obj->type == CYLINDER && obj->geo.cylinder.mat.data.lamb.tex)
+	{
 		free(obj->geo.cylinder.mat.data.lamb.tex);
-	else if (obj->type == CONE)
+		obj->geo.cylinder.mat.data.lamb.tex = NULL;
+	}
+	else if (obj->type == CONE && obj->geo.cone.mat.data.lamb.tex)
+	{
 		free(obj->geo.cone.mat.data.lamb.tex);
-	else if (obj->type == QUAD)
+		obj->geo.cone.mat.data.lamb.tex = NULL;
+	}
+	else if (obj->type == QUAD && obj->geo.quad.mat.data.lamb.tex)
+	{
 		free(obj->geo.quad.mat.data.lamb.tex);
+		obj->geo.quad.mat.data.lamb.tex = NULL;
+	}
 	free(obj);
 }
 

@@ -10,7 +10,7 @@ t_vec3	new_vec3(double x, double y, double z)
 	return (vec);
 }
 
-t_vec3 vec3_multiply(t_vec3 a, double scalar)
+t_vec3 vec3_mul_n(t_vec3 a, double scalar)
 {
 	t_vec3	result;
 
@@ -20,7 +20,7 @@ t_vec3 vec3_multiply(t_vec3 a, double scalar)
 	return (result);
 }
 
-t_vec3 vec3_divide(t_vec3 a, double scalar)
+t_vec3 vec3_div(t_vec3 a, double scalar)
 {
 	t_vec3	result;
 
@@ -35,7 +35,7 @@ t_vec3 vec3_divide(t_vec3 a, double scalar)
 	return (result);
 }
 
-t_vec3	vec3_subtract(t_vec3 a, t_vec3 b)
+t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
 {
 	t_vec3	result;
 
@@ -65,16 +65,16 @@ double	vec3_length(t_vec3 vec)
 	return (sqrt(vec3_length_squared(vec)));
 }
 
-t_vec3	vec3_normalize(t_vec3 vec)
+t_vec3	vec3_norm(t_vec3 vec)
 {
 	double	length;
 	t_vec3	result;
 
 	length = vec3_length(vec);
 	if (length != 0)
-		result = vec3_divide(vec, length);
-	// else
-	// 	printf("Warning: Zero length vector passed to vec3_normalize\n");
+		result = vec3_div(vec, length);
+	else
+		printf("Warning: Zero length vector passed to vec3_normalize\n");
 	return (result);
 }
 
@@ -139,7 +139,7 @@ t_vec3	random_unit_vec3()
 		p = random_vec3_range(-1.0, 1.0);
 		length_squared=vec3_length_squared(p);
 		if (length_squared > 1e-160 && length_squared <= 1)
-			return (vec3_multiply(p, 1.0 / sqrt(length_squared)));
+			return (vec3_mul_n(p, 1.0 / sqrt(length_squared)));
 	}
 }
 
@@ -149,7 +149,7 @@ t_vec3	random_on_hemisphere(t_vec3 normal)
 	if (vec3_dot(on_unit_sphere, normal) > 0.0)
 		return (on_unit_sphere);
 	else
-		return (vec3_multiply(on_unit_sphere, -1.0));
+		return (vec3_mul_n(on_unit_sphere, -1.0));
 }
 
 int	vec3_near_zero(t_vec3 vec)
@@ -162,7 +162,7 @@ int	vec3_near_zero(t_vec3 vec)
 
 t_vec3	vec3_reflect(t_vec3 v, t_vec3 n)
 {
-	return (vec3_subtract(v, vec3_multiply(n, 2.0 * vec3_dot(v, n))));
+	return (vec3_sub(v, vec3_mul_n(n, 2.0 * vec3_dot(v, n))));
 }
 
 t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat)
@@ -171,9 +171,9 @@ t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat)
 	t_vec3	r_out_perp;
 	t_vec3	r_out_parallel;
 
-	cos_theta = fmin(vec3_dot(vec3_multiply(uv, -1.0), n), 1.0);
-	r_out_perp = vec3_multiply(vec3_add(uv, vec3_multiply(n, cos_theta)), etai_over_etat);
-	r_out_parallel = vec3_multiply(n, -sqrt(fabs(1.0 - vec3_length_squared(r_out_perp))));
+	cos_theta = fmin(vec3_dot(vec3_mul_n(uv, -1.0), n), 1.0);
+	r_out_perp = vec3_mul_n(vec3_add(uv, vec3_mul_n(n, cos_theta)), etai_over_etat);
+	r_out_parallel = vec3_mul_n(n, -sqrt(fabs(1.0 - vec3_length_squared(r_out_perp))));
 	return (vec3_add(r_out_perp, r_out_parallel));
 }
 
