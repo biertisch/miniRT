@@ -1,5 +1,6 @@
 #include "minirt.h"
 
+// unnecessary for parser
 t_quad	new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat)
 {
 	t_quad	quad;

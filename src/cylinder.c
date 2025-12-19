@@ -1,5 +1,6 @@
 #include "minirt.h"
 
+// unnecessary for parser
 t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height, t_material mat)
 {
 	t_cylinder	cylinder;

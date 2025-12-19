@@ -6,11 +6,18 @@
 /*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 11:02:14 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:33:50 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+void	error_exit(t_world *wld, char *message)
+{
+	perror(message); // replace with ft_putstr_fd if needed for non-system failures
+	free_all_the_world(wld);
+	exit(EXIT_FAILURE);
+}
 
 void	free_object(t_object *obj)
 {
