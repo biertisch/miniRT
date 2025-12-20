@@ -17,7 +17,7 @@ LIBFT_A = $(LIBFT_DIR)/libft.a
 
 CC = cc
 #CCFLAGS = -Wextra -Wall -Werror -MMD --std=gnu11
-CCFLAGS = -Werror -MMD --std=gnu11
+CCFLAGS = -Werror -MMD --std=gnu11 -g
 
 D ?= 0
 

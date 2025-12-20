@@ -11,6 +11,12 @@ t_plane	new_plane(t_vec3 point, t_vec3 normal, t_material mat)
 	return (plane);
 }
 
+static void	get_plane_uv(t_vec3 p, double *u, double *v)
+{
+	*u = p.x - floor(p.x);
+	*v = p.z - floor(p.z);
+}
+
 int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 {
 	t_plane		*plane;
@@ -29,6 +35,7 @@ int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	record->p = ray_at(ray, t);
 	outward_normal = plane->normal;
 	set_face_normal(ray, outward_normal, record);
+	get_plane_uv(vec3_sub(record->p, plane->point), &record->u, &record->v);
 	record->mat = plane->mat;
 	record->hit_obj = &obj;
 	return (1);

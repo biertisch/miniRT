@@ -38,53 +38,17 @@ static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_recor
 	set_face_normal(ray, outward, rec);
 	return (1);
 }
-
-int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
+// Returns 0 if no hit, 2 if bottom cap hit, 1 if top cap hit
+int	cylinder_cap_check(t_ray *ray, t_interval *ray_t, t_cylinder *cy,
+	t_hit_record *rec)
 {
-    t_cylinder *cy = &obj.geo.cylinder;
-    t_vec3 oc = vec3_sub(ray->origin, cy->center);
-    t_vec3 axis = vec3_norm(cy->axis);
-    double a, b, c, disc, sqrt_disc;
-    double t1, t2;
-    t_hit_record tmp;
-    int hit_any = 0;
-    double closest_t = ray_t.max;  // Track closest hit instead of modifying ray_t
+	double		closest_t;
+	int			hit_any;
 
-    // ==== Solve for side surface ====
-    t_vec3 d_cross_a = vec3_cross(ray->direction, axis);
-    t_vec3 oc_cross_a = vec3_cross(oc, axis);
-    a = vec3_dot(d_cross_a, d_cross_a);
-    b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
-    c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
-    disc = b * b - 4 * a * c;
-    
-    if (disc >= 0)
-    {
-        sqrt_disc = sqrt(disc);
-        t1 = (-b - sqrt_disc) / (2 * a);
-        t2 = (-b + sqrt_disc) / (2 * a);
-        if (t1 >= ray_t.min && t1 < closest_t)
-        {
-            if (check_cylinder_side(ray, cy, t1, &tmp))
-            {
-                *rec = tmp;
-                closest_t = tmp.t;
-                hit_any = 1;
-            }
-        }
-        if (t2 >= ray_t.min && t2 < closest_t)
-        {
-            if (check_cylinder_side(ray, cy, t2, &tmp))
-            {
-                *rec = tmp;
-                closest_t = tmp.t;
-                hit_any = 1;
-            }
-        }
-    }
-
-    // ==== Check top/bottom caps ====
-    t_vec3 half_axis = vec3_mul_n(axis, cy->height / 2.0);
+	closest_t = ray_t->max;
+	hit_any = 0;
+	t_vec3 axis = vec3_norm(cy->axis);
+	t_vec3 half_axis = vec3_mul_n(axis, cy->height / 2.0);
     t_vec3 cap1 = vec3_sub(cy->center, half_axis);
     t_vec3 cap2 = vec3_add(cy->center, half_axis);
     double denom = vec3_dot(ray->direction, axis);
@@ -93,7 +57,7 @@ int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
     {
         // bottom cap
         double tcap = vec3_dot(vec3_sub(cap1, ray->origin), axis) / denom;
-        if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
+        if (tcap >= ray_t->min && tcap < closest_t)  // ← Check against closest_t
         {
             t_vec3 p = ray_at(ray, tcap);
             if (vec3_length_squared(vec3_sub(p, cap1)) <= cy->radius * cy->radius)
@@ -103,13 +67,13 @@ int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
                 rec->mat = cy->mat;
                 set_face_normal(ray, vec3_mul_n(axis, -1), rec);
                 closest_t = tcap;
-                hit_any = 1;
+                hit_any = 2;
             }
         }
 
         // top cap
         tcap = vec3_dot(vec3_sub(cap2, ray->origin), axis) / denom;
-        if (tcap >= ray_t.min && tcap < closest_t)  // ← Check against closest_t
+        if (tcap >= ray_t->min && tcap < closest_t)  // ← Check against closest_t
         {
             t_vec3 p = ray_at(ray, tcap);
             if (vec3_length_squared(vec3_sub(p, cap2)) <= cy->radius * cy->radius)
@@ -123,8 +87,135 @@ int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
             }
         }
     }
+	return (hit_any);
+}
+
+int	cylinder_side_check(t_ray *ray, t_cylinder *cy, t_interval *ray_t, t_hit_record *rec)
+{
+	t_hit_record tmp;
+	t_vec3 axis = vec3_norm(cy->axis);
+    t_vec3 d_cross_a = vec3_cross(ray->direction, axis);
+    t_vec3 oc_cross_a = vec3_cross(vec3_sub(ray->origin, cy->center), axis);
+    double a = vec3_dot(d_cross_a, d_cross_a);
+    double b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
+    double c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
+    double disc = b * b - 4 * a * c;
+    
+    if (disc >= 0)
+    {
+        double sqrt_disc = sqrt(disc);
+        double t1 = (-b - sqrt_disc) / (2 * a);
+        double t2 = (-b + sqrt_disc) / (2 * a);
+        if (t1 >= ray_t->min && t1 < ray_t->max)
+        {
+            if (check_cylinder_side(ray, cy, t1, &tmp))
+            {
+                *rec = tmp;
+				ray_t->max = tmp.t;
+                return (1);
+            }
+        }
+        if (t2 >= ray_t->min && t2 < ray_t->max)
+        {
+            if (check_cylinder_side(ray, cy, t2, &tmp))
+            {
+                *rec = tmp;
+				ray_t->max = tmp.t;
+                return (1);
+            }
+        }
+    }
+	return (0);
+}
+
+void	set_cylinder_uv(t_cylinder *cy, t_hit_record *rec)
+{
+	t_vec3  AP;   // hit 点到底面中心向量
+    t_vec3  X;    // 投影到截面平面的向量
+    t_vec3  T;    // 切线
+    t_vec3  B;    // 切线
+    double  t;
+
+    // 1️⃣ 计算 hit 点在 cylinder 轴向的投影（高度比例）
+    AP = vec3_sub(rec->p, cy->center);
+    t = vec3_dot(AP, cy->axis);   // 0~height
+    rec->v = t / cy->height;         // 归一化 v ∈ [0,1]
+
+    // 2️⃣ 计算截面平面向量 X
+    X = vec3_sub(AP, vec3_mul_n(cy->axis, t));  // 垂直于 axis
+
+    // 3️⃣ 构建局部切线空间
+    if (fabs(cy->axis.y) < 0.999)
+        T = vec3_norm(vec3_cross(cy->axis, new_vec3(0,1,0)));
+    else
+        T = vec3_norm(vec3_cross(cy->axis, new_vec3(1,0,0)));
+    B = vec3_cross(cy->axis, T);
+
+    // 4️⃣ 计算 u（围绕轴的角度）
+    rec->u = atan2(vec3_dot(X, B), vec3_dot(X, T)) / (2.0 * M_PI);
+    if (rec->u < 0)
+        rec->u += 1.0;
+}
+void cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
+{
+    t_vec3 T,B,X;
+    double t;
+
+	if (fabs(c->axis.y) < 0.999)
+		T = vec3_norm(vec3_cross(c->axis, new_vec3(0,1,0)));
+	else
+		T = vec3_norm(vec3_cross(c->axis, new_vec3(1,0,0)));
+		B = vec3_cross(c->axis, T);
+
+	if (face == 0)
+	{
+		X = vec3_sub(rec->p, c->center);
+		t = vec3_dot(X, c->axis);
+		rec->v = t / c->height;
+		X = vec3_sub(X, vec3_mul_n(c->axis, t));
+		rec->u = atan2(vec3_dot(X,B), vec3_dot(X,T)) / (2.0 * M_PI);
+		if (rec->u < 0) rec->u += 1.0;
+	}
+	else
+	{
+		t_vec3 center;
+		if (face == 1)
+			center = vec3_add(c->center, vec3_mul_n(c->axis, c->height/2.0));
+		else if (face == 2)
+			center = vec3_sub(c->center, vec3_mul_n(c->axis, c->height/2.0));
+		else
+			return ;
+		X = vec3_sub(rec->p, center);
+        rec->u = 0.5 + vec3_dot(X,T)/(2.0*c->radius);
+        rec->v = 0.5 + vec3_dot(X,B)/(2.0*c->radius);
+    }
+}
+
+int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
+{
+	t_cylinder	*cy;
+	int			hit_any;
+	int			face;
+	double		closest_t;
+	
+	closest_t = ray_t.max;
+	hit_any = 0;
+	cy = &obj.geo.cylinder;
+	face = -1;
+	hit_any = cylinder_side_check(ray, cy, &ray_t, rec);
 	if (hit_any)
+	{
+		ray_t.max = rec->t;
+		face = 0;
+	}
+	face = cylinder_cap_check(ray, &ray_t, cy, rec);
+	if (face > 0 || hit_any)
+		hit_any += face;
+	if (hit_any)
+	{
 		rec->hit_obj = &obj;
+		cylinder_uv(cy, rec, face);
+	}
 
     return (hit_any);
 }

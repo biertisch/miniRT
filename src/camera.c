@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 14:23:06 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/20 11:17:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ t_color	ray_color_v2(t_ray *ray, int depth, t_world *world)
 	{
 		phong.obj_color = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 
-		
 		r_2light = rt_ray(rec.p, vec3_norm(vec3_sub(world->spot_light.position, rec.p)));
 		distance = vec3_length(vec3_sub(world->spot_light.position, rec.p));
 		
@@ -133,7 +132,136 @@ t_color	ray_color_v2(t_ray *ray, int depth, t_world *world)
 	else
 		return (phong.ambient);
 }
+
+void	output_camara_info(t_camera *camera)
+{
+	if (DEBUG == 0)
+		return ;
+	printf("Camera Info:\n");
+	printf("  Lookfrom: (%f, %f, %f)\n", camera->lookfrom.x, camera->lookfrom.y, camera->lookfrom.z);
+	printf("  direction:   (%f, %f, %f)\n", camera->forword.x, camera->forword.y, camera->forword.z);
+	printf("  Vup:      (%f, %f, %f)\n", camera->vup.x, camera->vup.y, camera->vup.z);
+	printf("  U:        (%f, %f, %f)\n", camera->u.x, camera->u.y, camera->u.z);
+	printf("  V:        (%f, %f, %f)\n", camera->v.x, camera->v.y, camera->v.z);
+	printf("  W:        (%f, %f, %f)\n", camera->w.x, camera->w.y, camera->w.z);
+	printf("  FOV:      %f\n", camera->vfov);
+	printf("  Aspect Ratio: %f\n", (double)camera->img_w / (double)camera->img_h);
+	printf("  Image Width:  %d\n", camera->img_w);
+	printf("  Image Height: %d\n", camera->img_h);
+	printf("  Max Depth:        %d\n", camera->max_depth);
+	printf("  Pixel00 Location:    (%f, %f, %f)\n", camera->pix00_loc.x, camera->pix00_loc.y, camera->pix00_loc.z);
+	printf("  Pixel Delta U:       (%f, %f, %f)\n", camera->pix_delta_u.x, camera->pix_delta_u.y, camera->pix_delta_u.z);
+	printf("  Pixel Delta V:       (%f, %f, %f)\n", camera->pix_delta_v.x, camera->pix_delta_v.y, camera->pix_delta_v.z);
+}
+
+void	init_camera_viewport(t_camera *camera)
+{
+	t_vec3	viewport_upper_left;
+	double	focal_length;
+	double	theta;
+	double	viewport_height;
+	double	viewport_width;
+	t_vec3	viewport_v;
+	t_vec3	viewport_u;
+
+	focal_length =  vec3_length(camera->forword);
+	theta = degrees_to_radians(camera->vfov);
+	viewport_height = 2.0 * (tan(theta / 2)) * focal_length;
+	viewport_width = viewport_height * ((double)camera->img_w/camera->img_h);
+	viewport_u = vec3_mul_n(camera->u, viewport_width);
+	viewport_v = vec3_mul_n(camera->v, -viewport_height);
+	camera->pix_delta_u = vec3_mul_n(viewport_u, 1.0 / (double)camera->img_w);
+	camera->pix_delta_v = vec3_mul_n(viewport_v, 1.0 / (double)camera->img_h);
+	viewport_upper_left = vec3_sub(camera->lookfrom,vec3_mul_n(camera->w, focal_length));
+	viewport_upper_left = vec3_sub(viewport_upper_left, vec3_mul_n(viewport_u, 0.5));
+	viewport_upper_left = vec3_sub(viewport_upper_left, vec3_mul_n(viewport_v, 0.5));
+	camera->pix00_loc = vec3_add(viewport_upper_left, vec3_mul_n(vec3_add(camera->pix_delta_u,camera->pix_delta_v), 0.5));
+}
+
+t_vec3	choose_vup(t_vec3 forward)
+{
+	t_vec3	vup;
+
+	vup = (t_vec3){0.0, 1.0, 0.0};
+	if (fabs(vec3_dot(forward, vup)) >= 0.999)
+		vup = (t_vec3){0.0, 0.0, 1.0};
+	return (vup);
+}
+
+void	camera_light_initialize(t_world *wld)
+{
+	t_camera *camera;
+
+	camera = &wld->camera;
+	camera->aspect_ratio = 16.0/9.0;
+	camera->img_w = 400;
+	camera->max_depth = 5;
+	if (!camera->initialized)
+	{
+		camera->pitch = asin(camera->forword.y);
+		camera->yaw = atan2(camera->forword.z, camera->forword.x);
+		camera->vup = choose_vup(camera->forword);
+	}
+	camera->img_h = camera->img_w / camera->aspect_ratio;
+	if (camera->img_h < 1)
+		camera->img_h = 1;
+	camera->w = vec3_mul_n(unit_vector(camera->forword), -1);
+	camera->u = unit_vector(vec3_cross(camera->vup, camera->w));
+	camera->v = vec3_cross(camera->w, camera->u);
+	init_camera_viewport(camera);
+	camera->initialized = 1;
+	if (is_camera_on_surface(camera, wld))
+	{
+		free_all_the_world(wld);
+		exit(EXIT_FAILURE);
+	}
+	output_camara_info(camera);
+}
+
+static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
+{
+	t_vec3	pixel_point;
+	t_vec3	ray_direction;
+
+	pixel_point = vec3_add(camera->pix00_loc,
+					vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
+							 vec3_mul_n(camera->pix_delta_v, pixel_y)));
+	ray_direction = vec3_norm(vec3_sub(pixel_point, camera->lookfrom));
+	return (rt_ray(camera->lookfrom, ray_direction));
+}
+
+void	camera_render(t_camera *cam, t_world *wld)
+{
+	t_data	img;
+	t_color	pix_color;
+	t_ray	r;
+	int		i;
+	int		j;
+
+	img.img = mlx_new_image(wld->mlx, cam->img_w, cam->img_h);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
+							&img.line_length,&img.endian);
+	j = 0;
+	while (j < cam->img_h)
+	{
+		i = 0;
+        while (i < cam->img_w)
+		{
+			pix_color = (t_color){0,0,0};
+			r = get_ray(i, j, cam);
+			pix_color = color_add(pix_color, ray_color_v2(&r, cam->max_depth, wld));
+			write_color(&img, i, j, pix_color);
+			i++;
+		}
+		j++;
+    }
+	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
+	mlx_destroy_image(wld->mlx, img.img);
+}
+
 /*
+
+
 // Version 1: Phong Reflection Model with Shadows and specular highlights
 t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
 {
@@ -247,29 +375,7 @@ t_color ray_color_v0(t_ray *ray, int depth, t_world *world)
 	else
 		return (ambient);
 }
-*/
 
-void	output_camara_info(t_camera *camera)
-{
-	if (DEBUG == 0)
-		return ;
-	printf("Camera Info:\n");
-	printf("  Lookfrom: (%f, %f, %f)\n", camera->lookfrom.x, camera->lookfrom.y, camera->lookfrom.z);
-	printf("  direction:   (%f, %f, %f)\n", camera->forword.x, camera->forword.y, camera->forword.z);
-	printf("  Vup:      (%f, %f, %f)\n", camera->vup.x, camera->vup.y, camera->vup.z);
-	printf("  U:        (%f, %f, %f)\n", camera->u.x, camera->u.y, camera->u.z);
-	printf("  V:        (%f, %f, %f)\n", camera->v.x, camera->v.y, camera->v.z);
-	printf("  W:        (%f, %f, %f)\n", camera->w.x, camera->w.y, camera->w.z);
-	printf("  FOV:      %f\n", camera->vfov);
-	printf("  Aspect Ratio: %f\n", (double)camera->img_w / (double)camera->img_h);
-	printf("  Image Width:  %d\n", camera->img_w);
-	printf("  Image Height: %d\n", camera->img_h);
-	printf("  Max Depth:        %d\n", camera->max_depth);
-	printf("  Pixel00 Location:    (%f, %f, %f)\n", camera->pix00_loc.x, camera->pix00_loc.y, camera->pix00_loc.z);
-	printf("  Pixel Delta U:       (%f, %f, %f)\n", camera->pix_delta_u.x, camera->pix_delta_u.y, camera->pix_delta_u.z);
-	printf("  Pixel Delta V:       (%f, %f, %f)\n", camera->pix_delta_v.x, camera->pix_delta_v.y, camera->pix_delta_v.z);
-}
-/*
 t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 {
 	t_hit_record	rec;
@@ -358,114 +464,8 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 color_from_scatter = color_multiply_number(color_from_scatter, 4);
 
 	return (color_add(color_from_emission, color_from_scatter));
-}*/
-
-void	init_camera_viewport(t_camera *camera)
-{
-	t_vec3	viewport_upper_left;
-	double	focal_length;
-	double	theta;
-	double	viewport_height;
-	double	viewport_width;
-	t_vec3	viewport_v;
-	t_vec3	viewport_u;
-
-	focal_length =  vec3_length(camera->forword);
-	theta = degrees_to_radians(camera->vfov);
-	viewport_height = 2.0 * (tan(theta / 2)) * focal_length;
-	viewport_width = viewport_height * ((double)camera->img_w/camera->img_h);
-	viewport_u = vec3_mul_n(camera->u, viewport_width);
-	viewport_v = vec3_mul_n(camera->v, -viewport_height);
-	camera->pix_delta_u = vec3_mul_n(viewport_u, 1.0 / (double)camera->img_w);
-	camera->pix_delta_v = vec3_mul_n(viewport_v, 1.0 / (double)camera->img_h);
-	viewport_upper_left = vec3_sub(camera->lookfrom,vec3_mul_n(camera->w, focal_length));
-	viewport_upper_left = vec3_sub(viewport_upper_left, vec3_mul_n(viewport_u, 0.5));
-	viewport_upper_left = vec3_sub(viewport_upper_left, vec3_mul_n(viewport_v, 0.5));
-	camera->pix00_loc = vec3_add(viewport_upper_left, vec3_mul_n(vec3_add(camera->pix_delta_u,camera->pix_delta_v), 0.5));
 }
 
-t_vec3	choose_vup(t_vec3 forward)
-{
-	t_vec3	vup;
-
-	vup = (t_vec3){0.0, 1.0, 0.0};
-	if (fabs(vec3_dot(forward, vup)) >= 0.999)
-		vup = (t_vec3){0.0, 0.0, 1.0};
-	return (vup);
-}
-
-void	camera_light_initialize(t_world *wld)
-{
-	t_camera *camera;
-
-	camera = &wld->camera;
-	camera->aspect_ratio = 16.0/9.0;
-	camera->img_w = 400;
-	camera->max_depth = 5;
-	if (!camera->initialized)
-	{
-		camera->pitch = asin(camera->forword.y);
-		camera->yaw = atan2(camera->forword.z, camera->forword.x);
-		camera->vup = choose_vup(camera->forword);
-	}
-	camera->img_h = camera->img_w / camera->aspect_ratio;
-	if (camera->img_h < 1)
-		camera->img_h = 1;
-	camera->w = vec3_mul_n(unit_vector(camera->forword), -1);
-	camera->u = unit_vector(vec3_cross(camera->vup, camera->w));
-	camera->v = vec3_cross(camera->w, camera->u);
-	init_camera_viewport(camera);
-	camera->initialized = 1;
-	if (is_camera_on_surface(camera, wld))
-	{
-		free_all_the_world(wld);
-		exit(EXIT_FAILURE);
-	}
-	output_camara_info(camera);
-}
-
-static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
-{
-	t_vec3	pixel_point;
-	t_vec3	ray_direction;
-
-	pixel_point = vec3_add(camera->pix00_loc,
-					vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
-							 vec3_mul_n(camera->pix_delta_v, pixel_y)));
-	ray_direction = vec3_norm(vec3_sub(pixel_point, camera->lookfrom));
-	return (rt_ray(camera->lookfrom, ray_direction));
-}
-
-void	camera_render(t_camera *cam, t_world *wld)
-{
-	t_data	img;
-	t_color	pix_color;
-	t_ray	r;
-	int		i;
-	int		j;
-
-	img.img = mlx_new_image(wld->mlx, cam->img_w, cam->img_h);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
-							&img.line_length,&img.endian);
-	j = 0;
-	while (j < cam->img_h)
-	{
-		i = 0;
-        while (i < cam->img_w)
-		{
-			pix_color = (t_color){0,0,0};
-			r = get_ray(i, j, cam);
-			pix_color = color_add(pix_color, ray_color_v2(&r, cam->max_depth, wld));
-			write_color(&img, i, j, pix_color);
-			i++;
-		}
-		j++;
-    }
-	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
-	mlx_destroy_image(wld->mlx, img.img);
-}
-
-/*
 t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 {
 	t_vec3	offset;

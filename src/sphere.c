@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 17:58:34 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 09:40:14 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,15 @@ void	set_face_normal(t_ray *ray, t_vec3 outward_normal, t_hit_record *record)
 
 static void	get_sphere_uv(t_vec3 p, double *u, double *v)
 {
-	double	theta;
-	double	phi;
+	// double	theta;
+	// double	phi;
 
-	theta = acos(-p.y);
-	phi = atan2(-p.z, p.x) + M_PI;
-	*u = phi / (2 * M_PI);
-	*v = theta / M_PI;
+	// theta = acos(-p.y);
+	// phi = atan2(-p.z, p.x) + M_PI;
+	// *u = phi / (2 * M_PI);
+	// *v = theta / M_PI;
+	*u = 0.5 + (atan2(p.z, p.x) / (2 * M_PI));
+	*v = 0.5 - (asin(p.y) / M_PI);
 }
 
 static int	root_calc(t_sphere *sphere, t_ray *ray, t_interval ray_t, double *root)

@@ -28,13 +28,24 @@ t_checker_tex	*checker_texture_colors(double scale, t_color even_color, t_color 
 
 t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p)
 {
-	t_checker_tex *ct = (t_checker_tex *)texture;
-    double s = sin(p.x * ct->inv_scale * M_PI)
-             * sin(p.z * ct->inv_scale * M_PI);
-    if (s < 0)
-        return texture_value(ct->even, u, v, p);
-    else
-        return texture_value(ct->odd, u, v, p);
+	// t_checker_tex *ct = (t_checker_tex *)texture;
+    // double s = sin(p.x * ct->inv_scale * M_PI)
+    //          * sin(p.z * ct->inv_scale * M_PI);
+    // if (s < 0)
+    //     return texture_value(ct->even, u, v, p);
+    // else
+    //     return texture_value(ct->odd, u, v, p);
+
+	int				check;
+	t_checker_tex	*ct;
+
+	ct = (t_checker_tex *)texture;
+	check = ((int)floor(u * ct->inv_scale) + (int)floor(v * ct->inv_scale)) % 2;
+	if (check == 0)
+		return (texture_value(ct->even, u, v, p));
+	else
+		return (texture_value(ct->odd, u, v, p));
+	
 }
 t_color	checker_texture_value_old(t_texture *texture, double u, double v, t_vec3 p)
 {
