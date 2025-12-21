@@ -1,6 +1,6 @@
 NAME = miniRT
 SRC = $(addprefix src/, main.c color.c vec3.c ray.c sphere.c hittable_list.c interval.c camera_animation.c \
-						camera.c rt_utils.c material.c action.c quad.c plane.c cylinder.c cylinder_utils.c \
+						camera.c rt_utils.c material.c action.c action_extend.c quad.c plane.c cylinder.c cylinder_utils.c \
 						texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
 						onb.c pdf.c cone.c parser/error.c parser/error_utils.c parser/keyword.c\
 						parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\

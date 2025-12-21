@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 13:05:15 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 15:28:21 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -387,6 +387,9 @@ typedef struct s_world
 	t_object	*current_obj;
 	t_panel		*panel;
 }	t_world;
+
+//action_extend.c
+void				extend_action(int keycode, t_world *wld);
 
 //vec3.c;
 t_vec3				new_vec3(double x, double y, double z);

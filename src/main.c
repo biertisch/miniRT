@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 13:05:28 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 13:50:29 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	loop(void *param)
 			init_auto_c(&wld->camera_auto, &wld->camera);
 			wld->camera_auto.inited = 1;
 		}
+		wld->camera.initialized = 0;
 		update_orbit_camera(&wld->camera, &wld->camera_auto);
 		camera_light_initialize(wld);
 		camera_render(&wld->camera, wld);
