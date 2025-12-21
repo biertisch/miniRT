@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 18:58:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 19:18:52 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 23:39:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,9 @@ void	cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
 	t_vec3	center;
 
 	if (fabs(c->axis.y) < 0.999)
-		v_axis = vec3_norm(vec3_cross(c->axis, new_vec3(0, 1, 0)));
+		v_axis = vec3_norm(vec3_cross(c->axis, (t_vec3){0, 1, 0}));
 	else
-		v_axis = vec3_norm(vec3_cross(c->axis, new_vec3(1, 0, 0)));
+		v_axis = vec3_norm(vec3_cross(c->axis, (t_vec3){1, 0, 0}));
 	vv_axis = vec3_cross(c->axis, v_axis);
 	if (face == 2)
 		cylinder_side_uv(c, rec, v_axis, vv_axis);

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:59:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 15:29:34 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 23:36:41 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static void	camera_update_basis(t_camera *cam)
 {
 	t_vec3	world_up;
 
-	world_up = new_vec3(0, 1, 0);
+	world_up = (t_vec3){0, 1, 0};
 	if (fabs(vec3_dot(cam->forword, world_up)) > 0.999)
-		world_up = new_vec3(0, 0, 1);
+		world_up = (t_vec3){0, 0, 1};
 	cam->u = unit_vector(vec3_cross(world_up, cam->forword));
 	cam->vup = vec3_cross(cam->forword, cam->u);
 }

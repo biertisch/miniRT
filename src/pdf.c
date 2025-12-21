@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:51:27 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:55:13 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 23:22:53 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,14 @@ t_cosine_pdf	cosine_pdf_new(t_vec3 w)
 	cpdf.base.generate = &cosine_pdf_generate;
 	return (cpdf);
 }
+
+t_vec3	cosine_pdf_generate(t_pdf *self)
+{
+	t_cosine_pdf	*cpdf;
+
+	cpdf = (t_cosine_pdf *)self;
+	return (onb_transform(cpdf->uvw, random_cosine_direction()));
+}
 */
 
 double	cosine_pdf_value(t_pdf *self, t_vec3 direction)
@@ -43,14 +51,6 @@ double	cosine_pdf_value(t_pdf *self, t_vec3 direction)
 	cpdf = (t_cosine_pdf *)self;
 	cosine = vec3_dot(unit_vector(direction), onb_w(cpdf->uvw));
 	return (fmax(cosine / M_PI, 0.0));
-}
-
-t_vec3	cosine_pdf_generate(t_pdf *self)
-{
-	t_cosine_pdf	*cpdf;
-
-	cpdf = (t_cosine_pdf *)self;
-	return (onb_transform(cpdf->uvw, random_cosine_direction()));
 }
 
 double	hitable_pdf_value(t_pdf *self, t_vec3 dir)

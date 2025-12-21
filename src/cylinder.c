@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 19:14:00 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 23:11:04 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,7 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 	side_face = cylinder_side_check_v1(ray, cy, &ray_t, rec);
 	tp_face = cylinder_cap_check_v1(ray, &ray_t, cy, rec);
 	if (side_face || tp_face)
-	{
 		hit_any = 1;
-		rec->hit_obj = obj;
-	}
 	if (tp_face)
 		cylinder_uv(cy, rec, tp_face);
 	else if (side_face)

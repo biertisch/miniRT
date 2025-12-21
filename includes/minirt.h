@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 22:06:37 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 23:39:01 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,7 +337,6 @@ struct s_hit_record
 	t_vec3		p;
 	t_vec3		normal;
 	t_material	mat;
-	t_object	hit_obj;
 	t_color		orig_color;
 	t_ray		ray_in;
 	double		t;
@@ -387,7 +386,7 @@ void				extend_action(int keycode, t_world *wld);
 int					loop(void *param);
 
 //vec3.c;
-t_vec3				new_vec3(double x, double y, double z);
+// t_vec3				new_vec3(double x, double y, double z);
 t_vec3				vec3_sub(t_vec3 a, t_vec3 b);
 t_vec3				vec3_add(t_vec3 a, t_vec3 b);
 t_vec3				vec3_cross(t_vec3 a, t_vec3 b);
@@ -397,13 +396,13 @@ t_vec3				vec3_norm(t_vec3 vec);
 double				vec3_dot(t_vec3 a, t_vec3 b);
 t_vec3				vec3_mul_n(t_vec3 a, double scalar);
 t_vec3				unit_vector(t_vec3 vec);
-t_vec3				random_unit_vec3(void);
-t_vec3				random_on_hemisphere(t_vec3 normal);
-int					vec3_near_zero(t_vec3 vec);
-t_vec3				vec3_reflect(t_vec3 v, t_vec3 n);
-t_vec3				vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
-t_vec3				random_cosine_direction(void);
-t_vec3				vec3_clamp(t_vec3 v, double min, double max);
+// t_vec3				random_unit_vec3(void);
+// t_vec3				random_on_hemisphere(t_vec3 normal);
+// int					vec3_near_zero(t_vec3 vec);
+// t_vec3				vec3_reflect(t_vec3 v, t_vec3 n);
+// t_vec3		vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
+// t_vec3				random_cosine_direction(void);
+// t_vec3				vec3_clamp(t_vec3 v, double min, double max);
 
 //main.c
 int					handle_destroy(void *param);
