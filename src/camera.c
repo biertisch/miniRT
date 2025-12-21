@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 08:23:31 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 08:26:16 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,8 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 		final_color = phone_of_light(&phong, &rec, world, world->spot_light);
 		if (rec.mat.type == METAL)
 			final_color = metal_reflection_color(&phong, &rec, depth, world);
-		return color_clamp(color_add(phong.o_color,
-				color_mult_color(final_color, phong.o_color)), 0.0, 1.0);
+		return (color_clamp(color_add(phong.o_color,
+					color_mult_color(final_color, phong.o_color)), 0.0, 1.0));
 	}
 	else
 		return (phong.ambient);
