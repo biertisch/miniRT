@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:08:03 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 17:20:25 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 22:07:29 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_checker_tex	checker_texture(double scale, t_texture *even, t_texture *odd)
 	texture.even = even;
 	texture.odd = odd;
 	texture.base.value = &checker_texture_value;
+	texture.base.is_checker = 1;
 	return (texture);
 }
 

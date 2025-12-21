@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 19:24:14 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 22:12:20 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,18 @@ void	error_exit(t_world *wld, char *message)
 
 void	free_and_set_null(void **ptr)
 {
+	t_texture		*tex;
+	t_checker_tex	*ct;
+
 	if (ptr && *ptr)
 	{
+		tex = (t_texture *)(*ptr);
+		if (tex->is_checker)
+		{
+			ct = (t_checker_tex *)tex;
+			free_and_set_null((void **)&ct->even);
+			free_and_set_null((void **)&ct->odd);
+		}
 		free(*ptr);
 		*ptr = NULL;
 	}

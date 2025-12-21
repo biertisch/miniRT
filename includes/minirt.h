@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:49:01 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 22:06:37 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_texture	t_texture;
 struct s_texture
 {
 	t_color	(*value)(t_texture * self, double u, double v, t_vec3 p);
+	int		is_checker;
 };
 
 t_color				texture_value(t_texture *tex, double u, double v, t_vec3 p);
@@ -176,8 +177,8 @@ struct s_material
 	t_mat_type	type;
 	t_mat_data	data;
 	t_color		(*emitted)(t_material * self, t_ray r_in, t_hit_record * rec);
-	double		(*scattering_pdf)(t_ray *ray_in, t_hit_record *rec,
-			t_ray *scattered);
+	// double		(*scattering_pdf)(t_ray *ray_in, t_hit_record *rec,
+	// 		t_ray *scattered);
 };
 
 typedef struct s_interval
@@ -185,13 +186,6 @@ typedef struct s_interval
 	double	min;
 	double	max;
 }	t_interval;
-
-// typedef	struct	s_aabb
-// {
-// 	t_interval	x;
-// 	t_interval	y;
-// 	t_interval	z;
-// }	t_aabb;
 
 typedef struct s_onb
 {
@@ -205,10 +199,10 @@ struct	s_pdf
 	t_vec3	(*generate)(t_pdf * self);
 };
 
-typedef struct s_phere_pdf
-{
-	t_pdf		base;
-}	t_sphere_pdf;
+// typedef struct s_phere_pdf
+// {
+// 	t_pdf		base;
+// }	t_sphere_pdf;
 
 typedef struct s_roots_holder
 {
