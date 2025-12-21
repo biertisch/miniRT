@@ -6,18 +6,18 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/20 17:12:15 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 16:39:02 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 // unnecessary for parser
-t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height,
-	t_material mat)
-{
-	return ((t_cone){apex, axis, radius, height, mat});
-}
+// t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height,
+// 	t_material mat)
+// {
+// 	return ((t_cone){apex, axis, radius, height, mat});
+// }
 
 static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 {
@@ -84,46 +84,24 @@ static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
 
 void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 {
-	// t_vec3	axis;
-	// t_vec3	v;
-	// double	proj;
-	// double	theta;
+	t_vec3	ap;
+	t_vec3	x;
+	t_vec3	c_u;
+	t_vec3	c_w;
+	double	t;
 
-	// axis = vec3_mul_n(vec3_norm(cone->axis), -1);
-	// v = vec3_sub(rec->p, cone->apex);
-	// proj = vec3_dot(v, axis);
-	// theta = atan2(vec3_dot(v, vec3_norm(vec3_cross(axis,
-	// 					(t_vec3){0, 1, 0}))),
-	// 		vec3_dot(v, vec3_norm(vec3_cross(axis,
-	// 					(t_vec3){1, 0, 0}))));
-	// if (theta < 0)
-	// 	theta += 2 * M_PI;
-	// rec->u = theta / (2 * M_PI);
-	// rec->v = proj / cone->height;
-
-	t_vec3  ap;
-    t_vec3  x;
-    t_vec3  U;
-    t_vec3  W;
-    double  t;
-
-    ap = vec3_sub(rec->p, cone->apex);
-    t = vec3_dot(ap, cone->axis);   // axis 必须是单位向量
-
-    rec->v = t / cone->height;
-
-    x = vec3_sub(ap, vec3_mul_n(cone->axis, t));
-
-    if (fabs(cone->axis.y) < 0.999)
-        U = vec3_norm(vec3_cross(cone->axis, new_vec3(0, 1, 0)));
-    else
-        U = vec3_norm(vec3_cross(cone->axis, new_vec3(1, 0, 0)));
-
-    W = vec3_cross(cone->axis, U);
-
-    rec->u = atan2(vec3_dot(x, W), vec3_dot(x, U)) / (2 * M_PI);
-    if (rec->u < 0)
-        rec->u += 1.0;
+	ap = vec3_sub(rec->p, cone->apex);
+	t = vec3_dot(ap, cone->axis);
+	rec->v = t / cone->height;
+	x = vec3_sub(ap, vec3_mul_n(cone->axis, t));
+	if (fabs(cone->axis.y) < 0.999)
+		c_u = vec3_norm(vec3_cross(cone->axis, new_vec3(0, 1, 0)));
+	else
+		c_u = vec3_norm(vec3_cross(cone->axis, new_vec3(1, 0, 0)));
+	c_w = vec3_cross(cone->axis, c_u);
+	rec->u = atan2(vec3_dot(x, c_w), vec3_dot(x, c_u)) / (2 * M_PI);
+	if (rec->u < 0)
+		rec->u += 1.0;
 }
 
 int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
