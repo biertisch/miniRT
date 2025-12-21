@@ -1,19 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hittable_list.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/21 16:42:05 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/21 16:43:07 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
-
-double	default_hitable_pdf_value(t_pdf *self, t_vec3 origin, t_vec3 direction)
-{
-	(void)self;
-	(void)direction;
-	(void)origin;
-	return (0.0);
-}
-
-t_vec3	default_hitable_pdf_generate(t_pdf *self, t_vec3 origin)
-{
-	(void)self;
-	(void)origin;
-	return (new_vec3(1, 0, 0));
-}
 
 static int	assign_hit(t_object *new_object)
 {
@@ -98,7 +95,24 @@ int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 	return (hit_anything);
 }
 /*
-int	world_hit_old(t_object *objects, t_ray *ray, t_interval ray_t, t_hit_record *rec)
+
+double	default_hitable_pdf_value(t_pdf *self, t_vec3 origin, t_vec3 direction)
+{
+	(void)self;
+	(void)direction;
+	(void)origin;
+	return (0.0);
+}
+
+t_vec3	default_hitable_pdf_generate(t_pdf *self, t_vec3 origin)
+{
+	(void)self;
+	(void)origin;
+	return (new_vec3(1, 0, 0));
+}
+
+int	world_hit_old(t_object *objects, t_ray *ray, t_interval ray_t,
+	t_hit_record *rec)
 {
 	t_hit_record	temp_rec;
 	int				hit_anything;

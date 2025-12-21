@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:28:35 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 16:49:01 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,6 +390,7 @@ typedef struct s_world
 
 //action_extend.c
 void				extend_action(int keycode, t_world *wld);
+int					loop(void *param);
 
 //vec3.c;
 t_vec3				new_vec3(double x, double y, double z);
@@ -539,8 +540,8 @@ t_cosine_pdf		cosine_pdf_new(t_vec3 w);
 t_hitable_pdf		hitable_pdf_new(t_object *obj, t_vec3 origin);
 
 //cone.c
-t_cone				new_cone(t_vec3 apex, t_vec3 axis,
-						double radius, double height, t_material mat);
+// t_cone				new_cone(t_vec3 apex, t_vec3 axis,
+// 						double radius, double height, t_material mat);
 int					cone_hit(t_ray *ray, t_interval ray_t,
 						t_object obj, t_hit_record *record);
 //cone_quadratic.c

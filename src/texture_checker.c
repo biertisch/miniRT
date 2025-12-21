@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   texture_checker.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:08:03 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 14:08:29 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 17:20:25 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,20 @@ t_checker_tex	checker_texture(double scale, t_texture *even, t_texture *odd)
 	return (texture);
 }
 
-t_checker_tex	*checker_texture_colors(double scale, t_color even_color, t_color odd_color)
+t_checker_tex	*checker_texture_colors(double scale, t_color even_c,
+	t_color odd_c)
 {
-	t_checker_tex	*texture;
+	t_checker_tex		*texture;
 	t_solid_color_tex	*even_tex;
 	t_solid_color_tex	*odd_tex;
 
 	texture = malloc(sizeof(t_checker_tex));
 	even_tex = malloc(sizeof(t_solid_color_tex));
 	odd_tex = malloc(sizeof(t_solid_color_tex));
-	*even_tex = solid_color_texture(even_color);
-	*odd_tex = solid_color_texture(odd_color);
-	*texture = checker_texture(scale, (t_texture *)even_tex, (t_texture *)odd_tex);
+	*even_tex = solid_color_texture(even_c);
+	*odd_tex = solid_color_texture(odd_c);
+	*texture = checker_texture(scale, (t_texture *)even_tex,
+			(t_texture *)odd_tex);
 	return (texture);
 }
 
@@ -48,11 +50,12 @@ t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p)
 	if (check == 0)
 		return (texture_value(ct->even, u, v, p));
 	else
-		return (texture_value(ct->odd, u, v, p));	
+		return (texture_value(ct->odd, u, v, p));
 }
 
 /*
-t_color	checker_texture_value_old(t_texture *texture, double u, double v, t_vec3 p)
+t_color	checker_texture_value_old(t_texture *texture, 
+	double u, double v, t_vec3 p)
 {
 	int				xInt;
 	int				yInt;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   color.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/21 16:30:05 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/21 16:31:05 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 double	linear_to_gamma(double linear_component)
@@ -61,6 +73,7 @@ t_color	color_add(t_color a, t_color b)
 	result.b = a.b + b.b;
 	return (result);
 }
+
 t_color	color_multi_num(t_color color, double scalar)
 {
 	t_color	result;
@@ -70,6 +83,7 @@ t_color	color_multi_num(t_color color, double scalar)
 	result.b = color.b * scalar;
 	return (result);
 }
+
 t_color	color_mult_color(t_color a, t_color b)
 {
 	t_color	result;
@@ -80,7 +94,7 @@ t_color	color_mult_color(t_color a, t_color b)
 	return (result);
 }
 
-t_color color_clamp(t_color v, double min, double max)
+t_color	color_clamp(t_color v, double min, double max)
 {
 	if (v.r < min)
 		v.r = min;
@@ -94,7 +108,7 @@ t_color color_clamp(t_color v, double min, double max)
 		v.b = min;
 	if (v.b > max)
 		v.b = max;
-	return v;
+	return (v);
 }
 
 t_color	blend_colors(t_color c1, t_color c2, double t)

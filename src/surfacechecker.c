@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 20:09:27 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 18:33:40 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 17:17:31 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,11 @@ int	point_on_cylinder(t_vec3 p, t_cylinder *c)
 		return (0);
 	rad = vec3_length(vec3_sub(cp, vec3_mul_n(c->axis, proj)));
 	if (proj > -c->height * 0.5 + SURFACE_EPS && proj < c->height * 0.5
-			- SURFACE_EPS && fabs(rad - c->radius) < SURFACE_EPS)
+		- SURFACE_EPS && fabs(rad - c->radius) < SURFACE_EPS)
 		on_surface = 1;
-	if ((fabs(proj + c->height * 0.5) <= SURFACE_EPS || fabs(proj -
-			c->height * 0.5) <= SURFACE_EPS) && rad <= c->radius + SURFACE_EPS)
+	if ((fabs(proj + c->height * 0.5) <= SURFACE_EPS || fabs(proj
+				- c->height * 0.5) <= SURFACE_EPS)
+		&& rad <= c->radius + SURFACE_EPS)
 		on_surface = 1;
 	if (on_surface)
 		printf("Camera on cylinder surface\n");

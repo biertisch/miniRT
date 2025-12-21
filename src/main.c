@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 13:50:29 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 16:49:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,28 +55,6 @@ int	handle_pressed(int keycode, void *param)
 	}
 	else
 		do_action(keycode, wld);
-	return (0);
-}
-
-int	loop(void *param)
-{
-	t_world *wld;
-
-	wld = (t_world *)param;
-	if (!wld->camera_auto.in_rot)
-		return (0);
-	else
-	{
-		if (!wld->camera_auto.inited)
-		{
-			init_auto_c(&wld->camera_auto, &wld->camera);
-			wld->camera_auto.inited = 1;
-		}
-		wld->camera.initialized = 0;
-		update_orbit_camera(&wld->camera, &wld->camera_auto);
-		camera_light_initialize(wld);
-		camera_render(&wld->camera, wld);
-	}
 	return (0);
 }
 
