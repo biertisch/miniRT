@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scroll.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:22:46 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:16:12 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:15:47 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	scroll_down(t_panel *panel)
 {
 	int	max_offset;
 
-	max_offset = panel->total - panel->visible_objs;
+	max_offset = panel->total_count - panel->visible_objs;
 	if (max_offset < 0)
 		max_offset = 0;
 	if (panel->scroll_offset < max_offset)
@@ -42,7 +42,7 @@ void	select_object(t_panel *panel, int y)
 	if (row < 0 || row >= panel->visible_objs)
 		return ;
 	index = panel->scroll_offset + row;
-	if (index >= panel->total)
+	if (index >= panel->total_count)
 		return ;
 	panel->active_obj = index;
 }

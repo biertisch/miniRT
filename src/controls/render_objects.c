@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_objects.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:14:08 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:20:40 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,12 @@ static void	draw_object_row(t_panel *panel, t_world *scene, int index, int y)
 	ft_strlcpy(name, index_str, BUFF_SIZE);
 	free(index_str);
 	ft_strlcat(name, " ", BUFF_SIZE);
-	if (index == 0)
+	if (index < panel->light_count)
 		ft_strlcat(name, "Light", BUFF_SIZE);
 	else
-		ft_strlcat(name, get_type_name(scene->objects[index - 1]->type),
+		ft_strlcat(
+			name,
+			get_type_name(scene->objects[index - panel->light_count]->type),
 			BUFF_SIZE);
 	draw_string(panel->buffer, name, (t_point){PADD_X, y}, WHITE);
 }
@@ -61,7 +63,7 @@ void	render_object_list(t_panel *panel, t_world *scene)
 	while (row < panel->visible_objs)
 	{
 		obj_index = panel->scroll_offset + row;
-		if (obj_index >= panel->total)
+		if (obj_index >= panel->total_count)
 			break ;
 		y = OBJ_Y + PADD_Y + ROW_H + row * ROW_H;
 		if (obj_index == panel->active_obj)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controls.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:19:04 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:15:59 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,9 @@ typedef struct s_panel
 	int			drag_start_x;
 	double		drag_start_norm;
 	t_slider	**sliders;
-	int			total;
+	int			object_count;
+	int			light_count;
+	int			total_count;
 	double		camera_initial_fov;
 	t_vec3		camera_initial_origin;
 	t_vec3		camera_initial_direction;

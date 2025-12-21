@@ -53,19 +53,19 @@ void	add_object_to_world(t_world *world, t_geo_type geo_type, void *geo)
 {
 	t_object	*new_object;
 
-	if (world->num_objects >= 50)
+	if (world->num_objects >= MAX_OBJS)
 	{
-		ft_putstr_fd("World object limit reached\n", STDERR_FILENO);
+		ft_putstr_fd("Error\nObject limit reached\n", STDERR_FILENO);
 		return ;
 	}
-	new_object = (t_object *)malloc(sizeof(t_object));
+	new_object = malloc(sizeof(t_object));
 	if (!new_object)
-		return ;
+		error_exit(world, "Error\nmalloc");
 	new_object->type = geo_type;
 	if (!assign_geometry(new_object, geo) || !assign_hit(new_object))
 	{
 		free(new_object);
-		ft_putstr_fd("Unsupport geometry type\n", STDERR_FILENO);
+		ft_putstr_fd("Error\nUnsupport geometry type\n", STDERR_FILENO);
 		return ;
 	}
 	world->objects[world->num_objects] = new_object;

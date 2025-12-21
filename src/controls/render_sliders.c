@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_sliders.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:15:09 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:21:59 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ void	render_sliders(t_panel *panel, t_world *scene)
 	int	y;
 
 	obj = panel->active_obj;
-	if (obj < 0 || obj >= panel->total)
+	if (obj < 0 || obj >= panel->total_count)
 		return ;
 	type = -1;
-	if (obj >= 1) // light count
-		type = scene->objects[obj - 1]->type;
+	if (obj >= panel->light_count)
+		type = scene->objects[obj - panel->light_count]->type;
 	x = PADD_X;
 	render_slider_block(panel, scene, TRANSLATE, (t_point){x, TRANSF1_Y});
 	if (type == PLANE || type == CYLINDER || type == CONE)

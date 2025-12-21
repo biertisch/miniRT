@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:39:46 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:33:54 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 14:36:08 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	validate_global_rules(t_metadata *meta)
 		report_error(ERR_AMBIENT_COUNT, meta, NULL, -1);
 	if (meta->camera_count != 1)
 		report_error(ERR_CAMERA_COUNT, meta, NULL, -1);
-	if (meta->light_count != 1)
+	if (meta->light_count < 1)
 		report_error(ERR_LIGHT_COUNT, meta, NULL, -1);
 	if (meta->errors != 0)
 		return (report_error(ERR_VALIDATE, meta, NULL, -1));

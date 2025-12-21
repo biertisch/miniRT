@@ -16,12 +16,14 @@
 # define HEIGHT 600
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.05
-# define ESC	65307
-# define ENTER	65293
+# define ESC 65307
+# define ENTER 65293
 # define STEP_ANGLE 1.0f
 # define STEP_MOVE 3.3f
 # define MAX_PITCH 89.0f * M_PI / 180.0f
 # define SURFACE_EPS 1e-4
+# define MAX_OBJS 50
+# define MAX_LIGHTS 5
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -314,7 +316,7 @@ typedef struct s_spot_light
 {
 	t_vec3		position;
 	double		brightness;
-	t_color		light_color; //variable name can be abbreviate to color
+	t_color		color;
 }	t_s_light;
 
 typedef struct s_phong
@@ -330,14 +332,15 @@ typedef struct s_world
 {
 	void		*mlx;
 	void		*win;
-	t_object	*objects[50];
+	t_object	*objects[MAX_OBJS];
 	t_object	*bvh_root;
 	int			num_objects;
+	int			num_lights;
 	t_camera	camera;
 	t_color		ambient;
 	double		ambient_ratio;
-	t_s_light	spot_light;
-	t_object	lights;
+	t_s_light	*lights[MAX_LIGHTS];
+	// t_object	lights;
 	t_object	*current_obj;
 	t_panel		*panel;
 }	t_world;

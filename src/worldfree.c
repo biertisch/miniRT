@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   worldfree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 18:19:33 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 14:53:36 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,19 @@ void	free_objects(t_world *wld)
 	}
 }
 
+static void	free_lights(t_world *wld)
+{
+	int	i;
+
+	i = 0;
+	while (i < wld->num_lights)
+	{
+		free(wld->lights[i]);
+		wld->lights[i] = NULL;
+		i++;
+	}
+}
+
 void	free_all_the_world(t_world *wld)
 {
 	if (wld)
@@ -76,6 +89,7 @@ void	free_all_the_world(t_world *wld)
 			mlx_destroy_display(wld->mlx);
 			free(wld->mlx);
 		}
+		free_lights(wld);
 		free_objects(wld);
 	}
 }

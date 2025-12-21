@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 14:23:06 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:42:41 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,17 @@ t_color	ray_color_v2(t_ray *ray, int depth, t_world *world)
 	if (depth <= 0)
 		return (get_color(0.0, 0.0, 0.0));
 	phong.ambient = color_multi_num(world->ambient, world->ambient_ratio);
-	
+
 	if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 	{
 		phong.obj_color = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 
-		
-		r_2light = rt_ray(rec.p, vec3_norm(vec3_sub(world->spot_light.position, rec.p)));
-		distance = vec3_length(vec3_sub(world->spot_light.position, rec.p));
-		
+
+		r_2light = rt_ray(rec.p, vec3_norm(vec3_sub(world->lights[0]->position, rec.p)));
+		distance = vec3_length(vec3_sub(world->lights[0]->position, rec.p));
+
 		// Check for shadows
-		if (in_shadow(rec.p, world,  world->spot_light.position))
+		if (in_shadow(rec.p, world,  world->lights[0]->position))
 			return (color_clamp(color_mult_color(phong.obj_color,
 						color_multi_num(phong.ambient, 2.2)), 0.0, 1.0));
 		// Calculate attenuation
@@ -88,8 +88,8 @@ t_color	ray_color_v2(t_ray *ray, int depth, t_world *world)
 		cos_nl = vec3_dot(rec.normal, r_2light.direction);
 		if (cos_nl < 0)
 			cos_nl = 0;
-		phong.brightness = world->spot_light.brightness * cos_nl;
-		phong.diffuse = color_multi_num(world->spot_light.light_color, phong.brightness * attenuation);
+		phong.brightness = world->lights[0]->brightness * cos_nl;
+		phong.diffuse = color_multi_num(world->lights[0]->color, phong.brightness * attenuation);
 
 		// Specular component (Phong)
 		view_dir = vec3_norm(vec3_sub(ray->origin, rec.p));
@@ -101,7 +101,7 @@ t_color	ray_color_v2(t_ray *ray, int depth, t_world *world)
 		// Shininess factor - adjust this value (higher = sharper highlight)
 		double shininess = 32.0;
 		double spec_strength = pow(cos_rv, shininess);
-		phong.specular = color_multi_num(world->spot_light.light_color, spec_strength * attenuation * world->spot_light.brightness);
+		phong.specular = color_multi_num(world->lights[0]->color, spec_strength * attenuation * world->lights[0]->brightness);
 
 		// Combine all components: ambient + diffuse + specular
 		t_color final_color = color_add(color_multi_num(phong.ambient, 2.2), phong.diffuse);
@@ -157,13 +157,13 @@ t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
         return (get_color(0.0, 0.0, 0.0));
 
     ambient = color_multiply_number(world->ambient, world->ambient_ratio);
-    
+
     if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
     {
         color_from_emission = rec.mat.emitted(&rec.mat, *ray, &rec, rec.u, rec.v, rec.p);
 		r_2light = rt_ray(rec.p, vec3_subtract(world->spot_light.position, rec.p));
         distance = vec3_length(vec3_subtract(world->spot_light.position, rec.p));
-    
+
         // Check for shadows
         if (world_hit(world, &r_2light, new_interval(0.00001, distance-0.00001), &temp_rec) && temp_rec.t <= 1.0)
 			return color_clamp(color_multiply_vector(color_from_emission, color_multiply_number(ambient, 2.2)), 0.0, 1.0);
@@ -175,24 +175,24 @@ t_color ray_color_v1(t_ray *ray, int depth, t_world *world)
         if (cos_nl < 0)
             cos_nl = 0;
         brightness = world->spot_light.brightness * cos_nl;
-        diffuse = color_multiply_number(world->spot_light.light_color, brightness * attenuation);
-        
+        diffuse = color_multiply_number(world->spot_light.color, brightness * attenuation);
+
         // Specular component (Phong)
         view_dir = vec3_normalize(vec3_subtract(ray->origin, rec.p));
         reflect_dir = vec3_subtract(vec3_multiply(rec.normal, 2.0 * vec3_dot(light_dir, rec.normal)), light_dir);
         cos_rv = vec3_dot(reflect_dir, view_dir);
         if (cos_rv < 0)
             cos_rv = 0;
-        
+
         // Shininess factor - adjust this value (higher = sharper highlight)
         double shininess = 32.0;
         double spec_strength = pow(cos_rv, shininess);
-        specular = color_multiply_number(world->spot_light.light_color, spec_strength * attenuation * world->spot_light.brightness);
-        
+        specular = color_multiply_number(world->spot_light.color, spec_strength * attenuation * world->spot_light.brightness);
+
         // Combine all components: ambient + diffuse + specular
         t_color final_color = color_add(color_multiply_number(ambient, 2.2), diffuse);
         final_color = color_add(final_color, specular);
-        
+
         // Multiply by surface color and add emis// camera->lookat = vec3_add(camera->lookfrom, camera->lookat);sion
         return color_clamp(color_add(color_from_emission, color_multiply_vector(final_color, color_from_emission)), 0.0, 1.0);
     }
@@ -237,7 +237,7 @@ t_color ray_color_v0(t_ray *ray, int depth, t_world *world)
 
 // printf("Brightness: %f\n", brightness * compute_attenuation(vec3_length(r_2light.direction)));
 
-			diffuse = color_multiply_number(world->spot_light.light_color, brightness * compute_attenuation(vec3_length(r_2light.direction)));
+			diffuse = color_multiply_number(world->spot_light.color, brightness * compute_attenuation(vec3_length(r_2light.direction)));
 			diffuse = color_add(diffuse, color_multiply_number(ambient, 2.2));
 
 			// return color_multiply_vector(diffuse, color_from_emission);
@@ -283,7 +283,7 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	if (depth <= 0)
 		return (get_color(0.0, 0.0, 0.0));
 	// ray_t = new_interval(0.001, RT_INFINITY);
-	
+
 	// if (world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
 	// {
 	// 	t_ray	scattered;
@@ -319,7 +319,7 @@ t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights)
 	// double	a;
 	// a = 0.5 * (unit_direction.y + 1.0);
 	// return (blend_colors((t_color){1.0, 1.0, 1.0}, (t_color){0.5, 0.7, 1.0}, a));
-	
+
 
 	// if (!world_hit(world->bvh_root, ray, new_interval(0.001, RT_INFINITY), &rec))
 	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
@@ -479,7 +479,7 @@ t_ray	get_ray_v0(int pixel_x, int pixel_y, int s_i, int s_j, t_camera *camera)
 	ray_direction = vec3_subtract(pixel_sample, camera->lookfrom);
 	return (rt_ray(camera->lookfrom, ray_direction));
 }
-	
+
 void	camera_render_v0(t_camera *camera, t_world *wld)
 {
 	t_data img;

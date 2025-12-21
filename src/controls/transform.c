@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   transform.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:33:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 14:07:00 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:26:50 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,20 @@ static void	transform_object(t_slider *sliders, t_object *object)
 void	transform_scene(t_panel *panel, t_world *scene)
 {
 	int	i;
+	int	j;
 
-	apply_translation(panel->sliders[0], &scene->spot_light.position);
 	i = 0;
-	while (i < scene->num_objects)
+	while (i < panel->light_count)
 	{
-		transform_object(panel->sliders[i + 1], scene->objects[i]); // light count
+		apply_translation(panel->sliders[i], &scene->lights[i]->position);
 		i++;
+	}
+	j = 0;
+	while (i < panel->total_count && j < panel->object_count)
+	{
+		transform_object(panel->sliders[i], scene->objects[j]);
+		i++;
+		j++;
 	}
 	camera_render(&scene->camera, scene);
 }

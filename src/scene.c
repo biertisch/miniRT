@@ -21,9 +21,9 @@ void checkered_spheres(t_world *wld)
 	wld->ambient = get_color(1, 1, 1);
 	wld->ambient_ratio = 0.3;
 
-	wld->spot_light.position = new_vec3(20, 0, 10);
-	wld->spot_light.brightness = 1;
-	wld->spot_light.light_color = get_color(1.0, 1.0, 1.0);
+	wld->lights[0]->position = new_vec3(20, 0, 10);
+	wld->lights[0]->brightness = 1;
+	wld->lights[0]->color = get_color(1.0, 1.0, 1.0);
 }
 
 void cornel_box_scene(t_world *wld)
@@ -84,9 +84,9 @@ void cornel_box_scene(t_world *wld)
 	wld->ambient = get_color(1, 1, 1);
 	wld->ambient_ratio = 0.4;
 
-	wld->spot_light.position = new_vec3(440, 410, 240);
-	wld->spot_light.brightness = 1;
-	wld->spot_light.light_color = get_color(1.0, 1.0, 1.0);
+	wld->lights[0]->position = new_vec3(440, 410, 240);
+	wld->lights[0]->brightness = 1;
+	wld->lights[0]->color = get_color(1.0, 1.0, 1.0);
 }
 
 void base_scene1(t_world *wld)
@@ -168,9 +168,9 @@ void base_plane_sphere_scene(t_world *wld)
 	// wld->bvh_root = bvh_from_objects(wld->objects, 0, wld->num_objects);
 	t_sphere sphere1_lightpos = new_sphere(new_vec3(2, 5, -3), .5, c_sphere);
 	add_object_to_world(wld, SPHERE, &sphere1_lightpos);
-	wld->spot_light.position = new_vec3(2, 4, -3);
-	wld->spot_light.brightness = 0.8;
-	wld->spot_light.light_color = get_color(255, 255, 255);
+	wld->lights[0]->position = new_vec3(2, 4, -3);
+	wld->lights[0]->brightness = 0.8;
+	wld->lights[0]->color = get_color(255, 255, 255);
 	wld->ambient = get_color(255, 255, 255);
 	wld->ambient_ratio = 0.3;
 }

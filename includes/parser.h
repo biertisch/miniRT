@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:51:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:31:23 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 14:56:40 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define ERR_BUFFER_SIZE 120
 
 typedef struct s_world	t_world;
+typedef struct s_spot_light	t_s_light;
 
 typedef enum e_error_type
 {
@@ -104,6 +105,7 @@ int				parse_camera_fields(t_world *scene, const char **s,
 					t_metadata *meta);
 int				parse_light_fields(t_world *scene, const char **s,
 					t_metadata *meta);
+void			add_light_to_world(t_world *world, t_s_light *light);
 
 // parse_object_fields.c
 int				parse_sphere_fields(t_world *scene, const char **s,

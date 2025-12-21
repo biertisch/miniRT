@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:19:56 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:16:54 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_panel(t_world *scene, t_panel *panel)
 		return ;
 	if (scene->mlx && panel->win)
 		mlx_destroy_window(scene->mlx, panel->win);
-	free_sliders(&panel->sliders, panel->total);
+	free_sliders(&panel->sliders, panel->total_count);
 	if (panel->buffer->img)
 		mlx_destroy_image(scene->mlx, panel->buffer->img);
 	free(panel->buffer);
@@ -61,7 +61,7 @@ static void	init_panel(t_panel *panel, t_world *scene)
 	panel->camera_initial_fov = scene->camera.vfov;
 	panel->camera_initial_origin = scene->camera.lookfrom;
 	panel->camera_initial_direction = scene->camera.forword;
-	init_sliders(panel->sliders, panel->total, scene);
+	init_sliders(panel->sliders, panel->total_count, scene);
 }
 
 static void	allocate_panel(t_world *scene)
@@ -71,12 +71,14 @@ static void	allocate_panel(t_world *scene)
 	scene->panel = malloc(sizeof(*(scene->panel)));
 	if (!scene->panel)
 		error_exit(scene, "Error\nmalloc");
-	scene->panel->total = scene->num_objects + 1; // light count
-	scene->panel->sliders = ft_calloc(sizeof(t_slider *), scene->panel->total); 
+	scene->panel->object_count = scene->num_objects;
+	scene->panel->light_count = scene->num_lights;
+	scene->panel->total_count = scene->num_objects + scene->num_lights;
+	scene->panel->sliders = ft_calloc(sizeof(t_slider *), scene->panel->total_count);
 	if (!scene->panel->sliders)
 		error_exit(scene, "Error\nmalloc");
 	i = 0;
-	while (i < scene->panel->total)
+	while (i < scene->panel->total_count)
 	{
 		scene->panel->sliders[i] = ft_calloc(sizeof(t_slider), SLIDER_COUNT);
 		if (!scene->panel->sliders[i])

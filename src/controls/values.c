@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   values.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:38:05 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:17:26 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 15:18:51 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,16 @@ double	get_initial_value(t_world *scene, int index, t_slider_type slider)
 	t_object	*obj;
 	int			axis;
 
-	if (index < 0 || index > scene->panel->total)
+	if (index < 0 || index > scene->panel->total_count)
 		return (0);
 	axis = slider_to_axis(slider);
-	if (index == 0) // light count
+	if (index < scene->panel->light_count)
 	{
 		if (slider >= TRANSL_X && slider <= TRANSL_Z)
-			return (((double *)&scene->spot_light.position)[axis]);
+			return (((double *)&scene->lights[index]->position)[axis]);
 		return (0);
 	}
-	obj = scene->objects[index - 1];
+	obj = scene->objects[index - scene->panel->light_count];
 	if (slider >= TRANSL_X && slider <= TRANSL_Z)
 		return (get_object_position(obj, axis));
 	else if (slider >= ROTATE_X && slider <= ROTATE_Z)
