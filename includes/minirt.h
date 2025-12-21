@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 15:28:21 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 16:28:35 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,6 +423,10 @@ t_color				color_multi_num(t_color color, double scalar);
 t_color				color_mult_color(t_color a, t_color b);
 t_color				color_clamp(t_color v, double min, double max);
 void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
+t_color				blend_colors(t_color c1, t_color c2, double t);
+
+//debug_info.c
+void				output_camera_info(t_camera *c);
 
 //ray.c
 t_ray				rt_ray(t_vec3 origin, t_vec3 direction);
@@ -475,6 +479,15 @@ int					interval_contains(t_interval *interval, double value);
 // t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
 void				camera_light_initialize(t_world *wld);
 void				camera_render(t_camera *camera, t_world *wld);
+t_color				ray_color_v3(t_ray *ray, int depth, t_world *world);
+
+//camera_utils.c
+t_ray				get_ray(int pixel_x, int pixel_y, t_camera *camera);
+t_vec3				choose_vup(t_vec3 forward);
+t_color				metal_reflection_color(t_phong *phong, t_hit_record *rec,
+						int depth, t_world *world);
+int					in_shadow(t_vec3 point, t_world *world, t_vec3 light_pos);
+double				attenuation(double d);
 
 //rt_utils.c
 double				degrees_to_radians(double degrees);
@@ -550,5 +563,6 @@ int					is_camera_on_surface(t_camera *cam, t_world *world);
 //camera_animation.c
 void				init_auto_c(t_cam_auto *o, t_camera *c);
 void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
+void				value_min_clamp(double *value, double tob, double min);
 
 #endif

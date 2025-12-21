@@ -96,3 +96,13 @@ t_color color_clamp(t_color v, double min, double max)
 		v.b = max;
 	return v;
 }
+
+t_color	blend_colors(t_color c1, t_color c2, double t)
+{
+	t_color	blended;
+
+	blended.r = (1 - t) * c1.r + t * c2.r;
+	blended.g = (1 - t) * c1.g + t * c2.g;
+	blended.b = (1 - t) * c1.b + t * c2.b;
+	return (blended);
+}

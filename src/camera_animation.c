@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 09:24:04 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 14:14:08 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 16:28:06 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,12 @@ void	update_orbit_camera(t_camera *cam, t_cam_auto *o)
 	cam->lookfrom.y = o->center.y + o->height;
 	cam->forword = vec3_norm(vec3_sub(o->center, cam->lookfrom));
 	o->angle += o->speed;
+}
+
+void	value_min_clamp(double *value, double tob, double min)
+{
+	if (tob < min)
+		*value = min;
+	else
+		*value = tob;
 }

@@ -6,58 +6,11 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 08:26:16 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 16:27:10 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-t_color	blend_colors(t_color c1, t_color c2, double t)
-{
-	t_color	blended;
-
-	blended.r = (1 - t) * c1.r + t * c2.r;
-	blended.g = (1 - t) * c1.g + t * c2.g;
-	blended.b = (1 - t) * c1.b + t * c2.b;
-	return (blended);
-}
-
-double	attenuation(double d)
-{
-	double	constant;
-	double	linear;
-	double	quadratic;
-
-	constant = 1.0;
-	linear = 0.1;
-	quadratic = 0.01;
-	return (1.0 / (constant + linear * d + quadratic * d * d));
-}
-
-int	in_shadow(t_vec3 point, t_world *world, t_vec3 light_pos)
-{
-	t_vec3			to_light;
-	t_ray			shadow_r;
-	t_hit_record	temp_rec;
-	double			distance_to_light;
-
-	to_light = vec3_sub(light_pos, point);
-	distance_to_light = vec3_length(to_light);
-	shadow_r.direction = vec3_norm(to_light);
-	shadow_r.origin = vec3_add(point, vec3_mul_n(shadow_r.direction, 1e-4));
-	if (world_hit(world, &shadow_r, new_interval(0.001,
-				distance_to_light - 1e-4), &temp_rec))
-		return (1);
-	return (0);
-}
-
-void	value_clamp_min(double *value, double tob, double min)
-{
-	if (tob < min)
-		*value = min;
-	else
-		*value = tob;
-}
 
 t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 			t_world *world, t_s_light light)
@@ -71,43 +24,19 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 					color_multi_num(phong->ambient, 2.2)), 0.0, 1.0));
 	r2l = rt_ray(rec->p, vec3_norm(vec3_sub(light.position, rec->p)));
 	phong->atn = attenuation(vec3_length(vec3_sub(light.position, rec->p)));
-	value_clamp_min(&phong->cos_nl, vec3_dot(rec->normal, r2l.direction), 0.0);
+	value_min_clamp(&phong->cos_nl, vec3_dot(rec->normal, r2l.direction), 0.0);
 	phong->bright = light.brightness * phong->cos_nl;
 	phong->diffuse = color_multi_num(light.light_color,
 			phong->bright * phong->atn);
 	reflect_dir = vec3_sub(vec3_mul_n(rec->normal, 2.0
 				* vec3_dot(r2l.direction, rec->normal)), r2l.direction);
-	value_clamp_min(&phong->cos_rv, vec3_dot(reflect_dir,
+	value_min_clamp(&phong->cos_rv, vec3_dot(reflect_dir,
 			vec3_norm(vec3_sub(rec->ray_in.origin, rec->p))), 0.0);
 	phong->specular = color_multi_num(light.light_color, pow(phong->cos_rv,
 				SPECULAR_FACTOR) * phong->cos_nl * light.brightness);
 	f_color = color_add(color_multi_num(phong->ambient, 2.2), phong->diffuse);
 	f_color = color_add(f_color, phong->specular);
 	return (f_color);
-}
-t_color	ray_color_v3(t_ray *ray, int depth, t_world *world);
-
-t_color	metal_reflection_color(t_phong *phong, t_hit_record *rec,
-			int depth, t_world *world)
-{
-	t_color	reflected_color;
-	t_color	final_color;
-	t_vec3	c_i;
-	t_vec3	c_r;
-	t_ray	reflect_ray;
-
-	reflected_color = get_color(0, 0, 0);
-	final_color = color_add(phong->ambient, phong->specular);
-	c_i = vec3_norm(rec->ray_in.direction);
-	c_r = vec3_sub(c_i, vec3_mul_n(rec->normal, 2.0
-				* vec3_dot(c_i, rec->normal)));
-	reflect_ray.origin = vec3_add(rec->p, vec3_mul_n(rec->normal, 1e-4));
-	reflect_ray.direction = vec3_norm(c_r);
-	reflected_color = ray_color_v3(&reflect_ray, depth - 1, world);
-	final_color = blend_colors(final_color, reflected_color, 0.8);
-	// final_color = color_add(color_multi_num(final_color, 1.0 - 0.8),
-	// 		color_multi_num(reflected_color, 0.8));
-	return (final_color);
 }
 
 t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
@@ -134,33 +63,6 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 		return (phong.ambient);
 }
 
-void	output_camara_info(t_camera *c)
-{
-	if (DEBUG == 0)
-		return ;
-	printf("Camera Info:\n");
-	printf("  Lookfrom: (%f, %f, %f)\n", c->lookfrom.x,
-		c->lookfrom.y, c->lookfrom.z);
-	printf("  direction:   (%f, %f, %f)\n", c->forword.x,
-		c->forword.y, c->forword.z);
-	printf("  Vup:      (%f, %f, %f)\n", c->vup.x,
-		c->vup.y, c->vup.z);
-	printf("  U:        (%f, %f, %f)\n", c->u.x, c->u.y, c->u.z);
-	printf("  V:        (%f, %f, %f)\n", c->v.x, c->v.y, c->v.z);
-	printf("  W:        (%f, %f, %f)\n", c->w.x, c->w.y, c->w.z);
-	printf("  FOV:      %f\n", c->vfov);
-	printf("  Aspect Ratio: %f\n", (double)c->img_w / (double)c->img_h);
-	printf("  Image Width:  %d\n", c->img_w);
-	printf("  Image Height: %d\n", c->img_h);
-	printf("  Max Depth:        %d\n", c->max_depth);
-	printf("  Pixel00 Location:    (%f, %f, %f)\n", c->pix00_loc.x,
-		c->pix00_loc.y, c->pix00_loc.z);
-	printf("  Pixel Delta U:       (%f, %f, %f)\n", c->pix_delta_u.x,
-		c->pix_delta_u.y, c->pix_delta_u.z);
-	printf("  Pixel Delta V:       (%f, %f, %f)\n", c->pix_delta_v.x,
-		c->pix_delta_v.y, c->pix_delta_v.z);
-}
-
 void	init_camera_viewport(t_camera *c)
 {
 	t_vec3	vport_upper_left;
@@ -180,16 +82,6 @@ void	init_camera_viewport(t_camera *c)
 	vport_upper_left = vec3_sub(vport_upper_left, vec3_mul_n(viewport_v, 0.5));
 	c->pix00_loc = vec3_add(vport_upper_left,
 			vec3_mul_n(vec3_add(c->pix_delta_u, c->pix_delta_v), 0.5));
-}
-
-t_vec3	choose_vup(t_vec3 forward)
-{
-	t_vec3	vup;
-
-	vup = (t_vec3){0.0, 1.0, 0.0};
-	if (fabs(vec3_dot(forward, vup)) >= 0.999)
-		vup = (t_vec3){0.0, 0.0, 1.0};
-	return (vup);
 }
 
 void	camera_light_initialize(t_world *wld)
@@ -218,19 +110,7 @@ void	camera_light_initialize(t_world *wld)
 	{
 		printf("Caution: Camera is positioned on an object surface.\n");
 	}
-	output_camara_info(camera);
-}
-
-static	t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
-{
-	t_vec3	pixel_point;
-	t_vec3	ray_direction;
-
-	pixel_point = vec3_add(camera->pix00_loc,
-			vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
-				vec3_mul_n(camera->pix_delta_v, pixel_y)));
-	ray_direction = vec3_norm(vec3_sub(pixel_point, camera->lookfrom));
-	return (rt_ray(camera->lookfrom, ray_direction));
+	output_camera_info(camera);
 }
 
 void	camera_render(t_camera *cam, t_world *wld)
