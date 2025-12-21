@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 18:52:26 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 08:07:39 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include "controls.h"
 
 # define WIDTH 400
-# define HEIGHT 600
+# define DEPTH 5
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.05
 # define ESC	65307
@@ -33,7 +33,8 @@
 # define STEP_ANGLE 1.0f
 # define STEP_MOVE 1.1f
 # define MAX_PITCH_ANGLE 89.0f
-# define SURFACE_EPS 1e-4
+# define SURFACE_EPS 1e-5
+# define SPECULAR_FACTOR 32.0
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -162,8 +163,7 @@ struct s_material
 {
 	t_mat_type	type;
 	t_mat_data	data;
-	t_color		(*emitted)(t_material * self, t_ray r_in, t_hit_record * rec,
-		double u, double v, t_vec3 p);
+	t_color		(*emitted)(t_material * self, t_ray r_in, t_hit_record * rec);
 	double		(*scattering_pdf)(t_ray *ray_in, t_hit_record *rec,
 			t_ray *scattered);
 };
@@ -197,6 +197,17 @@ typedef struct s_phere_pdf
 {
 	t_pdf		base;
 }	t_sphere_pdf;
+
+typedef struct s_roots_holder
+{
+	double	a;
+	double	b;
+	double	c;
+	double	disc;
+	double	sqrt_disc;
+	double	rt1;
+	double	rt2;
+}	t_roots_holder;
 
 typedef struct s_cosine_pdf
 {
@@ -269,17 +280,7 @@ typedef union u_geo_data
 	t_cone		cone;
 }	t_geo_data;
 
-struct s_hit_record
-{
-	t_vec3		p;
-	t_vec3		normal;
-	t_material	mat;
-	t_object	*hit_obj;
-	double		t;
-	double		u;
-	double		v;
-	int			front_face;
-};
+
 
 typedef struct s_hitable_pdf
 {
@@ -325,6 +326,20 @@ struct s_object
 	struct s_object	*next;
 };
 
+struct s_hit_record
+{
+	t_vec3		p;
+	t_vec3		normal;
+	t_material	mat;
+	t_object	hit_obj;
+	t_color		orig_color;
+	t_ray		ray_in;
+	double		t;
+	double		u;
+	double		v;
+	int			front_face;
+};
+
 typedef struct s_spot_light
 {
 	t_vec3		position;
@@ -337,8 +352,11 @@ typedef struct s_phong
 	t_color		ambient;
 	t_color		diffuse;
 	t_color		specular;
-	t_color		obj_color;
-	double		brightness;
+	t_color		o_color;
+	double		bright;
+	double		cos_nl;
+	double		cos_rv;
+	double		atn;
 }	t_phong;
 
 typedef struct s_world
@@ -425,6 +443,10 @@ int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
 t_cylinder			new_cylinder(t_vec3 center, t_vec3 axis, double radius,
 						double height, t_material mat);
 
+//cylinder_utils.c
+void				cylinder_uv(t_cylinder *c, t_hit_record *rec, int face_hit);
+int					cylinder_cap_check_v1(t_ray *ray, t_interval *ray_t,
+						t_cylinder *cy, t_hit_record *rec);
 //interval.c
 t_interval			new_interval(double min, double max);
 int					interval_surrounds(t_interval *interval, double value);
@@ -474,7 +496,7 @@ t_color				checker_texture_value(t_texture *texture,
 t_diffuse_light		new_diffuse_light(t_texture *tex);
 t_diffuse_light		new_diffuse_light_color(t_color color);
 t_color				diffuse_light_emitted(t_material *self, t_ray rin,
-						t_hit_record *rec, double u, double v, t_vec3 p);
+						t_hit_record *rec);
 
 //onb.c
 t_onb				onb_new(t_vec3 n);

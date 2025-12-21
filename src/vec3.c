@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec3.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/20 19:24:39 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/20 19:56:56 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_vec3	new_vec3(double x, double y, double z)
@@ -10,7 +22,7 @@ t_vec3	new_vec3(double x, double y, double z)
 	return (vec);
 }
 
-t_vec3 vec3_mul_n(t_vec3 a, double scalar)
+t_vec3	vec3_mul_n(t_vec3 a, double scalar)
 {
 	t_vec3	result;
 
@@ -20,7 +32,7 @@ t_vec3 vec3_mul_n(t_vec3 a, double scalar)
 	return (result);
 }
 
-t_vec3 vec3_div(t_vec3 a, double scalar)
+t_vec3	vec3_div(t_vec3 a, double scalar)
 {
 	t_vec3	result;
 
@@ -55,7 +67,7 @@ t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 	return (result);
 }
 
-double vec3_length_squared(t_vec3 vec)
+double	vec3_length_squared(t_vec3 vec)
 {
 	return (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
@@ -109,15 +121,6 @@ t_vec3	unit_vector(t_vec3 vec)
 		printf("Warning: Zero length vector passed to unit_vector\n");
 	return (result);
 }
-t_vec3	random_vec3()
-{
-	t_vec3	result;
-
-	result.x = random_double();
-	result.y = random_double();
-	result.z = random_double();
-	return (result);
-}
 
 t_vec3	random_vec3_range(double min, double max)
 {
@@ -129,35 +132,18 @@ t_vec3	random_vec3_range(double min, double max)
 	return (result);
 }
 
-t_vec3	random_unit_vec3()
+t_vec3	random_unit_vec3(void)
 {
 	t_vec3	p;
 	double	length_squared;
 
-	while(42)
+	while (42)
 	{
 		p = random_vec3_range(-1.0, 1.0);
-		length_squared=vec3_length_squared(p);
+		length_squared = vec3_length_squared(p);
 		if (length_squared > 1e-160 && length_squared <= 1)
 			return (vec3_mul_n(p, 1.0 / sqrt(length_squared)));
 	}
-}
-
-t_vec3	random_on_hemisphere(t_vec3 normal)
-{
-	t_vec3	on_unit_sphere = random_unit_vec3();
-	if (vec3_dot(on_unit_sphere, normal) > 0.0)
-		return (on_unit_sphere);
-	else
-		return (vec3_mul_n(on_unit_sphere, -1.0));
-}
-
-int	vec3_near_zero(t_vec3 vec)
-{
-	double	s;
-
-	s = 1e-8;
-	return (fabs(vec.x) < s && fabs(vec.y) < s && fabs(vec.z) < s);
 }
 
 t_vec3	vec3_reflect(t_vec3 v, t_vec3 n)
@@ -172,25 +158,49 @@ t_vec3	vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat)
 	t_vec3	r_out_parallel;
 
 	cos_theta = fmin(vec3_dot(vec3_mul_n(uv, -1.0), n), 1.0);
-	r_out_perp = vec3_mul_n(vec3_add(uv, vec3_mul_n(n, cos_theta)), etai_over_etat);
-	r_out_parallel = vec3_mul_n(n, -sqrt(fabs(1.0 - vec3_length_squared(r_out_perp))));
+	r_out_perp = vec3_mul_n(vec3_add(uv, vec3_mul_n(n, cos_theta)),
+			etai_over_etat);
+	r_out_parallel = vec3_mul_n(n, -sqrt(fabs(1.0
+					- vec3_length_squared(r_out_perp))));
 	return (vec3_add(r_out_perp, r_out_parallel));
 }
 
-t_vec3	random_cosine_direction()
+t_vec3	random_cosine_direction(void)
 {
-    double r1 = random_double();
-    double r2 = random_double();
+	double	r2;
+	double	phi;
+	double	x;
+	double	y;
+	double	z;
 
-    double phi = 2 * M_PI * r1;
-    double x = cos(phi) * sqrt(r2);
-    double y = sin(phi) * sqrt(r2);
-    double z = sqrt(1-r2);
-
-    return new_vec3(x, y, z);
+	r2 = random_double();
+	phi = 2 * M_PI * random_double();
+	x = cos(phi) * sqrt(r2);
+	y = sin(phi) * sqrt(r2);
+	z = sqrt(1 - r2);
+	return (new_vec3(x, y, z));
 }
 
-t_vec3 vec3_clamp(t_vec3 v, double min, double max)
+/*
+
+t_vec3	random_vec3(void)
+{
+	t_vec3	result;
+
+	result.x = random_double();
+	result.y = random_double();
+	result.z = random_double();
+	return (result);
+}
+int	vec3_near_zero(t_vec3 vec)
+{
+	double	s;
+
+	s = 1e-8;
+	return (fabs(vec.x) < s && fabs(vec.y) < s && fabs(vec.z) < s);
+}
+
+t_vec3	vec3_clamp(t_vec3 v, double min, double max)
 {
 	if (v.x < min)
 		v.x = min;
@@ -204,5 +214,6 @@ t_vec3 vec3_clamp(t_vec3 v, double min, double max)
 		v.z = min;
 	if (v.z > max)
 		v.z = max;
-	return v;
+	return (v);
 }
+*/

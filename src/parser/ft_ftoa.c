@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ftoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:17:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:17:19 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/20 17:12:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	split_float(double n, int *precision, long *integer, long *fraction)
 {
 	long	scale;
 	long	rounded;
-	int		sign;
+	// int		sign;
 	int		i;
 
 	if (n < 0)

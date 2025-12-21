@@ -19,9 +19,10 @@ t_diffuse_light	new_diffuse_light_color(t_color color)
 	return (diffuse_light);
 }
 
-t_color	diffuse_light_emitted(t_material *self, t_ray r_in, t_hit_record *rec, double u, double v, t_vec3 p)
+t_color	diffuse_light_emitted(t_material *self, t_ray r_in, t_hit_record *rec)
 {
+	(void)r_in;
 	if (!rec->front_face)
 		return (get_color(0.0, 0.0, 0.0));
-	return (self->data.diffuse_light.tex->value(self->data.diffuse_light.tex, u, v, p));
+	return (self->data.diffuse_light.tex->value(self->data.diffuse_light.tex, rec->u, rec->v, rec->p));
 }

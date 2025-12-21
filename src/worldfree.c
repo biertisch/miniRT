@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 19:21:19 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 19:24:14 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,27 @@ void	error_exit(t_world *wld, char *message)
 	exit(EXIT_FAILURE);
 }
 
+void	free_and_set_null(void **ptr)
+{
+	if (ptr && *ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
+}
+
 void	free_object(t_object *obj)
 {
 	if (obj->type == SPHERE && obj->geo.sphere.mat.data.lamb.tex)
-	{
-		free(obj->geo.sphere.mat.data.lamb.tex);
-		obj->geo.sphere.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.sphere.mat.data.lamb.tex);
 	else if (obj->type == PLANE && obj->geo.plane.mat.data.lamb.tex)
-	{
-		free(obj->geo.plane.mat.data.lamb.tex);
-		obj->geo.plane.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.plane.mat.data.lamb.tex);
 	else if (obj->type == CYLINDER && obj->geo.cylinder.mat.data.lamb.tex)
-	{
-		free(obj->geo.cylinder.mat.data.lamb.tex);
-		obj->geo.cylinder.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.cylinder.mat.data.lamb.tex);
 	else if (obj->type == CONE && obj->geo.cone.mat.data.lamb.tex)
-	{
-		free(obj->geo.cone.mat.data.lamb.tex);
-		obj->geo.cone.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.cone.mat.data.lamb.tex);
 	else if (obj->type == QUAD && obj->geo.quad.mat.data.lamb.tex)
-	{
-		free(obj->geo.quad.mat.data.lamb.tex);
-		obj->geo.quad.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.quad.mat.data.lamb.tex);
 	free(obj);
 }
 

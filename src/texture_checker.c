@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture_checker.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/20 14:08:03 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/20 14:08:29 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_checker_tex	checker_texture(double scale, t_texture *even, t_texture *odd)
@@ -28,14 +40,6 @@ t_checker_tex	*checker_texture_colors(double scale, t_color even_color, t_color 
 
 t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p)
 {
-	// t_checker_tex *ct = (t_checker_tex *)texture;
-    // double s = sin(p.x * ct->inv_scale * M_PI)
-    //          * sin(p.z * ct->inv_scale * M_PI);
-    // if (s < 0)
-    //     return texture_value(ct->even, u, v, p);
-    // else
-    //     return texture_value(ct->odd, u, v, p);
-
 	int				check;
 	t_checker_tex	*ct;
 
@@ -44,15 +48,16 @@ t_color	checker_texture_value(t_texture *texture, double u, double v, t_vec3 p)
 	if (check == 0)
 		return (texture_value(ct->even, u, v, p));
 	else
-		return (texture_value(ct->odd, u, v, p));
-	
+		return (texture_value(ct->odd, u, v, p));	
 }
+
+/*
 t_color	checker_texture_value_old(t_texture *texture, double u, double v, t_vec3 p)
 {
-	int					xInt;
-	int					yInt;
-	int					zInt;
-	int					isEven;
+	int				xInt;
+	int				yInt;
+	int				zInt;
+	int				isEven;
 	t_checker_tex	*checker_tex;
 
 	checker_tex = (t_checker_tex *)texture;
@@ -64,4 +69,4 @@ t_color	checker_texture_value_old(t_texture *texture, double u, double v, t_vec3
 		return (texture_value(checker_tex->even, u, v, p));
 	else
 		return (texture_value(checker_tex->odd, u, v, p));
-}
+}*/

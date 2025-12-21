@@ -1,106 +1,134 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/20 19:14:00 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
-// unnecessary for parser
-t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius, double height, t_material mat)
+static int	on_cy_side(t_ray *ray, t_cylinder *cy, double t,
+				t_hit_record *rec)
 {
-	t_cylinder	cylinder;
-
-	cylinder.center = center;
-	cylinder.axis = vec3_norm(axis);
-	cylinder.radius = radius;
-	cylinder.height = height;
-	cylinder.mat = mat;
-	return (cylinder);
-}
-
-static int	check_cylinder_side(t_ray *ray, t_cylinder *cy, double t, t_hit_record *rec)
-{
-	t_vec3 p;
-	t_vec3 axis;
-	t_vec3 v;
-	double half_h;
-	double proj;
-	t_vec3 proj_point;
-	t_vec3 outward;
+	t_vec3	p;
+	t_vec3	axis;
+	t_vec3	v;
+	double	proj;
+	t_vec3	proj_point;
 
 	p = ray_at(ray, t);
 	axis = vec3_norm(cy->axis);
 	v = vec3_sub(p, cy->center);
-	half_h = cy->height / 2.0;
 	proj = vec3_dot(v, axis);
-	if (proj < -half_h || proj > half_h)
+	if (proj < -(cy->height / 2.0) || proj > cy->height / 2.0)
 		return (0);
 	proj_point = vec3_add(cy->center, vec3_mul_n(axis, proj));
-	outward = vec3_norm(vec3_sub(p, proj_point));
 	rec->t = t;
 	rec->p = p;
 	rec->mat = cy->mat;
-	set_face_normal(ray, outward, rec);
+	set_face_normal(ray, vec3_norm(vec3_sub(p, proj_point)), rec);
 	return (1);
 }
-// Returns 0 if no hit, 2 if bottom cap hit, 1 if top cap hit
-int	cylinder_cap_check(t_ray *ray, t_interval *ray_t, t_cylinder *cy,
+
+int	calc_cylinder_side_roots(t_ray *ray, t_cylinder *cy,
+	double *t1, double *t2)
+{
+	t_vec3			d_cross_a;
+	t_vec3			oc_cross_a;
+	t_roots_holder	rh;
+
+	rh = (t_roots_holder){0};
+	d_cross_a = vec3_cross(ray->direction, cy->axis);
+	oc_cross_a = vec3_cross(vec3_sub(ray->origin, cy->center), cy->axis);
+	rh.a = vec3_dot(d_cross_a, d_cross_a);
+	rh.b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
+	rh.c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
+	rh.disc = rh.b * rh.b - 4 * rh.a * rh.c;
+	if (rh.disc >= 0)
+	{
+		rh.sqrt_disc = sqrt(rh.disc);
+		*t1 = (-rh.b - rh.sqrt_disc) / (2 * rh.a);
+		*t2 = (-rh.b + rh.sqrt_disc) / (2 * rh.a);
+	}
+	return (rh.disc >= 0);
+}
+
+int	cylinder_side_check_v1(t_ray *ray, t_cylinder *cy, t_interval *ray_t,
 	t_hit_record *rec)
 {
-	double		closest_t;
+	double			t1;
+	double			t2;
+	int				hit_side;
+
+	hit_side = 0;
+	if (calc_cylinder_side_roots(ray, cy, &t1, &t2))
+	{
+		if (t1 >= ray_t->min && t1 < ray_t->max
+			&& on_cy_side(ray, cy, t1, rec))
+		{
+			ray_t->max = rec->t;
+			hit_side = 2;
+		}
+		if (t2 >= ray_t->min && t2 < ray_t->max
+			&& on_cy_side(ray, cy, t2, rec))
+		{
+			ray_t->max = rec->t;
+			hit_side = 2;
+		}
+	}
+	return (hit_side);
+}
+
+int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
+{
+	t_cylinder	*cy;
+	int			side_face;
+	int			tp_face;
 	int			hit_any;
 
-	closest_t = ray_t->max;
+	cy = &obj.geo.cylinder;
+	side_face = 0;
+	tp_face = 0;
 	hit_any = 0;
-	t_vec3 axis = vec3_norm(cy->axis);
-	t_vec3 half_axis = vec3_mul_n(axis, cy->height / 2.0);
-    t_vec3 cap1 = vec3_sub(cy->center, half_axis);
-    t_vec3 cap2 = vec3_add(cy->center, half_axis);
-    double denom = vec3_dot(ray->direction, axis);
-
-    if (fabs(denom) > 1e-8)
-    {
-        // bottom cap
-        double tcap = vec3_dot(vec3_sub(cap1, ray->origin), axis) / denom;
-        if (tcap >= ray_t->min && tcap < closest_t)  // ← Check against closest_t
-        {
-            t_vec3 p = ray_at(ray, tcap);
-            if (vec3_length_squared(vec3_sub(p, cap1)) <= cy->radius * cy->radius)
-            {
-                rec->t = tcap;
-                rec->p = p;
-                rec->mat = cy->mat;
-                set_face_normal(ray, vec3_mul_n(axis, -1), rec);
-                closest_t = tcap;
-                hit_any = 2;
-            }
-        }
-
-        // top cap
-        tcap = vec3_dot(vec3_sub(cap2, ray->origin), axis) / denom;
-        if (tcap >= ray_t->min && tcap < closest_t)  // ← Check against closest_t
-        {
-            t_vec3 p = ray_at(ray, tcap);
-            if (vec3_length_squared(vec3_sub(p, cap2)) <= cy->radius * cy->radius)
-            {
-                rec->t = tcap;
-                rec->p = p;
-                rec->mat = cy->mat;
-                set_face_normal(ray, axis, rec);
-                closest_t = tcap;
-                hit_any = 1;
-            }
-        }
-    }
+	cy->axis = vec3_norm(cy->axis);
+	side_face = cylinder_side_check_v1(ray, cy, &ray_t, rec);
+	tp_face = cylinder_cap_check_v1(ray, &ray_t, cy, rec);
+	if (side_face || tp_face)
+	{
+		hit_any = 1;
+		rec->hit_obj = obj;
+	}
+	if (tp_face)
+		cylinder_uv(cy, rec, tp_face);
+	else if (side_face)
+		cylinder_uv(cy, rec, side_face);
 	return (hit_any);
 }
 
-int	cylinder_side_check(t_ray *ray, t_cylinder *cy, t_interval *ray_t, t_hit_record *rec)
+/*
+
+int	cylinder_side_check_v0(t_ray *ray, t_cylinder *cy, t_interval *ray_t,
+	t_hit_record *rec)
 {
-	t_hit_record tmp;
-	t_vec3 axis = vec3_norm(cy->axis);
-    t_vec3 d_cross_a = vec3_cross(ray->direction, axis);
-    t_vec3 oc_cross_a = vec3_cross(vec3_sub(ray->origin, cy->center), axis);
-    double a = vec3_dot(d_cross_a, d_cross_a);
-    double b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
-    double c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
-    double disc = b * b - 4 * a * c;
-    
+	t_hit_record	tmp;
+	t_vec3			d_cross_a;
+	t_vec3			oc_cross_a;
+	double			a;
+	double			b;
+	double			c;
+	double			disc;
+
+	d_cross_a = vec3_cross(ray->direction, cy->axis);
+	oc_cross_a = vec3_cross(vec3_sub(ray->origin, cy->center), cy->axis);
+	a = vec3_dot(d_cross_a, d_cross_a);
+	b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
+	c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
+	disc = b * b - 4 * a * c;
     if (disc >= 0)
     {
         double sqrt_disc = sqrt(disc);
@@ -112,7 +140,7 @@ int	cylinder_side_check(t_ray *ray, t_cylinder *cy, t_interval *ray_t, t_hit_rec
             {
                 *rec = tmp;
 				ray_t->max = tmp.t;
-                return (1);
+                return (2);
             }
         }
         if (t2 >= ray_t->min && t2 < ray_t->max)
@@ -121,105 +149,78 @@ int	cylinder_side_check(t_ray *ray, t_cylinder *cy, t_interval *ray_t, t_hit_rec
             {
                 *rec = tmp;
 				ray_t->max = tmp.t;
-                return (1);
+                return (2);
             }
         }
     }
 	return (0);
 }
 
-void	set_cylinder_uv(t_cylinder *cy, t_hit_record *rec)
+// Returns 0 if no hit, 3 if bottom cap hit, 1 if top cap hit
+int	cylinder_cap_check_v0(t_ray *ray, t_interval *ray_t, t_cylinder *cy,
+	t_hit_record *rec)
 {
-	t_vec3  AP;   // hit 点到底面中心向量
-    t_vec3  X;    // 投影到截面平面的向量
-    t_vec3  T;    // 切线
-    t_vec3  B;    // 切线
-    double  t;
+	int		hit_any;
+	t_vec3	axis;
+    double	denom;
 
-    // 1️⃣ 计算 hit 点在 cylinder 轴向的投影（高度比例）
-    AP = vec3_sub(rec->p, cy->center);
-    t = vec3_dot(AP, cy->axis);   // 0~height
-    rec->v = t / cy->height;         // 归一化 v ∈ [0,1]
-
-    // 2️⃣ 计算截面平面向量 X
-    X = vec3_sub(AP, vec3_mul_n(cy->axis, t));  // 垂直于 axis
-
-    // 3️⃣ 构建局部切线空间
-    if (fabs(cy->axis.y) < 0.999)
-        T = vec3_norm(vec3_cross(cy->axis, new_vec3(0,1,0)));
-    else
-        T = vec3_norm(vec3_cross(cy->axis, new_vec3(1,0,0)));
-    B = vec3_cross(cy->axis, T);
-
-    // 4️⃣ 计算 u（围绕轴的角度）
-    rec->u = atan2(vec3_dot(X, B), vec3_dot(X, T)) / (2.0 * M_PI);
-    if (rec->u < 0)
-        rec->u += 1.0;
-}
-void cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
-{
-    t_vec3 T,B,X;
-    double t;
-
-	if (fabs(c->axis.y) < 0.999)
-		T = vec3_norm(vec3_cross(c->axis, new_vec3(0,1,0)));
-	else
-		T = vec3_norm(vec3_cross(c->axis, new_vec3(1,0,0)));
-		B = vec3_cross(c->axis, T);
-
-	if (face == 0)
-	{
-		X = vec3_sub(rec->p, c->center);
-		t = vec3_dot(X, c->axis);
-		rec->v = t / c->height;
-		X = vec3_sub(X, vec3_mul_n(c->axis, t));
-		rec->u = atan2(vec3_dot(X,B), vec3_dot(X,T)) / (2.0 * M_PI);
-		if (rec->u < 0) rec->u += 1.0;
-	}
-	else
-	{
-		t_vec3 center;
-		if (face == 1)
-			center = vec3_add(c->center, vec3_mul_n(c->axis, c->height/2.0));
-		else if (face == 2)
-			center = vec3_sub(c->center, vec3_mul_n(c->axis, c->height/2.0));
-		else
-			return ;
-		X = vec3_sub(rec->p, center);
-        rec->u = 0.5 + vec3_dot(X,T)/(2.0*c->radius);
-        rec->v = 0.5 + vec3_dot(X,B)/(2.0*c->radius);
-    }
-}
-
-int cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
-{
-	t_cylinder	*cy;
-	int			hit_any;
-	int			face;
-	double		closest_t;
-	
-	closest_t = ray_t.max;
 	hit_any = 0;
-	cy = &obj.geo.cylinder;
-	face = -1;
-	hit_any = cylinder_side_check(ray, cy, &ray_t, rec);
-	if (hit_any)
+	axis = vec3_norm(cy->axis);
+	denom = vec3_dot(ray->direction, axis);
+	cy->axis = vec3_norm(cy->axis);
+    if (fabs(denom) > 1e-8)
+    {
+        // bottom cap
+		t_vec3 b_cap = vec3_sub(cy->center, vec3_mul_n(axis, cy->height / 2.0));
+        double tcap = vec3_dot(vec3_sub(b_cap, ray->origin), axis) / denom;
+	return box;
+}    
+	if (tcap >= ray_t->min && tcap < ray_t->max)  // ← Check against closest_t
 	{
-		ray_t.max = rec->t;
-		face = 0;
+		t_vec3 p = ray_at(ray, tcap);
+		if (vec3_length_squared(vec3_sub(p, b_cap)) <= cy->radius * cy->radius)
+		{
+			rec->t = tcap;
+			rec->p = p;
+			rec->mat = cy->mat;
+			set_face_normal(ray, vec3_mul_n(axis, -1), rec);
+			ray_t->max = tcap;
+			hit_any = 3;
+		}
 	}
-	face = cylinder_cap_check(ray, &ray_t, cy, rec);
-	if (face > 0 || hit_any)
-		hit_any += face;
-	if (hit_any)
+	// top cap
+	t_vec3 t_cap = vec3_add(cy->center, vec3_mul_n(axis, cy->height / 2.0));
+	tcap = vec3_dot(vec3_sub(t_cap, ray->origin), axis) / denom;
+	if (tcap >= ray_t->min && tcap < ray_t->max)
 	{
-		rec->hit_obj = &obj;
-		cylinder_uv(cy, rec, face);
+		t_vec3 p = ray_at(ray, tcap);
+		if (vec3_length_squared(vec3_sub(p, t_cap)) <= cy->radius * cy->radius)
+		{
+			rec->t = tcap;
+			rec->p = p;
+			rec->mat = cy->mat;
+			set_face_normal(ray, axis, rec);
+			ray_t->max = tcap;
+			hit_any = 1;
+		}
 	}
-
-    return (hit_any);
+    }
+	return (hit_any);
 }
-/*
+
+// unnecessary for parser
+t_cylinder	new_cylinder(t_vec3 center, t_vec3 axis, double radius,
+	double height, t_material mat)
+{
+	t_cylinder	cylinder;
+
+	cylinder.center = center;
+	cylinder.axis = vec3_norm(axis);
+	cylinder.radius = radius;
+	cylinder.height = height;
+	cylinder.mat = mat;
+	return (cylinder);
+}
 
 t_aabb cylinder_bbox(t_cylinder *cy)
 {
@@ -265,42 +266,44 @@ t_aabb	cylinder_compute_bbox(t_cylinder *cy)
 	return (bbox);
 }
 
-static int	check_cylinder_caps(t_ray *ray, t_cylinder *cylinder, double t, t_hit_record *record)
+static int	check_cylinder_caps(t_ray *ray, t_cylinder *cylinder,
+ double t, t_hit_record *record)
 {
-	t_vec3	hit_point;
-	t_vec3	to_hit;
-	double	distance_along_axis;
-	double	distance_from_axis_squared;
+t_vec3	hit_point;
+t_vec3	to_hit;
+double	distance_along_axis;
+double	distance_from_axis_squared;
 
-	hit_point = ray_at(ray, t);
-	to_hit = vec3_subtract(hit_point, cylinder->center);
-	distance_along_axis = vec3_dot(to_hit, cylinder->axis);
-	
-	// Check if hit point is within the cylinder height bounds
-	if (distance_along_axis < 0 || distance_along_axis > cylinder->height)
-		return (0);
-	
-	// Calculate distance from cylinder axis
-	t_vec3 projection_on_axis = vec3_multiply(cylinder->axis, distance_along_axis);
-	t_vec3 radial_vector = vec3_subtract(to_hit, projection_on_axis);
-	distance_from_axis_squared = vec3_dot(radial_vector, radial_vector);
-	
-	// Check if hit point is within cylinder radius
-	if (distance_from_axis_squared > cylinder->radius * cylinder->radius)
-		return (0);
-	
-	// Calculate outward normal at hit point
-	t_vec3 outward_normal = vec3_multiply(radial_vector, 1.0 / cylinder->radius);
-	
-	record->t = t;
-	record->p = hit_point;
-	set_face_normal(ray, outward_normal, record);
-	record->mat = cylinder->mat;
-	
-	return (1);
+hit_point = ray_at(ray, t);
+to_hit = vec3_subtract(hit_point, cylinder->center);
+distance_along_axis = vec3_dot(to_hit, cylinder->axis);
+
+// Check if hit point is within the cylinder height bounds
+if (distance_along_axis < 0 || distance_along_axis > cylinder->height)
+	return (0);
+
+// Calculate distance from cylinder axis
+t_vec3 projection_on_axis = vec3_multiply(cylinder->axis, distance_along_axis);
+t_vec3 radial_vector = vec3_subtract(to_hit, projection_on_axis);
+distance_from_axis_squared = vec3_dot(radial_vector, radial_vector);
+
+// Check if hit point is within cylinder radius
+if (distance_from_axis_squared > cylinder->radius * cylinder->radius)
+	return (0);
+
+// Calculate outward normal at hit point
+t_vec3 outward_normal = vec3_multiply(radial_vector, 1.0 / cylinder->radius);
+
+record->t = t;
+record->p = hit_point;
+set_face_normal(ray, outward_normal, record);
+record->mat = cylinder->mat;
+
+return (1);
 }
 
-int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
+int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
+	t_hit_record *record)
 {
 	t_cylinder	*cylinder;
 	t_vec3		oc;
@@ -319,14 +322,15 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *recor
 	// Vector from ray origin to cylinder center
 	oc = vec3_subtract(ray->origin, cylinder->center);
 	
-	// For infinite cylinder, we solve: ||(o + td) - c - ((o + td - c) · a)a||² = r²
+//For infinite cylinder, we solve: ||(o + td) - c - ((o + td - c) · a)a||² = r²
 	// This reduces to a quadratic equation in t
 	ray_cross_axis = vec3_cross(ray->direction, cylinder->axis);
 	oc_cross_axis = vec3_cross(oc, cylinder->axis);
 	
 	a = vec3_dot(ray_cross_axis, ray_cross_axis);
 	b = 2.0 * vec3_dot(ray_cross_axis, oc_cross_axis);
-	c = vec3_dot(oc_cross_axis, oc_cross_axis) - (cylinder->radius * cylinder->radius);
+c = vec3_dot(oc_cross_axis, oc_cross_axis) 
+	- (cylinder->radius * cylinder->radius);
 	
 	discriminant = b * b - 4.0 * a * c;
 	
@@ -357,7 +361,8 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *recor
 	return (0);
 }
 
-int	cylinder_hit_old(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
+int	cylinder_hit_old(t_ray *ray, t_interval ray_t, t_object obj,
+ t_hit_record *rec)
 {
 	t_cylinder	*cy = &obj.geo.cylinder;
 	t_vec3		oc = vec3_subtract(ray->origin, cy->center);
@@ -410,36 +415,50 @@ int	cylinder_hit_old(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *r
 	// bottom cap
 	if (fabs(denom) > 1e-8)
 	{
-		double tcap = vec3_dot(vec3_subtract(cap1, ray->origin), axis) / denom;
-		if (interval_surrounds(&ray_t, tcap))
+	double tcap = vec3_dot(vec3_subtract(cap1, ray->origin), axis) / denom;
+	if (interval_surrounds(&ray_t, tcap))
+	{
+		t_vec3 p = ray_at(ray, tcap);
+	if (vec3_length_squared(vec3_subtract(p, cap1)) <= cy->radius * cy->radius)
 		{
-			t_vec3 p = ray_at(ray, tcap);
-			if (vec3_length_squared(vec3_subtract(p, cap1)) <= cy->radius * cy->radius)
-			{
-				rec->t = tcap;
-				rec->p = p;
-				rec->mat = cy->mat;
-				set_face_normal(ray, vec3_multiply(axis, -1), rec);
-				ray_t.max = tcap;
-				hit_any = 1;
-			}
+			rec->t = tcap;
+			rec->p = p;
+			rec->mat = cy->mat;
+			set_face_normal(ray, vec3_multiply(axis, -1), rec);
+			ray_t.max = tcap;
+			hit_any = 1;p cap
+	tcap = vec3_dot(vec3_subtract(cap2, ray->origin), axis) / denom;
+	if (interval_surrounds(&ray_t, tcap))
+	{
+		t_vec3 p = ray_at(ray, tcap);
+	if (vec3_length_squared(vec3_subtract(p, cap2)) <= cy->radius * cy->radius)
+		{
+			rec->t = tcap;
+			rec->p = p;
+			rec->mat = cy->mat;
+			set_face_normal(ray, axis, rec);
+			ray_t.max = tcap;
+			hit_any = 1;
 		}
+	}
+		}
+	}
 
-		// top cap
-		tcap = vec3_dot(vec3_subtract(cap2, ray->origin), axis) / denom;
-		if (interval_surrounds(&ray_t, tcap))
+	// top cap
+	tcap = vec3_dot(vec3_subtract(cap2, ray->origin), axis) / denom;
+	if (interval_surrounds(&ray_t, tcap))
+	{
+		t_vec3 p = ray_at(ray, tcap);
+	if (vec3_length_squared(vec3_subtract(p, cap2)) <= cy->radius * cy->radius)
 		{
-			t_vec3 p = ray_at(ray, tcap);
-			if (vec3_length_squared(vec3_subtract(p, cap2)) <= cy->radius * cy->radius)
-			{
-				rec->t = tcap;
-				rec->p = p;
-				rec->mat = cy->mat;
-				set_face_normal(ray, axis, rec);
-				ray_t.max = tcap;
-				hit_any = 1;
-			}
+			rec->t = tcap;
+			rec->p = p;
+			rec->mat = cy->mat;
+			set_face_normal(ray, axis, rec);
+			ray_t.max = tcap;
+			hit_any = 1;
 		}
+	}
 	}
 
 	return (hit_any);

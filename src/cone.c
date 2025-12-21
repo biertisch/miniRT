@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/20 10:05:21 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 17:12:15 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 	t_vec3	m;
 	t_vec3	outward;
 
+	(void)cone;
 	m = vec3_mul_n(axis, proj);
 	outward = vec3_sub(v, m);
 	return (vec3_norm(outward));
@@ -150,6 +151,6 @@ int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 		hit_any = 1;
 	set_cone_uv(c, rec);
 	if (hit_any)
-		rec->hit_obj = &obj;
+		rec->hit_obj = obj;
 	return (hit_any);
 }

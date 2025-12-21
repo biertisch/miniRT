@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 20:09:27 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/18 20:28:38 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 18:33:40 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,22 +42,21 @@ int	point_on_cylinder(t_vec3 p, t_cylinder *c)
 {
 	t_vec3	cp;
 	double	proj;
-	double	dist_to_axis;
+	double	rad;
 	int		on_surface;
 
 	on_surface = 0;
 	cp = vec3_sub(p, c->center);
 	proj = vec3_dot(cp, c->axis);
-	if (proj < 0 || proj > c->height)
-		on_surface = 0;
-	dist_to_axis = vec3_length(
-			vec3_sub(cp, vec3_mul_n(c->axis, proj)));
-	if (fabs(dist_to_axis - c->radius) < SURFACE_EPS)
+	if (proj < -c->height * 0.5 - SURFACE_EPS
+		|| proj > c->height * 0.5 + SURFACE_EPS)
+		return (0);
+	rad = vec3_length(vec3_sub(cp, vec3_mul_n(c->axis, proj)));
+	if (proj > -c->height * 0.5 + SURFACE_EPS && proj < c->height * 0.5
+			- SURFACE_EPS && fabs(rad - c->radius) < SURFACE_EPS)
 		on_surface = 1;
-	if (fabs(proj) < SURFACE_EPS && dist_to_axis <= c->radius + SURFACE_EPS)
-		on_surface = 1;
-	if (fabs(proj - c->height) < SURFACE_EPS
-		&& dist_to_axis <= c->radius + SURFACE_EPS)
+	if ((fabs(proj + c->height * 0.5) <= SURFACE_EPS || fabs(proj -
+			c->height * 0.5) <= SURFACE_EPS) && rad <= c->radius + SURFACE_EPS)
 		on_surface = 1;
 	if (on_surface)
 		printf("Camera on cylinder surface\n");

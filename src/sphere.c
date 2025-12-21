@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 09:40:14 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 17:04:13 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	set_face_normal(ray, outward_normal, record);
 	get_sphere_uv(outward_normal, &record->u, &record->v);
 	record->mat = sphere->mat;
-	record->hit_obj = &obj;
+	record->hit_obj = obj;
 	return (1);
 }

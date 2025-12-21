@@ -22,21 +22,17 @@ double	default_scattering_pdf(t_ray *ray_in, t_hit_record *rec, t_ray *scattered
 	return (0);
 }
 
-t_color	default_emitted(t_material *self,t_ray r_in,t_hit_record *rec, double u, double v, t_vec3 p)
+t_color	default_emitted(t_material *self,t_ray r_in,t_hit_record *rec)
 {
 	(void)self;
-	(void)u;
-	(void)v;
-	(void)p;
 	(void)r_in;
-	(void)rec;
 
 	switch(self->type)
 	{
 		case LAMBERTIAN:
-			return color_multi_num(self->data.lamb.tex->value(self->data.lamb.tex, u, v, p),0.3);
+			return color_multi_num(self->data.lamb.tex->value(self->data.lamb.tex, rec->u, rec->v, rec->p),0.3);
 		case METAL:
-			return color_multi_num(self->data.metal.tex->value(self->data.metal.tex, u, v, p),0.3);
+			return color_multi_num(self->data.metal.tex->value(self->data.metal.tex, rec->u, rec->v, rec->p),0.3);
 		case DIELECTRIC:
 			return (get_color(0.0, 0.0, 0.0));
 		default:
@@ -59,6 +55,7 @@ int	metal_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t_ray 
 {
 	t_vec3	reflected;
 
+	(void)pdf;
 	reflected = vec3_reflect(ray_in->direction, rec->normal);
 	reflected = vec3_add(unit_vector(reflected), vec3_mul_n(random_unit_vec3(), rec->mat.data.metal.fuzz));
 	*scattered = rt_ray(rec->p, reflected);
@@ -78,6 +75,7 @@ int	dielectric_scatter(t_ray *ray_in, t_hit_record *rec, t_color *attenuation, t
 {
 	double	ri;
 
+	(void)pdf;
 	*attenuation = get_color(1.0, 1.0, 1.0);
 	if (rec->front_face)
 		ri = 1.0 / rec->mat.data.dielect.ref_idx;

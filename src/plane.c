@@ -37,6 +37,6 @@ int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	set_face_normal(ray, outward_normal, record);
 	get_plane_uv(vec3_sub(record->p, plane->point), &record->u, &record->v);
 	record->mat = plane->mat;
-	record->hit_obj = &obj;
+	record->hit_obj = obj;
 	return (1);
 }

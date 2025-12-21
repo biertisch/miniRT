@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_object_fields.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 19:20:28 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 11:19:54 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static t_material	parse_material(const char **s, t_color color)
 	t_checker_tex	*checker;
 
 	skip_spaces(s);
-	if (ft_strcmp(*s, "c") == 0)
+	if (ft_strcmp(*s, "c") == 0 || ft_strcmp(*s, "c\n") == 0 || ft_strcmp(*s, "c ") == 0 || ft_strcmp(*s, "c#") == 0)
 	{
 		(*s)++;
-		checker = checker_texture_colors(0.99, color, (t_color){232, 232, 228});
+		checker = checker_texture_colors(20, norm_color(color), norm_color((t_color){0, 125, 125}));
 		return (get_material_texture(LAMBERTIAN, (t_texture *)checker, 0));
 	}
 	return (get_material(LAMBERTIAN, color, 0));
@@ -36,6 +36,7 @@ int	parse_sphere_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	if (!parse_float(&diameter, s, &meta->rule->fields[1], meta))
 		return (0);
+
 	sphere.radius = diameter / 2;
 	if (!parse_color(&color, s, &meta->rule->fields[2], meta))
 		return (0);

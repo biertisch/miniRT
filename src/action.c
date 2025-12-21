@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:59:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 18:03:59 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 17:11:19 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ static void camera_update_basis(t_camera *cam)
 static	void	camera_rotate_pitch(t_camera *cam, t_direction dir, float angle)
 {
 	double	step;
-	double	max_pitch;
+	// double	max_pitch;
 
 	step = get_rota_step(cam->vfov) * angle;
-	max_pitch = MAX_PITCH_ANGLE * M_PI / 180.0;
+	// max_pitch = MAX_PITCH_ANGLE * M_PI / 180.0;
 	if (dir == UP_DOWN)
 	{
 		cam->pitch += step;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_sliders.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:15:09 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/20 17:13:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	render_sliders(t_panel *panel, t_world *scene)
 	int	obj;
 	int	type;
 	int	x;
-	int	y;
+	// int	y;
 
 	obj = panel->active_obj;
 	if (obj < 0 || obj >= panel->total)

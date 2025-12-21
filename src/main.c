@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 19:20:15 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 17:00:11 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ void	reg_hook(t_world *wld)
 int	main(int argc, char **argv)
 {
 	t_world		wld;
-	t_quad		lights;
-	t_object	light_obj;
 
 	if (argc != 2)
 	{
