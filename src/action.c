@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:59:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 17:11:19 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 13:06:02 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,14 @@ void	do_action(int keycode, t_world *wld)
 		resize_obj(wld, 1.1f);
 	else if (keycode == '-')
 		resize_obj(wld, 0.9f);
+	else if (keycode == 'r')
+	{
+		wld->camera_auto.in_rot = !wld->camera_auto.in_rot;
+		if (wld->camera_auto.in_rot)
+			printf("Auto-rotation ON 🔄\n");
+		else
+			printf("Auto-rotation OFF ⏸️\n");
+	}
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 17:00:11 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 13:05:28 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,34 @@ int	handle_pressed(int keycode, void *param)
 	return (0);
 }
 
+int	loop(void *param)
+{
+	t_world *wld;
+
+	wld = (t_world *)param;
+	if (!wld->camera_auto.in_rot)
+		return (0);
+	else
+	{
+		if (!wld->camera_auto.inited)
+		{
+			init_auto_c(&wld->camera_auto, &wld->camera);
+			wld->camera_auto.inited = 1;
+		}
+		update_orbit_camera(&wld->camera, &wld->camera_auto);
+		camera_light_initialize(wld);
+		camera_render(&wld->camera, wld);
+	}
+	return (0);
+}
+
 void	reg_hook(t_world *wld)
 {
 	mlx_hook(wld->win, KeyRelease, 1L << 1, handle_pressed, wld);
 	mlx_hook(wld->win, DestroyNotify, 0, handle_destroy, wld);
 	mlx_mouse_hook(wld->win, mouse_hook, wld);
 	mlx_hook(wld->win, 4, 1L << 2, mouse_press, wld);
+	mlx_loop_hook(wld->mlx, loop, wld);
 }
 
 int	main(int argc, char **argv)

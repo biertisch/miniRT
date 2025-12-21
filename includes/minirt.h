@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 08:07:39 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/21 13:05:15 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,18 @@ typedef struct s_data
 	int		line_length;
 	int		endian;
 }	t_data;
+
+typedef struct s_camera_auto
+{
+	double	angle;
+	double	speed;
+	double	radius;
+	double	height;
+	t_vec3	center;
+	int		in_rot;
+	int		inited;
+}	t_cam_auto;
+
 
 typedef struct s_ray
 {
@@ -367,6 +379,7 @@ typedef struct s_world
 	t_object	*bvh_root;
 	int			num_objects;
 	t_camera	camera;
+	t_cam_auto	camera_auto;
 	t_color		ambient;
 	double		ambient_ratio;
 	t_s_light	spot_light;
@@ -530,5 +543,9 @@ void				error_exit(t_world *wld, char *message);
 
 //surfacechecker.c
 int					is_camera_on_surface(t_camera *cam, t_world *world);
+
+//camera_animation.c
+void				init_auto_c(t_cam_auto *o, t_camera *c);
+void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
 
 #endif
