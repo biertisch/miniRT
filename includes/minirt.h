@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 10:46:52 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 22:43:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define SPECULAR_FACTOR 32.0
 # define MAX_OBJS 50
 # define MAX_LIGHTS 5
+# define BUMP_SCALE 0.3
 
 # ifndef DEBUG
 #  define DEBUG 0
@@ -178,6 +179,14 @@ struct s_material
 	t_mat_data	data;
 	t_color		(*emitted)(t_material * self, t_ray r_in, t_hit_record * rec);
 };
+
+typedef struct s_tbn
+{
+	t_vec3	T;
+	t_vec3	B;
+	t_vec3	N;
+}	t_tbn;
+
 
 typedef struct s_interval
 {
@@ -523,4 +532,10 @@ void				init_auto_c(t_cam_auto *o, t_camera *c);
 void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
 void				value_min_clamp(double *value, double tob, double min);
 
+//bump.c
+t_vec3 				apply_bump(t_tbn tbn, double u, double v,
+						double (*height)(double, double));
+double				sine_bump(double u, double v);
+t_tbn				get_tbn_sphere(t_vec3 N);
+void				apply_sphere_bump(t_hit_record *rec, t_sphere *sp);
 #endif

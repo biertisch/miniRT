@@ -6,11 +6,21 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 17:43:40 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/22 22:38:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+t_color	normal_to_color(t_vec3 n)
+{
+	t_color	c;
+
+	c.r = (n.x + 1.0) * 0.5;
+	c.g = (n.y + 1.0) * 0.5;
+	c.b = (n.z + 1.0) * 0.5;
+	return (c);
+}
 
 // phong_of_light?
 t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
@@ -24,6 +34,7 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 		return (get_color(0.0, 0.0, 0.0));
 		// return (color_clamp(color_mult_color(phong->o_color,
 		// 			color_multi_num(phong->ambient, 2.2)), 0.0, 1.0));
+	// return (normal_to_color(rec->normal)); // debug normal visualization
 	r2l = rt_ray(rec->p, vec3_norm(vec3_sub(light.position, rec->p)));
 	phong->atn = attenuation(vec3_length(vec3_sub(light.position, rec->p)));
 	value_min_clamp(&phong->cos_nl, vec3_dot(rec->normal, r2l.direction), 0.0);
