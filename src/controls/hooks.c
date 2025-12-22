@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hooks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:16:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:16:32 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 12:39:42 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,13 @@ int	controls_mouse_hook(int button, int x, int y, void *param)
 	{
 		if (!scene->panel->dragging)
 			detect_active_slider(scene->panel, x, y);
-		if (scene->panel->active_obj != -1 && scene->panel->active_slider != -1
-			&& hit_knob(scene->panel, x, y))
-			begin_drag(scene->panel, x);
+		if (scene->panel->active_obj != -1 && scene->panel->active_slider != -1)
+		{
+			if (hit_knob(scene->panel, x, y))
+				begin_drag(scene->panel, x);
+			else
+				jump_to_click(scene->panel, x);
+		}
 	}
 	else if (button == 4 && (y >= OBJ_Y && y < TRANSF_Y))
 		scroll_up(scene->panel);

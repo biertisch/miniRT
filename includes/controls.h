@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 10:01:46 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 12:39:52 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ int		setup_controls(t_world *scene);
 void	free_panel(t_world *scene, t_panel *panel);
 
 // drag.c
+void	jump_to_click(t_panel *panel, int x);
 void	begin_drag(t_panel *panel, int x);
 int		hit_knob(t_panel *panel, int x, int y);
 void	detect_active_slider(t_panel *panel, int x, int y);

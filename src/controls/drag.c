@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:20:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:15:47 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 12:52:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,23 @@ void	begin_drag(t_panel *panel, int x)
 	panel->dragging = 1;
 	panel->drag_start_x = x;
 	panel->drag_start_norm = panel->sliders[obj][slider].knob_pos;
+}
+
+void	jump_to_click(t_panel *panel, int x)
+{
+	t_slider	*slider;
+	double		pos;
+
+	if (panel->active_obj < 0 || panel->active_slider < 0)
+		return ;
+	slider = &panel->sliders[panel->active_obj][panel->active_slider];
+	pos = (double)(x - (slider->x + 2 + KNOB_W / 2)) / (SLIDER_W - KNOB_W - 4);
+	if (pos < 0)
+		pos = 0;
+	else if (pos > 1)
+		pos = 1;
+	slider->knob_pos = pos;
+	panel->dragging = 1;
+	panel->drag_start_x = x;
+	panel->drag_start_norm = pos;
 }
