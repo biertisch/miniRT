@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 15:21:31 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:48:34 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/22 00:09:08 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ static	void	resize_obj(t_world *wld, float scale)
 			wld->current_obj->geo.cylinder.height *= scale;
 			camera_render(&wld->camera, wld);
 		}
+		else if (wld->current_obj->type == CONE)
+		{
+			wld->current_obj->geo.cone.radius *= scale;
+			wld->current_obj->geo.cone.height *= scale;
+			camera_render(&wld->camera, wld);
+		}
+		else
+			printf("Resize not supported for this object type.\n");
 	}
 	else
 		printf("Use mouse to select object first.\n");

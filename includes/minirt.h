@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 23:39:01 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/22 00:07:24 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ typedef struct s_camera_auto
 	int		inited;
 }	t_cam_auto;
 
-
 typedef struct s_ray
 {
 	t_vec3	origin;
@@ -103,7 +102,6 @@ typedef struct s_ray
 
 //texture_begin
 typedef struct s_texture	t_texture;
-// typedef struct s_texture_vtable t_texture_vtable;
 
 struct s_texture
 {
@@ -177,8 +175,6 @@ struct s_material
 	t_mat_type	type;
 	t_mat_data	data;
 	t_color		(*emitted)(t_material * self, t_ray r_in, t_hit_record * rec);
-	// double		(*scattering_pdf)(t_ray *ray_in, t_hit_record *rec,
-	// 		t_ray *scattered);
 };
 
 typedef struct s_interval
@@ -198,11 +194,6 @@ struct	s_pdf
 	double	(*value)(t_pdf *self, t_vec3 direction);
 	t_vec3	(*generate)(t_pdf * self);
 };
-
-// typedef struct s_phere_pdf
-// {
-// 	t_pdf		base;
-// }	t_sphere_pdf;
 
 typedef struct s_roots_holder
 {
@@ -286,8 +277,6 @@ typedef union u_geo_data
 	t_cone		cone;
 }	t_geo_data;
 
-
-
 typedef struct s_hitable_pdf
 {
 	t_pdf		base;
@@ -303,21 +292,16 @@ typedef struct s_camera
 	t_vec3	pix00_loc;
 	t_vec3	pix_delta_u;
 	t_vec3	pix_delta_v;
-	// int		samples_per_pixel;
-	// double	pixel_samples_scale;
 	int		max_depth;
 	double	vfov;
 	t_vec3	lookfrom;
 	t_vec3	forword;
 	double	pitch;
 	double	yaw;
-	// t_vec3	lookat;
 	t_vec3	vup;
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
-	// int		sqrt_spp;
-	// double	recip_sqrt_spp;
 	int		initialized;
 }	t_camera;
 
@@ -349,7 +333,7 @@ typedef struct s_spot_light
 {
 	t_vec3		position;
 	double		brightness;
-	t_color		light_color; //variable name can be abbreviate to color
+	t_color		color;
 }	t_s_light;
 
 typedef struct s_phong
@@ -376,7 +360,6 @@ typedef struct s_world
 	t_color		ambient;
 	double		ambient_ratio;
 	t_s_light	spot_light;
-	t_object	lights;
 	t_object	*current_obj;
 	t_panel		*panel;
 }	t_world;
@@ -386,23 +369,17 @@ void				extend_action(int keycode, t_world *wld);
 int					loop(void *param);
 
 //vec3.c;
-// t_vec3				new_vec3(double x, double y, double z);
-t_vec3				vec3_sub(t_vec3 a, t_vec3 b);
-t_vec3				vec3_add(t_vec3 a, t_vec3 b);
-t_vec3				vec3_cross(t_vec3 a, t_vec3 b);
 double				vec3_length_squared(t_vec3 vec);
 double				vec3_length(t_vec3 vec);
 t_vec3				vec3_norm(t_vec3 vec);
+t_vec3				unit_vector(t_vec3 vec);
+
+//vec3_op.c
+t_vec3				vec3_sub(t_vec3 a, t_vec3 b);
+t_vec3				vec3_add(t_vec3 a, t_vec3 b);
+t_vec3				vec3_cross(t_vec3 a, t_vec3 b);
 double				vec3_dot(t_vec3 a, t_vec3 b);
 t_vec3				vec3_mul_n(t_vec3 a, double scalar);
-t_vec3				unit_vector(t_vec3 vec);
-// t_vec3				random_unit_vec3(void);
-// t_vec3				random_on_hemisphere(t_vec3 normal);
-// int					vec3_near_zero(t_vec3 vec);
-// t_vec3				vec3_reflect(t_vec3 v, t_vec3 n);
-// t_vec3		vec3_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
-// t_vec3				random_cosine_direction(void);
-// t_vec3				vec3_clamp(t_vec3 v, double min, double max);
 
 //main.c
 int					handle_destroy(void *param);
@@ -436,8 +413,6 @@ int					world_hit(t_world *world, t_ray *ray, t_interval ray_t,
 t_quad				new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
 int					quad_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
-// double	quad_pdf_value(t_object obj, t_vec3 origin, t_vec3 direction);
-// t_vec3	quad_random(t_object obj, t_vec3 origin);
 
 //sphere.c
 int					sphere_hit(t_ray *ray, t_interval ray_t, t_object obj,
@@ -454,8 +429,6 @@ t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 //cylinder.c
 int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
-t_cylinder			new_cylinder(t_vec3 center, t_vec3 axis, double radius,
-						double height, t_material mat);
 
 //cylinder_utils.c
 void				cylinder_uv(t_cylinder *c, t_hit_record *rec, int face_hit);
@@ -465,9 +438,6 @@ int					cylinder_cap_check_v1(t_ray *ray, t_interval *ray_t,
 t_interval			new_interval(double min, double max);
 int					interval_surrounds(t_interval *interval, double value);
 double				interval_clamp(t_interval *interval, double value);
-t_interval			interval_union(t_interval *a, t_interval *b);
-double				interval_size(t_interval *interval);
-t_interval			interval_expand(t_interval *interval, double delta);
 int					interval_contains(t_interval *interval, double value);
 //camera.c
 // t_color	ray_color(t_ray *ray, int depth, t_world *world, t_object lights);
@@ -493,12 +463,6 @@ int					random_int(int min, int max);
 t_material			get_material(t_mat_type type, t_color albedo, double fuzz);
 t_material			get_material_texture(t_mat_type type, t_texture *tex,
 						double fuzz_or_refidx);
-int					lambertian_scatter(t_ray *ray_in, t_hit_record *rec,
-						t_color *attenuation, t_ray *scattered, double *pdf);
-int					metal_scatter(t_ray *ray_in, t_hit_record *rec,
-						t_color *attenuation, t_ray *scattered, double *pdf);
-int					dielectric_scatter(t_ray *ray_in, t_hit_record *rec,
-						t_color *attenuation, t_ray *scattered, double *pdf);
 
 //action.c
 void				do_action(int keycode, t_world *wld);
@@ -533,8 +497,6 @@ t_cosine_pdf		cosine_pdf_new(t_vec3 w);
 t_hitable_pdf		hitable_pdf_new(t_object *obj, t_vec3 origin);
 
 //cone.c
-// t_cone				new_cone(t_vec3 apex, t_vec3 axis,
-// 						double radius, double height, t_material mat);
 int					cone_hit(t_ray *ray, t_interval ray_t,
 						t_object obj, t_hit_record *record);
 //cone_quadratic.c
