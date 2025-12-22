@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 09:24:04 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:28:06 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/22 16:01:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	init_auto_c(t_cam_auto *o, t_camera *c)
 {
 	o->angle = atan2(c->lookfrom.z, c->lookfrom.x);
-	o->speed = 0.21;
+	o->speed = ROT_SPEED;
 	o->radius = sqrt(c->lookfrom.x * c->lookfrom.x
 			+ c->lookfrom.z * c->lookfrom.z);
 	o->height = c->lookfrom.y;
