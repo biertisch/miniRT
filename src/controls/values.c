@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:38:05 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:18:51 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 13:09:39 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ double	get_initial_value(t_world *scene, int index, t_slider_type slider)
 	t_object	*obj;
 	int			axis;
 
-	if (index < 0 || index > scene->panel->total_count)
+	if (index < 0 || index >= scene->panel->total_count)
 		return (0);
 	axis = slider_to_axis(slider);
 	if (index < scene->panel->light_count)
