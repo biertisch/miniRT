@@ -6,12 +6,13 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 10:21:04 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 12:14:12 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
+// phong_of_light?
 t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 			t_world *world, t_s_light light)
 {
@@ -26,16 +27,14 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 	phong->atn = attenuation(vec3_length(vec3_sub(light.position, rec->p)));
 	value_min_clamp(&phong->cos_nl, vec3_dot(rec->normal, r2l.direction), 0.0);
 	phong->bright = light.brightness * phong->cos_nl;
-	phong->diffuse = color_multi_num(light.color,
-			phong->bright * phong->atn);
+	phong->diffuse = color_multi_num(light.color, phong->bright * phong->atn);
 	reflect_dir = vec3_sub(vec3_mul_n(rec->normal, 2.0
 				* vec3_dot(r2l.direction, rec->normal)), r2l.direction);
 	value_min_clamp(&phong->cos_rv, vec3_dot(reflect_dir,
 			vec3_norm(vec3_sub(rec->ray_in.origin, rec->p))), 0.0);
 	phong->specular = color_multi_num(light.color, pow(phong->cos_rv,
-				SPECULAR_FACTOR) * phong->cos_nl * light.brightness);
-	f_color = color_add(color_multi_num(phong->ambient, 2.2), phong->diffuse);
-	f_color = color_add(f_color, phong->specular);
+				SPECULAR_FACTOR) * phong->atn * light.brightness);
+	f_color = color_add(phong->diffuse, phong->specular);
 	return (f_color);
 }
 
@@ -43,24 +42,28 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 {
 	t_hit_record	rec;
 	t_phong			phong;
+	t_color			light_sum;
 	t_color			final_color;
+	int				i;
 
 	if (depth <= 0)
 		return (get_color(0.0, 0.0, 0.0));
 	phong.ambient = color_multi_num(world->ambient, world->ambient_ratio);
-	if (world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
-	{
-		phong.o_color = rec.mat.emitted(&rec.mat, *ray, &rec);
-		rec.orig_color = phong.o_color;
-		rec.ray_in = *ray;
-		final_color = phone_of_light(&phong, &rec, world, *world->lights[0]);
-		if (rec.mat.type == METAL)
-			final_color = metal_reflection_color(&phong, &rec, depth, world);
-		return (color_clamp(color_add(phong.o_color,
-					color_mult_color(final_color, phong.o_color)), 0.0, 1.0));
-	}
-	else
+	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 		return (phong.ambient);
+	phong.o_color = rec.mat.emitted(&rec.mat, *ray, &rec);
+	rec.orig_color = phong.o_color;
+	rec.ray_in = *ray;
+	light_sum = get_color(0.0, 0.0, 0.0);
+	i = -1;
+	while (++i < world->num_lights)
+		light_sum = color_add(light_sum,
+				phone_of_light(&phong, &rec, world, *world->lights[i]));
+	final_color = color_add(color_multi_num(phong.ambient, 2.2), light_sum);
+	final_color = color_mult_color(final_color, phong.o_color);
+	if (rec.mat.type == METAL)
+		final_color = metal_reflection_color(&phong, &rec, depth, world);
+	return (color_clamp(final_color, 0.0, 1.0));
 }
 
 void	init_camera_viewport(t_camera *c)

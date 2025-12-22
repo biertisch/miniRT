@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 10:03:16 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:46:52 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -514,7 +514,6 @@ int					mouse_press(int button, int x, int y, void *param);
 
 //worldfree.c
 void				free_all_the_world(t_world *wld);
-void				error_exit(t_world *wld, char *message);
 
 //surfacechecker.c
 int					is_camera_on_surface(t_camera *cam, t_world *world);

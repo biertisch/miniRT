@@ -3,8 +3,8 @@ SRC = $(addprefix src/, main.c color.c vec3.c vec3_op.c ray.c sphere.c hittable_
 						camera.c camera_utils.c debug_info.c rt_utils.c material.c action.c action_extend.c \
 						quad.c plane.c cylinder.c cylinder_utils.c \
 						texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
-						onb.c pdf.c cone.c parser/error.c parser/error_utils.c parser/keyword.c\
-						parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
+						onb.c pdf.c cone.c parser/error.c parser/error_message.c parser/error_utils.c\
+						parser/keyword.c parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
 						parser/parse_object_fields.c parser/parse_scalar.c parser/parse_vector.c\
 						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
 						parser/ft_ftoa.c controls/controls.c controls/drag.c controls/hooks.c\
