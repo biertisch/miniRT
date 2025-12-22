@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:58:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:16:54 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 12:08:23 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ static void	allocate_panel(t_world *scene)
 	scene->panel->object_count = scene->num_objects;
 	scene->panel->light_count = scene->num_lights;
 	scene->panel->total_count = scene->num_objects + scene->num_lights;
-	scene->panel->sliders = ft_calloc(sizeof(t_slider *), scene->panel->total_count);
+	scene->panel->sliders = ft_calloc(sizeof(t_slider *),
+			scene->panel->total_count);
 	if (!scene->panel->sliders)
 		error_exit(scene, "Error\nmalloc");
 	i = 0;

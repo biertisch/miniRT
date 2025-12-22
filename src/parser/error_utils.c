@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:47:33 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:14:49 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:53:03 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,4 @@ void	append_header(char *buffer, int errors)
 {
 	if (errors == 0)
 		ft_strlcpy(buffer, "Error\n", ERR_BUFFER_SIZE);
-}
-
-void	normal_error_message(char *buffer, t_field_rule *field)
-{
-	ft_strlcat(buffer, "vector '", ERR_BUFFER_SIZE);
-	if (field && field->name)
-		ft_strlcat(buffer, field->name, ERR_BUFFER_SIZE);
-	ft_strlcat(buffer, "' must be normalized (length = 1)", ERR_BUFFER_SIZE);
 }

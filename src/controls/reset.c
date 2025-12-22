@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 16:14:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:41:50 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 11:56:00 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,19 +72,12 @@ void	reset_scene(t_panel *panel, t_world *scene)
 	panel->drag_start_x = PANEL_W / 2;
 	panel->drag_start_norm = 0.5;
 	reset_sliders(panel->sliders, panel->total_count);
-	i = 0;
-	while (i < panel->light_count)
-	{
+	i = -1;
+	while (++i < panel->light_count)
 		reset_position(panel->sliders[i], &scene->lights[i]->position);
-		i++;
-	}
-	j = 0;
-	while (i < panel->total_count && j < panel->object_count)
-	{
+	j = -1;
+	while (++i < panel->total_count && ++j < panel->object_count)
 		reset_object(panel->sliders[i], scene->objects[j]);
-		i++;
-		j++;
-	}
 	scene->camera.vfov = panel->camera_initial_fov;
 	scene->camera.lookfrom = panel->camera_initial_origin;
 	scene->camera.forword = panel->camera_initial_direction;

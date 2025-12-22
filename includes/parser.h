@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:51:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 14:56:40 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 12:11:39 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 # define ERR_BUFFER_SIZE 120
 
-typedef struct s_world	t_world;
+typedef struct s_world		t_world;
 typedef struct s_spot_light	t_s_light;
 
 typedef enum e_error_type
@@ -74,15 +74,24 @@ typedef struct s_metadata
 }	t_metadata;
 
 // error.c
+void			error_exit(t_world *wld, char *message);
 int				report_error(t_error_type code, t_metadata *meta,
 					t_field_rule *field, double value);
+
+// error_message.c
+void			global_error_message(char *buffer, int errors);
+void			count_error_message(char *buffer, t_error_type code,
+					t_metadata *meta);
+void			format_error_message(char *buffer, t_field_rule *field);
+void			range_error_message(char *buffer, t_field_rule *field,
+					double value);
+void			normal_error_message(char *buffer, t_field_rule *field);
 
 // error_utils.c
 void			append_int(char *buffer, int value);
 void			append_float(char *buffer, double value, int precision);
 void			append_line(char *buffer, int line_no);
 void			append_header(char *buffer, int errors);
-void			normal_error_message(char *buffer, t_field_rule *field);
 
 // keyword.c
 int				is_valid_keyword(const char *p, char *key, t_metadata *meta);
