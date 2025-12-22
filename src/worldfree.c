@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 14:53:36 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:16:59 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,37 @@ void	error_exit(t_world *wld, char *message)
 	exit(EXIT_FAILURE);
 }
 
+void	free_and_set_null(void **ptr)
+{
+	t_texture		*tex;
+	t_checker_tex	*ct;
+
+	if (ptr && *ptr)
+	{
+		tex = (t_texture *)(*ptr);
+		if (tex->is_checker)
+		{
+			ct = (t_checker_tex *)tex;
+			free_and_set_null((void **)&ct->even);
+			free_and_set_null((void **)&ct->odd);
+		}
+		free(*ptr);
+		*ptr = NULL;
+	}
+}
+
 void	free_object(t_object *obj)
 {
 	if (obj->type == SPHERE && obj->geo.sphere.mat.data.lamb.tex)
-	{
-		free(obj->geo.sphere.mat.data.lamb.tex);
-		obj->geo.sphere.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.sphere.mat.data.lamb.tex);
 	else if (obj->type == PLANE && obj->geo.plane.mat.data.lamb.tex)
-	{
-		free(obj->geo.plane.mat.data.lamb.tex);
-		obj->geo.plane.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.plane.mat.data.lamb.tex);
 	else if (obj->type == CYLINDER && obj->geo.cylinder.mat.data.lamb.tex)
-	{
-		free(obj->geo.cylinder.mat.data.lamb.tex);
-		obj->geo.cylinder.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.cylinder.mat.data.lamb.tex);
 	else if (obj->type == CONE && obj->geo.cone.mat.data.lamb.tex)
-	{
-		free(obj->geo.cone.mat.data.lamb.tex);
-		obj->geo.cone.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.cone.mat.data.lamb.tex);
 	else if (obj->type == QUAD && obj->geo.quad.mat.data.lamb.tex)
-	{
-		free(obj->geo.quad.mat.data.lamb.tex);
-		obj->geo.quad.mat.data.lamb.tex = NULL;
-	}
+		free_and_set_null((void **)&obj->geo.quad.mat.data.lamb.tex);
 	free(obj);
 }
 

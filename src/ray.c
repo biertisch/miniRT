@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/21 17:02:22 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/21 17:03:02 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
-t_ray rt_ray(t_vec3 origin, t_vec3 direction)
+t_ray	rt_ray(t_vec3 origin, t_vec3 direction)
 {
-	t_ray new_ray;
+	t_ray	new_ray;
 
 	new_ray.origin = origin;
 	new_ray.direction = direction;
@@ -11,13 +23,11 @@ t_ray rt_ray(t_vec3 origin, t_vec3 direction)
 
 t_vec3	ray_at(t_ray *ray, double t)
 {
-	t_vec3 point;
+	t_vec3	point;
 
 	point = vec3_add(ray->origin, vec3_mul_n(ray->direction, t));
 	return (point);
 }
-
-
 
 // double	hit_sphere(t_vec3 center, double radius, t_ray *ray)
 // {
@@ -37,8 +47,6 @@ t_vec3	ray_at(t_ray *ray, double t)
 // 	else
 // 		return (h - sqrt(discriminant)) / a;
 // }
-
-
 /*
 void ray_tracing(void *mlx, void *window, t_scene *scene)
 {

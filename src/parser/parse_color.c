@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:50:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:00:30 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:26:57 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	parse_color_component(const char **s, int *out, int i)
 			return (0);
 		(*s)++;
 	}
-	if (i == 2 && **s != '\0' && !ft_isspace((unsigned char)**s))
+	if (i == 2 && **s != '\0' && !ft_isspace((unsigned char)**s) && **s != '#')
 		return (0);
 	*out = value;
 	return (1);

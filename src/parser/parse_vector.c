@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:56:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:01:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:28:00 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	parse_vec3_component(const char **s, double *out, int i)
 			return (0);
 		(*s)++;
 	}
-	if (i == 2 && **s != '\0' && !ft_isspace((unsigned char)**s))
+	if (i == 2 && **s != '\0' && !ft_isspace((unsigned char)**s) && **s != '#')
 		return (0);
 	*out = value;
 	return (1);

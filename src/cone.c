@@ -3,27 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 14:26:40 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 23:37:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 // unnecessary for parser
-t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height,
-	t_material mat)
-{
-	return ((t_cone){apex, axis, radius, height, mat});
-}
+// t_cone	new_cone(t_vec3 apex, t_vec3 axis, double radius, double height,
+// 	t_material mat)
+// {
+// 	return ((t_cone){apex, axis, radius, height, mat});
+// }
 
 static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 {
 	t_vec3	m;
 	t_vec3	outward;
 
+	(void)cone;
 	m = vec3_mul_n(axis, proj);
 	outward = vec3_sub(v, m);
 	return (vec3_norm(outward));
@@ -81,12 +82,39 @@ static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
 	return (1);
 }
 
+void	set_cone_uv(t_cone *cone, t_hit_record *rec)
+{
+	t_vec3	ap;
+	t_vec3	x;
+	t_vec3	c_u;
+	t_vec3	c_w;
+	double	t;
+
+	ap = vec3_sub(rec->p, cone->apex);
+	t = vec3_dot(ap, cone->axis);
+	rec->v = t / cone->height;
+	x = vec3_sub(ap, vec3_mul_n(cone->axis, t));
+	if ((vec3_dot(x, x)) < 1e-12)
+	{
+		rec->u = 0.0;
+		return ;
+	}
+	if (fabs(cone->axis.y) < 0.999)
+		c_u = vec3_norm(vec3_cross(cone->axis, (t_vec3){0, 1, 0}));
+	else
+		c_u = vec3_norm(vec3_cross(cone->axis, (t_vec3){1, 0, 0}));
+	c_w = vec3_cross(cone->axis, c_u);
+	rec->u = atan2(vec3_dot(x, c_w), vec3_dot(x, c_u)) / (2 * M_PI);
+	if (rec->u < 0)
+		rec->u += 1.0;
+}
+
 int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 {
-	t_cone			*c;
-	double			t1;
-	double			t2;
-	int				hit_any;
+	t_cone	*c;
+	double	t1;
+	double	t2;
+	int		hit_any;
 
 	c = &obj.geo.cone;
 	if (!solve_cone_quadratic(ray, c, &t1, &t2))
@@ -105,6 +133,6 @@ int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 	if (check_cone_base(ray, &ray_t, c, rec))
 		hit_any = 1;
 	if (hit_any)
-		rec->hit_obj = &obj;
+		set_cone_uv(c, rec);
 	return (hit_any);
 }

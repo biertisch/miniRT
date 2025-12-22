@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:26:21 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:21:59 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:04:04 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	render_sliders(t_panel *panel, t_world *scene)
 	int	obj;
 	int	type;
 	int	x;
-	int	y;
 
 	obj = panel->active_obj;
 	if (obj < 0 || obj >= panel->total_count)

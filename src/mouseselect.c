@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:09:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/17 17:10:56 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/20 17:13:54 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	mouse_press(int button, int x, int y, void *param)
 	t_ray			ray;
 	t_hit_record	rec;
 
+	(void)button;
 	wld = (t_world *)param;
 	ray = get_ray_with_screenxy(x, y, &wld->camera);
 	if (has_object_was_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec))

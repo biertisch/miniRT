@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:20:40 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/22 10:03:33 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	draw_highlight(t_panel *panel, int row, int y)
 	int	x;
 	int	width;
 
+	(void)row;
 	x = PADD_X - 5;
 	y -= (ROW_H - CHAR_H) / 2;
 	width = panel->width - 2 * x;

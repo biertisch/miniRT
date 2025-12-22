@@ -3,18 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   action.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:59:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 10:16:13 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 23:36:41 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-double	get_rota_step(double fov)
+void	camera_action(void (*func)(t_camera *, t_direction, float),
+	t_direction beheaver, t_world *wld, float val)
 {
-	return (fov / 60.0 * STEP_ANGLE * M_PI / 180.0);
+	func(&wld->camera, beheaver, val);
+	wld->camera_auto.inited = 0;
+	camera_light_initialize(wld);
+	camera_render(&wld->camera, wld);
 }
 
 static	void	camera_move(t_camera *cam, t_direction direction, float dist)
@@ -26,41 +30,38 @@ static	void	camera_move(t_camera *cam, t_direction direction, float dist)
 	{
 		forward = cam->forword;
 		cam->lookfrom = vec3_add(cam->lookfrom, vec3_mul_n(forward, dist));
-		// cam->lookat = vec3_add(cam->lookat, vec3_mul_n(forward, dist));
 	}
 	else if (direction == LEFT_RIGHT)
 	{
 		forward = cam->forword;
 		right = unit_vector(vec3_cross(forward, cam->vup));
 		cam->lookfrom = vec3_add(cam->lookfrom, vec3_mul_n(right, dist));
-		// cam->lookat = vec3_add(cam->lookat, vec3_mul_n(right, dist));
 	}
 }
 
-static void camera_update_basis(t_camera *cam)
+static void	camera_update_basis(t_camera *cam)
 {
-    t_vec3 world_up;
+	t_vec3	world_up;
 
-    world_up = new_vec3(0, 1, 0);
-    if (fabs(vec3_dot(cam->forword, world_up)) > 0.999)
-        world_up = new_vec3(0, 0, 1);
-
-    cam->u = unit_vector(vec3_cross(world_up, cam->forword));
-    cam->vup = vec3_cross(cam->forword, cam->u);
+	world_up = (t_vec3){0, 1, 0};
+	if (fabs(vec3_dot(cam->forword, world_up)) > 0.999)
+		world_up = (t_vec3){0, 0, 1};
+	cam->u = unit_vector(vec3_cross(world_up, cam->forword));
+	cam->vup = vec3_cross(cam->forword, cam->u);
 }
 
 static	void	camera_rotate_pitch(t_camera *cam, t_direction dir, float angle)
 {
-	double step;
+	double	step;
 
-	step = get_rota_step(cam->vfov) * angle;
+	step = ((cam->vfov / 60.0 * STEP_ANGLE * M_PI / 180.0)) * angle;
 	if (dir == UP_DOWN)
 	{
 		cam->pitch += step;
-		if (cam->pitch > MAX_PITCH)
-			cam->pitch = MAX_PITCH;
-		if (cam->pitch < -MAX_PITCH)
-			cam->pitch = -MAX_PITCH;
+		if (cam->pitch > MAX_PITCH_ANGLE)
+			cam->pitch = MAX_PITCH_ANGLE;
+		if (cam->pitch < -MAX_PITCH_ANGLE)
+			cam->pitch = -MAX_PITCH_ANGLE;
 	}
 	else if (dir == LEFT_RIGHT)
 		cam->yaw += step;
@@ -69,34 +70,6 @@ static	void	camera_rotate_pitch(t_camera *cam, t_direction dir, float angle)
 	cam->forword.z = cos(cam->pitch) * sin(cam->yaw);
 	cam->forword = unit_vector(cam->forword);
 	camera_update_basis(cam);
-}
-
-static	void	camera_action(void (*func)(t_camera *, t_direction, float),
-	t_direction beheaver, t_world *wld, float val)
-{
-	func(&wld->camera, beheaver, val);
-	camera_light_initialize(wld);
-	camera_render(&wld->camera, wld);
-}
-
-static	void	resize_obj(t_world *wld, float scale)
-{
-	if (wld->current_obj)
-	{
-		if (wld->current_obj->type == SPHERE)
-		{
-			wld->current_obj->geo.sphere.radius *= scale;
-			camera_render(&wld->camera, wld);
-		}
-		else if (wld->current_obj->type == CYLINDER)
-		{
-			wld->current_obj->geo.cylinder.radius *= scale;
-			wld->current_obj->geo.cylinder.height *= scale;
-			camera_render(&wld->camera, wld);
-		}
-	}
-	else
-		printf("Use mouse to select object first.\n");
 }
 
 void	do_action(int keycode, t_world *wld)
@@ -117,18 +90,16 @@ void	do_action(int keycode, t_world *wld)
 		camera_action(camera_move, LEFT_RIGHT, wld, -STEP_MOVE);
 	else if (keycode == 'd')
 		camera_action(camera_move, LEFT_RIGHT, wld, +STEP_MOVE);
-	else if (keycode == 'p')
-		printf("📷 Info:\nAt: (%.2f, %.2f, %.2f)\nTarget: (%.2f, %.2f, %.2f)\n",
-			wld->camera.lookfrom.x, wld->camera.lookfrom.y,
-			wld->camera.lookfrom.z, wld->camera.forword.x,
-			wld->camera.forword.y, wld->camera.forword.z);
-	else if (keycode == '=')
-		resize_obj(wld, 1.1f);
-	else if (keycode == '-')
-		resize_obj(wld, 0.9f);
+	else
+		extend_action(keycode, wld);
 }
 
 /*
+
+double	get_rota_step(double fov)
+{
+	return (fov / 60.0 * STEP_ANGLE * M_PI / 180.0);
+}
 void	camera_move_forward_back(t_camera *cam, t_direction dir, float dist)
 {
 	t_vec3	forward;

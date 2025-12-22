@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture_solid_color.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/21 17:20:37 by bliu              #+#    #+#             */
+/*   Updated: 2025/12/21 22:08:51 by bliu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_solid_color_tex	solid_color_texture(t_color color)
@@ -5,6 +17,7 @@ t_solid_color_tex	solid_color_texture(t_color color)
 	t_solid_color_tex	texture;
 
 	texture.base.value = &solid_color_value;
+	texture.base.is_checker = 0;
 	texture.albedo = color;
 	return (texture);
 }
@@ -15,6 +28,7 @@ t_solid_color_tex	*solid_color_texture_ptr(t_color color)
 
 	texture = malloc(sizeof(t_solid_color_tex));
 	texture->base.value = &solid_color_value;
+	texture->base.is_checker = 0;
 	texture->albedo = color;
 	return (texture);
 }

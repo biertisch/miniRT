@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 18:30:52 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 16:49:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,12 @@ void	reg_hook(t_world *wld)
 	mlx_hook(wld->win, DestroyNotify, 0, handle_destroy, wld);
 	mlx_mouse_hook(wld->win, mouse_hook, wld);
 	mlx_hook(wld->win, 4, 1L << 2, mouse_press, wld);
+	mlx_loop_hook(wld->mlx, loop, wld);
 }
 
 int	main(int argc, char **argv)
 {
 	t_world		wld;
-	t_quad		lights;
-	t_object	light_obj;
 
 	if (argc != 2)
 	{
@@ -78,11 +77,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_memset(&wld, 0, sizeof(t_world));
-	if (!use_test_scene(&wld, 0))
-	{
-		if (!parser(&wld, argv[1]))
-			return (1);
-	}
+	if (!parser(&wld, argv[1]))
+		return (1);
 	camera_light_initialize(&wld);
 	wld.mlx = mlx_init();
 	wld.win = mlx_new_window(wld.mlx, wld.camera.img_w,

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/19 14:26:51 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/21 23:11:21 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
+/*
 // unnecessary for parser
 t_sphere	new_sphere(t_vec3 center, double radius, t_material mat)
 {
@@ -22,6 +23,7 @@ t_sphere	new_sphere(t_vec3 center, double radius, t_material mat)
 	sphere.mat = mat;
 	return (sphere);
 }
+*/
 
 void	set_face_normal(t_ray *ray, t_vec3 outward_normal, t_hit_record *record)
 {
@@ -39,29 +41,22 @@ void	set_face_normal(t_ray *ray, t_vec3 outward_normal, t_hit_record *record)
 
 static void	get_sphere_uv(t_vec3 p, double *u, double *v)
 {
-	double	theta;
-	double	phi;
-
-	theta = acos(-p.y);
-	phi = atan2(-p.z, p.x) + M_PI;
-	*u = phi / (2 * M_PI);
-	*v = theta / M_PI;
+	*u = 0.5 + (atan2(p.z, p.x) / (2 * M_PI));
+	*v = 0.5 - (asin(p.y) / M_PI);
 }
 
-static int	root_calc(t_sphere *sphere, t_ray *ray, t_interval ray_t, double *root)
+static int	root_calc(t_sphere *s, t_ray *ray, t_interval ray_t, double *root)
 {
 	t_vec3		oc;
 	double		a;
 	double		h;
-	double		c;
 	double		discriminant;
 	double		sqrtd;
 
-	oc = vec3_sub(sphere->center, ray->origin);
+	oc = vec3_sub(s->center, ray->origin);
 	a = vec3_dot(ray->direction, ray->direction);
 	h = vec3_dot(oc, ray->direction);
-	c = vec3_dot(oc, oc) - (sphere->radius * sphere->radius);
-	discriminant = h * h - a * c;
+	discriminant = h * h - a * (vec3_dot(oc, oc) - (s->radius * s->radius));
 	if (discriminant < 0)
 		return (0);
 	sqrtd = sqrt(discriminant);
@@ -77,40 +72,18 @@ static int	root_calc(t_sphere *sphere, t_ray *ray, t_interval ray_t, double *roo
 
 int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 {
-	// t_vec3		oc;
-	// double		a;
-	// double		h;
-	// double		c;
-	// double		discriminant;
-	t_sphere	*sphere;
-	// double		sqrtd;
+	t_sphere	*s;
 	double		root;
-	t_vec3		outward_normal;
+	t_vec3		otwrd_norm;
 
-	sphere = &obj.geo.sphere;
-	// oc = vec3_sub(sphere->center, ray->origin);
-	// a = vec3_dot(ray->direction, ray->direction);
-	// h = vec3_dot(oc, ray->direction);
-	// c = vec3_dot(oc, oc) - (sphere->radius * sphere->radius);
-	// discriminant = h * h - a * c;
-	// if (discriminant < 0)
-	// 	return (0);
-	// sqrtd = sqrt(discriminant);
-	// root = (h - sqrtd) / a;
-	// if (!interval_surrounds(&ray_t, root))
-	// {
-	// 	root = (h + sqrtd) / a;
-	// 	if (!interval_surrounds(&ray_t, root))
-	// 		return (0);
-	// }
-	if (!root_calc(sphere, ray, ray_t, &root))
+	s = &obj.geo.sphere;
+	if (!root_calc(s, ray, ray_t, &root))
 		return (0);
 	record->t = root;
 	record->p = ray_at(ray, record->t);
-	outward_normal = vec3_mul_n(vec3_sub(record->p, sphere->center), 1.0 / sphere->radius);
-	set_face_normal(ray, outward_normal, record);
-	get_sphere_uv(outward_normal, &record->u, &record->v);
-	record->mat = sphere->mat;
-	record->hit_obj = &obj;
+	otwrd_norm = vec3_mul_n(vec3_sub(record->p, s->center), 1.0 / s->radius);
+	set_face_normal(ray, otwrd_norm, record);
+	get_sphere_uv(otwrd_norm, &record->u, &record->v);
+	record->mat = s->mat;
 	return (1);
 }
