@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 14:45:41 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 16:25:31 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -536,6 +536,10 @@ void				value_min_clamp(double *value, double tob, double min);
 t_vec3 				apply_bump(t_tbn tbn, double u, double v,
 						double (*height)(double, double));
 double				sine_bump(double u, double v);
+double				turbulence(double u, double v);
 t_tbn				get_tbn_sphere(t_vec3 N);
+t_tbn				get_tbn_plane(void);
+t_tbn				get_tbn_cylinder(t_vec3 p, t_vec3 axis);
+t_tbn				get_tbn_cone(t_vec3 p, t_vec3 axis);
 void				apply_sphere_bump(t_hit_record *rec, t_sphere *sp);
 #endif

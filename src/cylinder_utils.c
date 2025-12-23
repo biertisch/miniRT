@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 18:58:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 14:28:59 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 16:09:04 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,6 @@ void	cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
 		rec->u = 0.5 + vec3_dot(c2hit, v_axis) / (2.0 * c->radius);
 		rec->v = 0.5 + vec3_dot(c2hit, vv_axis) / (2.0 * c->radius);
 	}
+	rec->normal = apply_bump(get_tbn_cylinder(vec3_sub(rec->p, c->center), c->axis),
+		rec->u, rec->v, sine_bump);
 }

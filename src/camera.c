@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 14:48:58 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 15:48:34 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	camera_light_initialize(t_world *wld)
 	t_camera	*camera;
 
 	camera = &wld->camera;
-	camera->aspect_ratio = 16.0 / 9.0;
+	camera->aspect_ratio = 4.0 / 3.0;
 	camera->img_w = WIDTH;
 	camera->max_depth = DEPTH;
 	if (!camera->initialized)
