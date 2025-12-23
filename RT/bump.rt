@@ -8,7 +8,7 @@ C 0,2,-5 0,0,1 50
 # L -2,3,0 0.9 0,255,0
 # L 2,3,2 0.9 0,0,255
 
-L 2,3,-2 0.9 255,255,255
+L 2,6,-2 0.4 255,255,255
 # Objects
 # Plane (name:char:pl point:vector:[x,y,z] normalized_orientation_vector:vector:[-1,1] color:vector:[0-255,0-255,0-255])
 # pl 0,0,0 0,1.0,0 220,255,255
