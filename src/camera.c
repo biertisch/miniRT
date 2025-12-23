@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 14:17:00 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 14:48:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 	value_min_clamp(&phong->cos_rv, vec3_dot(vec3_norm(reflect_dir),
 			vec3_norm(vec3_sub(rec->ray_in.origin, rec->p))), 0.0);
 	phong->specular = color_multi_num(light.color, pow(phong->cos_rv,
-				SPECULAR_FACTOR) * phong->atn * light.brightness * 4);
+				SPECULAR_FACTOR) * phong->atn * light.brightness);
 	f_color = color_add(phong->diffuse, phong->specular);
 	return (f_color);
 }
@@ -68,16 +68,16 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 	rec.ray_in = *ray;
 	light_sum = get_color(0.0, 0.0, 0.0);
 	i = -1;
-	phong.ambient = color_multi_num(color_mult_color(phong.ambient, rec.orig_color), 5.5);
+	phong.ambient = color_multi_num(color_mult_color(phong.ambient, rec.orig_color), 1);
 	while (++i < world->num_lights)
 		light_sum = color_add(light_sum,
 				phone_of_light(&phong, &rec, world, *world->lights[i]));
 	final_color = color_add(phong.ambient, light_sum);
-	final_color = color_mult_color(final_color, phong.o_color);
+	// final_color = color_mult_color(final_color, phong.o_color);
 	if (rec.mat.type == METAL)
 		final_color = metal_reflection_color(&phong, &rec, depth, world);
-	// return (color_clamp(final_color, 0.0, 1.0));
-	return (color_clamp(color_add(phong.o_color, final_color), 0.0, 1.0));
+	return (color_clamp(final_color, 0.0, 1.0));
+	// return (color_clamp(color_add(phong.o_color, final_color), 0.0, 1.0));
 }
 
 void	init_camera_viewport(t_camera *c)
