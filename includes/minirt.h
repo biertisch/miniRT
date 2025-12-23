@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 22:43:22 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 13:47:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@
 # define WIDTH 400
 # define DEPTH 5
 # define RT_INFINITY 1e8
-# define ROT_SPEED 0.05
+# define ROT_SPEED 0.01
 # define ESC 65307
 # define ENTER 65293
 # define STEP_ANGLE 1.0f
 # define STEP_MOVE 1.1f
 # define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-5
-# define SPECULAR_FACTOR 32.0
+# define SPECULAR_FACTOR 64.0
 # define MAX_OBJS 50
 # define MAX_LIGHTS 5
 # define BUMP_SCALE 0.3
