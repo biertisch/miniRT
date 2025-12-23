@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 18:17:57 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 19:04:36 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define WIDTH 600
 # define DEPTH 5
 # define RT_INFINITY 1e8
-# define ROT_SPEED 0.01
+# define ROT_SPEED 0.11f
 # define ESC 65307
 # define ENTER 65293
 # define STEP_ANGLE 1.0f

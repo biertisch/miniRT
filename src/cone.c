@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 18:51:40 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 19:07:41 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,22 @@
 
 static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 {
-	t_vec3	m;
-	t_vec3	outward;
+	// t_vec3	m;
+	// t_vec3	outward;
 
-	(void)cone;
-	m = vec3_mul_n(axis, proj);
-	outward = vec3_sub(v, m);
-	return (vec3_norm(outward));
+	// (void)cone;
+	// m = vec3_mul_n(axis, proj);
+	// outward = vec3_sub(v, m);
+	// return (vec3_norm(outward));
+	double	k;
+	t_vec3	n;
+
+	k = cone->radius / cone->height;
+	n = vec3_sub(
+			v,
+			vec3_mul_n(axis, proj * (1 + k * k))
+		);
+	return vec3_norm(n);
 }
 
 static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
@@ -90,6 +99,7 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	t_vec3	c_w;
 	double	t;
 
+	cone->axis = vec3_norm(cone->axis);
 	ap = vec3_sub(rec->p, cone->apex);
 	t = vec3_dot(ap, cone->axis);
 	rec->v = t / cone->height;
