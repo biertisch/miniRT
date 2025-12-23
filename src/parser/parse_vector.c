@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_vector.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:56:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 10:28:00 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/23 14:06:06 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	validate_normal(t_vec3 *normal, t_field_rule *rule)
 	if ((ft_strcmp(rule->name, "orientation") == 0
 			|| ft_strcmp(rule->name, "normal") == 0
 			|| ft_strcmp(rule->name, "axis") == 0)
-		&& vec3_length(*normal) != 1)
+		&& fabs(vec3_length(*normal) - 1) > 1e-3)
 		return (0);
 	return (1);
 }
@@ -66,7 +66,10 @@ int	parse_vec3(t_vec3 *out, const char **s, t_field_rule *field,
 		&& (tmp.z < field->min || tmp.z > field->max))
 		return (report_error(ERR_RANGE, meta, field, tmp.z));
 	if (!validate_normal(&tmp, field))
+	{
+		printf("current length: %f\n", vec3_length(tmp));
 		return (report_error(ERR_NORMAL, meta, field, -1));
+	}
 	*out = tmp;
 	return (1);
 }
