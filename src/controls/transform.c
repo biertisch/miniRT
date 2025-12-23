@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   transform.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:33:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/21 15:26:50 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/23 16:34:15 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	transform_object(t_slider *sliders, t_object *object)
 	{
 		apply_translation(sliders, &object->geo.plane.point);
 		apply_rotation(sliders, &object->geo.plane.normal);
+		printf("Plane's current normal: %f,%f,%f\n", object->geo.plane.normal.x, object->geo.plane.normal.y, object->geo.plane.normal.z);
 	}
 	else if (object->type == SPHERE)
 	{
@@ -30,6 +31,8 @@ static void	transform_object(t_slider *sliders, t_object *object)
 		apply_rotation(sliders, &object->geo.cylinder.axis);
 		apply_resize(sliders, &object->geo.cylinder.radius,
 			&object->geo.cylinder.height);
+		printf("Cylinder's current axis: %f,%f,%f\n", object->geo.cylinder.axis.x, object->geo.cylinder.axis.y, object->geo.cylinder.axis.z);
+			
 	}
 	else if (object->type == CONE)
 	{
@@ -37,6 +40,7 @@ static void	transform_object(t_slider *sliders, t_object *object)
 		apply_rotation(sliders, &object->geo.cone.axis);
 		apply_resize(sliders, &object->geo.cone.radius,
 			&object->geo.cone.height);
+		printf("Cone's current axis: %f,%f,%f\n", object->geo.cone.axis.x, object->geo.cone.axis.y, object->geo.cone.axis.z);
 	}
 }
 
