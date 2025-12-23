@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 18:58:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 23:39:32 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 14:28:59 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
 	{
 		if (face == 1)
 			center = vec3_add(c->center, vec3_mul_n(c->axis, c->height / 2.0));
-		else if (face == 3)
+		else
 			center = vec3_sub(c->center, vec3_mul_n(c->axis, c->height / 2.0));
 		c2hit = vec3_sub(rec->p, center);
 		rec->u = 0.5 + vec3_dot(c2hit, v_axis) / (2.0 * c->radius);
