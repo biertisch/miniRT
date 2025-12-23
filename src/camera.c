@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 15:48:34 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 18:38:38 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 	reflect_dir = vec3_sub(vec3_mul_n(rec->normal, 2.0
 				* vec3_dot(r2l.direction, rec->normal)), r2l.direction);
 	value_min_clamp(&phong->cos_rv, vec3_dot(vec3_norm(reflect_dir),
-			vec3_norm(vec3_sub(rec->ray_in.origin, rec->p))), 0.0);
+		vec3_mul_n(rec->ray_in.direction, -1)), 0.0);
+			// vec3_norm(vec3_sub(rec->ray_in.origin, rec->p))), 0.0);
 	phong->specular = color_multi_num(light.color, pow(phong->cos_rv,
 				SPECULAR_FACTOR) * phong->atn * light.brightness);
 	f_color = color_add(phong->diffuse, phong->specular);
@@ -68,7 +69,7 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 	rec.ray_in = *ray;
 	light_sum = get_color(0.0, 0.0, 0.0);
 	i = -1;
-	phong.ambient = color_multi_num(color_mult_color(phong.ambient, rec.orig_color), 1);
+	phong.ambient = color_mult_color(phong.ambient, rec.orig_color);
 	while (++i < world->num_lights)
 		light_sum = color_add(light_sum,
 				phone_of_light(&phong, &rec, world, *world->lights[i]));

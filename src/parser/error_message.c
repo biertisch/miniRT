@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 10:52:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 10:53:23 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/23 14:19:35 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	count_error_message(char *buffer, t_error_type code, t_metadata *meta)
 		ft_strlcat(buffer, "camera 'C' must appear exactly once (found ",
 			ERR_BUFFER_SIZE);
 	}
-	else if (code == ERR_LIGHT_COUNT)
+	else
 	{
 		value = meta->light_count;
 		ft_strlcat(buffer, "light 'L' must appear at least once (found ",

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 16:29:12 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 18:37:00 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	set_face_normal(ray, otwrd_norm, record);
 	get_sphere_uv(otwrd_norm, &record->u, &record->v);
 // apply_sphere_bump(record, s);
-	record->normal = apply_bump(get_tbn_sphere(otwrd_norm), record->u, record->v, sine_bump);
+	// record->normal = apply_bump(get_tbn_sphere(otwrd_norm), record->u, record->v, sine_bump);
 	record->mat = s->mat;
 	return (1);
 }

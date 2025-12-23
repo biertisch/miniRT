@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 16:12:18 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 18:51:40 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	rec->u = atan2(vec3_dot(x, c_w), vec3_dot(x, c_u)) / (2 * M_PI);
 	if (rec->u < 0)
 		rec->u += 1.0;
-	rec->normal = apply_bump(get_tbn_cone(rec->p, cone->axis),
-		rec->u, rec->v, sine_bump);
+	// rec->normal = apply_bump(get_tbn_cone(rec->p, cone->axis),
+	// 	rec->u, rec->v, sine_bump);
 }
 
 int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
