@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 02:57:15 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 03:23:55 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,14 +114,20 @@ typedef struct s_bump_tex
 	int		endian;
 }	t_bump_tex;
 
+typedef enum e_tex_type
+{
+	SOLID_COLOR,
+	PICTURE,
+	CHECKER
+}	t_tex_type;
 
 //texture_begin
 typedef struct s_texture	t_texture;
 
 struct s_texture
 {
-	t_color	(*value)(t_texture * self, double u, double v, t_vec3 p);
-	int		is_checker;
+	t_color			(*value)(t_texture * self, double u, double v, t_vec3 p);
+	t_tex_type		type;
 };
 
 t_color				texture_value(t_texture *tex, double u, double v, t_vec3 p);

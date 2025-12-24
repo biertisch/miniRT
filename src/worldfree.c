@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   worldfree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 10:46:08 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/24 03:30:13 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ void	free_and_set_null(void **ptr)
 	if (ptr && *ptr)
 	{
 		tex = (t_texture *)(*ptr);
-		if (tex->is_checker)
+		if (tex->type == CHECKER)
 		{
 			ct = (t_checker_tex *)tex;
 			free_and_set_null((void **)&ct->even);
 			free_and_set_null((void **)&ct->odd);
 		}
-		free(*ptr);
+		if (tex->type != PICTURE)
+			free(*ptr);
 		*ptr = NULL;
 	}
 }
@@ -77,6 +78,10 @@ void	free_all_the_world(t_world *wld)
 {
 	if (wld)
 	{
+		if (wld->mlx && wld->pic_c_tex.pic_tex.img)
+			mlx_destroy_image(wld->mlx, wld->pic_c_tex.pic_tex.img);
+		if (wld->mlx && wld->bump_tex.img)
+			mlx_destroy_image(wld->mlx, wld->bump_tex.img);
 		if (wld->mlx && wld->win)
 			mlx_destroy_window(wld->mlx, wld->win);
 		if (wld->panel)

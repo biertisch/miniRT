@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 00:41:23 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 02:33:20 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 03:24:23 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_pic_color_tex		picture_texture(t_bump_tex tex)
 	t_pic_color_tex	texture;
 
 	texture.base.value = &texture_map_value;
-	texture.base.is_checker = 0;
+	texture.base.type = PICTURE;
 	texture.pic_tex = tex;
 	texture.albedo = get_color(1.0, 1.0, 1.0);
 	return (texture);
