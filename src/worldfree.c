@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 13:47:21 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 03:30:13 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 03:53:45 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void	free_all_the_world(t_world *wld)
 	{
 		if (wld->mlx && wld->pic_c_tex.pic_tex.img)
 			mlx_destroy_image(wld->mlx, wld->pic_c_tex.pic_tex.img);
-		if (wld->mlx && wld->bump_tex.img)
-			mlx_destroy_image(wld->mlx, wld->bump_tex.img);
+		if (wld->mlx && wld->pic_c_tex.bump_tex.img)
+			mlx_destroy_image(wld->mlx, wld->pic_c_tex.bump_tex.img);
 		if (wld->mlx && wld->win)
 			mlx_destroy_window(wld->mlx, wld->win);
 		if (wld->panel)

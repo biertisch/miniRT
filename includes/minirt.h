@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 03:23:55 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 03:51:48 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,7 +405,6 @@ typedef struct s_world
 	t_object	*current_obj;
 	t_panel		*panel;
 	t_pic_color_tex	pic_c_tex;
-	t_bump_tex	bump_tex;
 }	t_world;
 
 //action_extend.c
