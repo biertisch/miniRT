@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 03:54:44 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 04:01:25 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ void	add_test_objects(t_world *wld)
 
 	sphere.center = (t_vec3){0,0,0};
 	sphere.radius = 2.0;
-	wld->pic_c_tex = picture_texture(load_xpm(wld->mlx, "textures/earth.xpm"));
-	wld->pic_c_tex.bump_tex = load_xpm(wld->mlx, "textures/earthmapspecular.xpm");
+	wld->pic_c_tex = picture_texture(load_xpm(wld->mlx, "textures/earthmap4k.xpm"));
+	wld->pic_c_tex.bump_tex = load_xpm(wld->mlx, "textures/earthmap4kspecular.xpm");
 	sphere.mat = get_material_texture(LAMBERTIAN,
 			(t_texture *)&wld->pic_c_tex, 0);
 	add_object_to_world(wld, SPHERE, &sphere);
