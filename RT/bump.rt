@@ -11,10 +11,10 @@ C 0,2,-5 0,0,1 70
 L 2,6,-2 0.4 255,255,255
 # Objects
 # Plane (name:char:pl point:vector:[x,y,z] normalized_orientation_vector:vector:[-1,1] color:vector:[0-255,0-255,0-255])
- pl 0,0,0 0,1.0,0 220,255,255
+#  pl 0,0,0 0,1.0,0 220,255,255
 # Sphere (name:char:sp center:vector:[x,y,z] diameter:double color:vector:[0-255,0-255,0-255])
-sp 0,0,0 3 170,170,170
+# sp 0,0,0 3 170,170,170
 
-cy 5,1.5,0 0,1,0 2 3 170,170,170
+# cy 5,1.5,0 0,1,0 2 3 170,170,170
 
-co -5,4,0 0,1,0 2 4 170,170,170
+# co -5,4,0 0,1,0 2 4 170,170,170

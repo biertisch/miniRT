@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:42:05 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:43:07 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 22:19:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 	t_object		*current;
 	int				i;
 
+	*rec = (t_hit_record){0};
 	hit_anything = 0;
 	closest_so_far = ray_t.max;
 	i = 0;

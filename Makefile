@@ -1,9 +1,9 @@
 NAME = miniRT
-SRC = $(addprefix src/, main.c color.c vec3.c vec3_op.c ray.c sphere.c hittable_list.c interval.c camera_animation.c \
+SRC = $(addprefix src/, main.c color.c vec3.c vec3_op.c ray.c geobjs/sphere.c hittable_list.c interval.c camera_animation.c \
 						camera.c camera_utils.c debug_info.c rt_utils.c material.c action.c action_extend.c \
-						quad.c plane.c cylinder.c cylinder_utils.c bump.c \
+						geobjs/quad.c geobjs/plane.c geobjs/cylinder.c geobjs/cylinder_utils.c bump.c \
 						texture.c texture_solid_color.c texture_checker.c diffuse_light.c \
-						onb.c pdf.c cone.c parser/error.c parser/error_message.c parser/error_utils.c\
+						onb.c pdf.c geobjs/cone.c geobjs/cone_quadratic.c parser/error.c parser/error_message.c parser/error_utils.c\
 						parser/keyword.c parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
 						parser/parse_object_fields.c parser/parse_scalar.c parser/parse_vector.c\
 						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
@@ -12,7 +12,7 @@ SRC = $(addprefix src/, main.c color.c vec3.c vec3_op.c ray.c sphere.c hittable_
 						controls/bitmaps.c controls/render_utils.c controls/render.c controls/scroll.c\
 						controls/sliders_utils.c controls/values.c controls/transform.c\
 						controls/rotation.c controls/translation.c controls/resize.c controls/reset.c\
-						cone_quadratic.c mouseselect.c scene.c worldfree.c surfacechecker.c)
+						mouseselect.c scene.c worldfree.c surfacechecker.c texture_picture.c)
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 

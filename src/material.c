@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 17:22:50 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 21:58:24 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 02:05:42 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ double	default_scattering_pdf(t_ray *ray_in, t_hit_record *rec, t_ray *scater)
 
 t_color	default_emitted(t_material *self, t_ray r_in, t_hit_record *rec)
 {
-	(void)self;
 	(void)r_in;
 	if (self->type == LAMBERTIAN)
 		return (color_multi_num(self->data.lamb.tex->value(

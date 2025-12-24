@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 18:58:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 18:19:06 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 23:41:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	on_cylinder_bcap(t_ray *ray, t_interval *ray_t,
 			rec->t = bcap;
 			rec->p = p;
 			rec->mat = cy->mat;
+			rec->g_norm = vec3_mul_n(cy->axis, -1);
 			set_face_normal(ray, vec3_mul_n(cy->axis, -1), rec);
 			ray_t->max = bcap;
 			hit_any_local = 3;
@@ -62,6 +63,7 @@ int	on_cylinder_tcap(t_ray *ray, t_interval *ray_t,
 			rec->t = tcap;
 			rec->p = p;
 			rec->mat = cy->mat;
+			rec->g_norm = cy->axis;
 			set_face_normal(ray, cy->axis, rec);
 			ray_t->max = tcap;
 			hit_any_local = 1;
@@ -131,6 +133,6 @@ void	cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
 		rec->u = 0.5 + vec3_dot(c2hit, v_axis) / (2.0 * c->radius);
 		rec->v = 0.5 + vec3_dot(c2hit, vv_axis) / (2.0 * c->radius);
 	}
-	rec->normal = apply_bump(get_tbn_cylinder(vec3_sub(rec->p, c->center), c->axis),
-		rec->u, rec->v, sine_bump);
+	rec->normal = apply_bump(get_tbn_cylinder(vec3_sub(rec->p, c->center),
+				c->axis), rec->u, rec->v, sine_bump);
 }

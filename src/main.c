@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:49:46 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 03:00:08 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,19 @@ void	reg_hook(t_world *wld)
 	mlx_loop_hook(wld->mlx, loop, wld);
 }
 
+void	add_test_objects(t_world *wld)
+{
+	t_sphere		sphere;
+
+	sphere.center = (t_vec3){0,0,0};
+	sphere.radius = 2.0;
+	wld->pic_c_tex = picture_texture(load_xpm(wld->mlx, "textures/bumpearth.xpm"));
+	// wld->bump_tex = load_xpm(wld->mlx, "textures/earth_bump.xpm");
+	sphere.mat = get_material_texture(LAMBERTIAN,
+			(t_texture *)&wld->pic_c_tex, 0);
+	add_object_to_world(wld, SPHERE, &sphere);
+}
+
 int	main(int argc, char **argv)
 {
 	t_world		wld;
@@ -82,7 +95,8 @@ int	main(int argc, char **argv)
 	camera_light_initialize(&wld);
 	wld.mlx = mlx_init();
 	wld.win = mlx_new_window(wld.mlx, wld.camera.img_w,
-			wld.camera.img_h, "MiniRT");
+		wld.camera.img_h, "MiniRT");
+	add_test_objects(&wld);
 	reg_hook(&wld);
 	camera_render(&(wld.camera), &wld);
 	setup_controls(&wld);

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 23:11:04 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 23:41:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static int	on_cy_side(t_ray *ray, t_cylinder *cy, double t,
 	rec->t = t;
 	rec->p = p;
 	rec->mat = cy->mat;
+	rec->is_d_side = 0;
+	rec->g_norm = vec3_norm(vec3_sub(p, proj_point));
 	set_face_normal(ray, vec3_norm(vec3_sub(p, proj_point)), rec);
 	return (1);
 }
@@ -104,6 +106,8 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 		cylinder_uv(cy, rec, tp_face);
 	else if (side_face)
 		cylinder_uv(cy, rec, side_face);
+	if (hit_any)
+		rec->is_d_side = 0;
 	return (hit_any);
 }
 

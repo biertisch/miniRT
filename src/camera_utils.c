@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:13:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:28:00 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 22:18:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	in_shadow(t_vec3 point, t_world *world, t_vec3 light_pos)
 	t_hit_record	temp_rec;
 	double			distance_to_light;
 
+	temp_rec = (t_hit_record){0};
 	to_light = vec3_sub(light_pos, point);
 	distance_to_light = vec3_length(to_light);
 	shadow_r.direction = vec3_norm(to_light);

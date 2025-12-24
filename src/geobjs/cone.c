@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 19:07:41 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/23 23:41:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,14 @@
 
 static t_vec3	cone_normal(t_cone *cone, t_vec3 v, t_vec3 axis, double proj)
 {
-	// t_vec3	m;
-	// t_vec3	outward;
-
-	// (void)cone;
-	// m = vec3_mul_n(axis, proj);
-	// outward = vec3_sub(v, m);
-	// return (vec3_norm(outward));
 	double	k;
 	t_vec3	n;
 
 	k = cone->radius / cone->height;
 	n = vec3_sub(
 			v,
-			vec3_mul_n(axis, proj * (1 + k * k))
-		);
-	return vec3_norm(n);
+			vec3_mul_n(axis, proj * (1 + k * k)));
+	return (vec3_norm(n));
 }
 
 static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
@@ -57,13 +49,13 @@ static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
 	if (t < ray_t->min || t > ray_t->max)
 		return (0);
 	p = ray_at(ray, t);
-	if (vec3_length_squared(vec3_sub(p, center))
-		> cone->radius * cone->radius)
+	if (vec3_length_squared(vec3_sub(p, center)) > cone->radius * cone->radius)
 		return (0);
 	rec->t = t;
 	rec->p = p;
 	rec->mat = cone->mat;
-	rec->normal = axis;
+	rec->g_norm = axis;
+	rec->is_d_side = 0;
 	set_face_normal(ray, axis, rec);
 	ray_t->max = t;
 	return (1);
@@ -86,7 +78,8 @@ static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
 	rec->t = t;
 	rec->p = p;
 	rec->mat = cone->mat;
-	rec->normal = cone_normal(cone, v, axis, proj);
+	rec->g_norm = cone_normal(cone, v, axis, proj);
+	rec->is_d_side = 0;
 	set_face_normal(ray, rec->normal, rec);
 	return (1);
 }

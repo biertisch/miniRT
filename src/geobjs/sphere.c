@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 18:37:00 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 03:14:52 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,16 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	record->t = root;
 	record->p = ray_at(ray, record->t);
 	otwrd_norm = vec3_mul_n(vec3_sub(record->p, s->center), 1.0 / s->radius);
+	record->g_norm = otwrd_norm;
+	record->is_d_side = 0;
 	set_face_normal(ray, otwrd_norm, record);
 	get_sphere_uv(otwrd_norm, &record->u, &record->v);
 // apply_sphere_bump(record, s);
 	// record->normal = apply_bump(get_tbn_sphere(otwrd_norm), record->u, record->v, sine_bump);
+	t_pic_color_tex	*tex;
+	tex = (t_pic_color_tex *)s->mat.data.lamb.tex;
+	record->g_norm = apply_bump_map(get_tbn_sphere(otwrd_norm),
+			bump_tangent_normal(&tex->pic_tex, record->u, record->v, 20));
 	record->mat = s->mat;
 	return (1);
 }

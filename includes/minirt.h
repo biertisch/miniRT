@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 19:04:36 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 02:57:15 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include "parser.h"
 # include "controls.h"
 
-# define WIDTH 600
+# define WIDTH 400
 # define DEPTH 5
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.11f
@@ -103,6 +103,18 @@ typedef struct s_ray
 	t_vec3	direction;
 }	t_ray;
 
+typedef struct s_bump_tex
+{
+	void	*img;
+	char	*addr;
+	int		width;
+	int		height;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_bump_tex;
+
+
 //texture_begin
 typedef struct s_texture	t_texture;
 
@@ -119,6 +131,16 @@ typedef struct s_soldid_color_tex
 	t_texture	base;
 	t_color		albedo;
 }	t_solid_color_tex;
+
+typedef struct s_pic_color_tex
+{
+	t_texture	base;
+	t_color		albedo;
+	t_bump_tex	pic_tex;
+	t_bump_tex	bump_tex;
+}	t_pic_color_tex;
+
+t_pic_color_tex		picture_texture(t_bump_tex tex);
 
 typedef struct s_checker_texture
 {
@@ -331,6 +353,7 @@ struct s_hit_record
 {
 	t_vec3		p;
 	t_vec3		normal;
+	t_vec3		g_norm;
 	t_material	mat;
 	t_color		orig_color;
 	t_ray		ray_in;
@@ -338,6 +361,7 @@ struct s_hit_record
 	double		u;
 	double		v;
 	int			front_face;
+	int			is_d_side;
 };
 
 typedef struct s_spot_light
@@ -352,7 +376,7 @@ typedef struct s_phong
 	t_color		ambient;
 	t_color		diffuse;
 	t_color		specular;
-	t_color		o_color;
+	// t_color		o_color;
 	double		bright;
 	double		cos_nl;
 	double		cos_rv;
@@ -374,6 +398,8 @@ typedef struct s_world
 	t_s_light	*lights[MAX_LIGHTS];
 	t_object	*current_obj;
 	t_panel		*panel;
+	t_pic_color_tex	pic_c_tex;
+	t_bump_tex	bump_tex;
 }	t_world;
 
 //action_extend.c
@@ -542,4 +568,14 @@ t_tbn				get_tbn_plane(void);
 t_tbn				get_tbn_cylinder(t_vec3 p, t_vec3 axis);
 t_tbn				get_tbn_cone(t_vec3 p, t_vec3 axis);
 void				apply_sphere_bump(t_hit_record *rec, t_sphere *sp);
+t_bump_tex			load_texture(void *mlx, char *path);
+t_vec3 				bump_tangent_normal(t_bump_tex *tex, double u,
+						double v, double strength);
+t_vec3				apply_bump_map(t_tbn tbn, t_vec3 Nt);
+
+//texture_picture.c
+t_bump_tex			load_xpm(void *mlx, char *path);
+t_pic_color_tex		picture_texture(t_bump_tex tex);
+t_color				texture_map_value(t_texture *self, double u,
+						double v, t_vec3 p);
 #endif

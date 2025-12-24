@@ -6,11 +6,67 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 22:26:32 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 16:32:03 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/24 02:50:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+t_bump_tex load_texture(void *mlx, char *path)
+{
+	t_bump_tex	tex;
+
+	tex.img = mlx_xpm_file_to_image(mlx, path, &tex.width, &tex.height);
+	tex.addr = mlx_get_data_addr(tex.img, &tex.bpp, &tex.line_len, &tex.endian);
+	return (tex);
+}
+
+double	bump_map_height(t_bump_tex *tex, double u, double v)
+{
+	int		x;
+	int		y;
+	unsigned int	pixel;
+
+	// x = (int)(u * tex->width) % tex->width;
+	// y = (int)(v * tex->height) % tex->height;
+	// if (x < 0)
+	// 	x += tex->width;
+	// if (y < 0)
+	// 	y += tex->height;
+	x = (int)(u * (tex->width  - 1));
+	y = (int)((v) * (tex->height - 1));
+	pixel = *(unsigned int *)(tex->addr
+			+ y * tex->line_len
+			+ x * (tex->bpp / 8));
+	return ((pixel & 0xFF) / 255.0);
+}
+
+t_vec3 bump_tangent_normal(t_bump_tex *tex, double u, double v, double strength)
+{
+	double	du;
+	double	dv;
+	double	height;
+	double	height_u;
+	double	height_v;
+	t_vec3	bump_normal;
+
+	height = bump_map_height((t_bump_tex *)tex, u, v);
+	height_u = bump_map_height((t_bump_tex *)tex, u + 0.001, v);
+	height_v = bump_map_height((t_bump_tex *)tex, u, v + 0.001);
+	du = (height_u - height) * strength;
+	dv = (height_v - height) * strength;
+	bump_normal = vec3_norm((t_vec3){-du, -dv, 1.0});
+	return (bump_normal);
+}
+
+t_vec3	apply_bump_map(t_tbn tbn, t_vec3 Nt)
+{
+	t_vec3	bumped;
+
+	bumped = vec3_add(vec3_mul_n(tbn.T, Nt.x),
+			vec3_add(vec3_mul_n(tbn.B, Nt.y), vec3_mul_n(tbn.N, Nt.z)));
+	return (vec3_norm(bumped));
+}
 
 
 double	noise_bump(double u, double v)
