@@ -50,16 +50,16 @@ t_color	texture_sample(t_bump_tex *tex, double u, double v)
 
 t_color	texture_map_value(t_texture *self, double u, double v, t_vec3 p)
 {
-	t_pic_color_tex	*texture;
+	t_pic_tex	*texture;
 
 	(void)p;
-	texture = (t_pic_color_tex *)self;
+	texture = (t_pic_tex *)self;
 	return (texture_sample(&texture->pic_tex, u, v));
 }
 
-t_pic_color_tex		picture_texture(t_bump_tex tex)
+t_pic_tex		picture_texture(t_bump_tex tex)
 {
-	t_pic_color_tex	texture;
+	t_pic_tex	texture;
 
 	texture.base.value = &texture_map_value;
 	texture.base.type = PICTURE;

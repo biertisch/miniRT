@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:42:05 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 22:19:03 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 11:41:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	add_object_to_world(t_world *world, t_geo_type geo_type, void *geo)
 	if (!new_object)
 		error_exit(world, "Error\nmalloc");
 	new_object->type = geo_type;
+	new_object->tex_type = world->tex_type;
 	if (!assign_geometry(new_object, geo) || !assign_hit(new_object))
 	{
 		free(new_object);

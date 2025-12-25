@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/24 01:11:47 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 14:03:55 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,30 @@ static t_material	parse_material(const char **s, t_color color)
 	t_checker_tex	*checker;
 
 	skip_spaces(s);
-	if (**s == 'c' && (**(s + 1) == '\0' || ft_isspace(**(s + 1))
-			|| **(s + 1) == '#'))
+	if (**s == 'c' && (*(*s + 1) == '\0' || ft_isspace(*(*s + 1))
+			|| *(*s + 1) == '#'))
 	{
 		(*s)++;
+		world()->tex_type = CHECKER;
 		checker = checker_texture_colors(20, norm_color(color),
 				norm_color((t_color){0, 125, 125}));
 		return (get_material_texture(LAMBERTIAN, (t_texture *)checker, 0));
 	}
+	if (**s == 'p' && (*(*s + 1) == '\0' || ft_isspace(*(*s + 1))
+			|| *(*s + 1) == '#'))
+	{
+		(*s)++;
+		world()->tex_type = PICTURE;
+		return (get_material_texture(LAMBERTIAN, (t_texture *)&(world()->pic_c_tex), 0));
+	}
+	if (**s == 'b' && (*(*s + 1) == '\0' || ft_isspace(*(*s + 1))
+			|| *(*s + 1) == '#'))
+	{
+		(*s)++;
+		world()->tex_type = BUMP_FUNC;
+	}
+	else
+		world()->tex_type = SOLID_COLOR;
 	return (get_material(LAMBERTIAN, color, 0));
 }
 

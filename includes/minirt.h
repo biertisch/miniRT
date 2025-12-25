@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 03:51:48 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 14:44:49 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ typedef enum e_tex_type
 {
 	SOLID_COLOR,
 	PICTURE,
-	CHECKER
+	CHECKER,
+	BUMP_FUNC
 }	t_tex_type;
 
 //texture_begin
@@ -352,6 +353,7 @@ struct s_object
 			t_hit_record *record);
 	double			(*pdf_value)(t_object obj, t_vec3 origin, t_vec3 direction);
 	t_vec3			(*random)(t_object obj, t_vec3 origin);
+	t_tex_type		tex_type;
 	struct s_object	*next;
 };
 
@@ -404,6 +406,7 @@ typedef struct s_world
 	t_s_light	*lights[MAX_LIGHTS];
 	t_object	*current_obj;
 	t_panel		*panel;
+	t_tex_type	tex_type;
 	t_pic_tex	pic_c_tex;
 }	t_world;
 
@@ -425,7 +428,7 @@ double				vec3_dot(t_vec3 a, t_vec3 b);
 t_vec3				vec3_mul_n(t_vec3 a, double scalar);
 
 //main.c
-int					handle_destroy(void *param);
+t_world				*world(void);
 void				free_all_the_world(t_world *wld);
 
 // color.c
@@ -451,6 +454,9 @@ void				add_object_to_world(t_world *world, t_geo_type geo_type,
 						void *sphere);
 int					world_hit(t_world *world, t_ray *ray, t_interval ray_t,
 						t_hit_record *rec);
+//hook_manager.c
+void				reg_hook(t_world *wld);
+int					handle_destroy(void *param);
 
 //quad.c
 t_quad				new_quad(t_vec3 Q, t_vec3 u, t_vec3 v, t_material mat);
@@ -568,15 +574,19 @@ t_vec3				apply_bump(t_tbn tbn, double u, double v,
 						double (*height)(double, double));
 double				sine_bump(double u, double v);
 double				turbulence(double u, double v);
-t_tbn				get_tbn_sphere(t_vec3 N);
-t_tbn				get_tbn_plane(void);
-t_tbn				get_tbn_cylinder(t_vec3 p, t_vec3 axis);
-t_tbn				get_tbn_cone(t_vec3 p, t_vec3 axis);
-void				apply_sphere_bump(t_hit_record *rec, t_sphere *sp);
-t_bump_tex			load_texture(void *mlx, char *path);
+// void				apply_sphere_bump(t_hit_record *rec, t_sphere *sp);
+// t_bump_tex			load_texture(void *mlx, char *path);
+
+//bump_map.c
 t_vec3				bump_tangent_normal(t_bump_tex *tex, double u,
 						double v, double strength);
 t_vec3				apply_bump_map(t_tbn tbn, t_vec3 Nt);
+
+//bump_tbn.c
+t_tbn				get_tbn_sphere(t_vec3 normal);
+t_tbn				get_tbn_plane(t_vec3 normal);
+t_tbn				get_tbn_cylinder(t_vec3 p, t_vec3 axis);
+t_tbn				get_tbn_cone(t_vec3 p, t_cone *cone);
 
 //texture_picture.c
 t_bump_tex			load_xpm(void *mlx, char *path);

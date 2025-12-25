@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 23:41:12 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 16:21:29 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
 	rec->t = t;
 	rec->p = p;
 	rec->mat = cone->mat;
-	rec->g_norm = axis;
+	rec->g_norm = vec3_mul_n(axis, -1);
 	rec->is_d_side = 0;
 	set_face_normal(ray, axis, rec);
 	ray_t->max = t;
@@ -80,7 +80,7 @@ static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
 	rec->mat = cone->mat;
 	rec->g_norm = cone_normal(cone, v, axis, proj);
 	rec->is_d_side = 0;
-	set_face_normal(ray, rec->normal, rec);
+	set_face_normal(ray, rec->g_norm, rec);
 	return (1);
 }
 
@@ -96,6 +96,9 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	ap = vec3_sub(rec->p, cone->apex);
 	t = vec3_dot(ap, cone->axis);
 	rec->v = t / cone->height;
+	if (rec->v < 0.0)
+		rec->v += 1.0;
+	// printf("cone v: %f\n", rec->v);
 	x = vec3_sub(ap, vec3_mul_n(cone->axis, t));
 	if ((vec3_dot(x, x)) < 1e-12)
 	{
@@ -110,8 +113,14 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	rec->u = atan2(vec3_dot(x, c_w), vec3_dot(x, c_u)) / (2 * M_PI);
 	if (rec->u < 0)
 		rec->u += 1.0;
-	// rec->normal = apply_bump(get_tbn_cone(rec->p, cone->axis),
-	// 	rec->u, rec->v, sine_bump);
+	if (((t_object *)cone)->tex_type == BUMP_FUNC)
+		rec->g_norm = apply_bump(get_tbn_cone(rec->p, cone),
+				rec->u, rec->v, sine_bump);
+	else if (((t_object *)cone)->tex_type == PICTURE)
+		rec->g_norm = apply_bump_map(get_tbn_cone(rec->p, cone),
+				bump_tangent_normal(
+					&((t_pic_tex *)cone->mat.data.lamb.tex)->bump_tex,
+					rec->u, rec->v, 0.1));
 }
 
 int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)

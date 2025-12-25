@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:55:45 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 23:54:47 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 15:36:14 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ t_plane	new_plane(t_vec3 point, t_vec3 normal, t_material mat)
 	return (plane);
 }
 
-static void	get_plane_uv(t_vec3 p, double *u, double *v)
+static void	get_plane_uv(t_vec3 p2hit, t_tbn tbn, t_hit_record *record)
 {
-	*u = p.x - floor(p.x);
-	*v = p.z - floor(p.z);
+	record->u = vec3_dot(p2hit, tbn.ct);
+	record->v = vec3_dot(p2hit, tbn.cb);
+	record->u -= floor(record->u);
+	record->v -= floor(record->v);
 }
 
 int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
@@ -44,13 +46,18 @@ int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 		return (0);
 	record->t = t;
 	record->p = ray_at(ray, t);
-	// record->g_norm = plane->normal;
 	record->is_d_side = 1;
 	set_face_normal(ray, plane->normal, record);
 	record->g_norm = record->normal;
-	get_plane_uv(vec3_sub(record->p, plane->point), &record->u, &record->v);
-	record->normal = apply_bump(get_tbn_plane(), record->u,
-			record->v, sine_bump);
+	get_plane_uv(vec3_sub(record->p, plane->point), get_tbn_plane(plane->normal), record);
+	if (obj.tex_type == BUMP_FUNC)
+		record->g_norm = apply_bump(get_tbn_plane(record->g_norm), record->u,
+				record->v, sine_bump);
+	else if (obj.tex_type == PICTURE)
+		record->g_norm = apply_bump_map(get_tbn_plane(record->g_norm),
+				bump_tangent_normal(
+					&((t_pic_tex *)plane->mat.data.lamb.tex)->bump_tex,
+					record->u, record->v, 0.1));
 	record->mat = plane->mat;
 	return (1);
 }
