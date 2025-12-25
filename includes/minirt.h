@@ -138,15 +138,16 @@ typedef struct s_soldid_color_tex
 	t_color		albedo;
 }	t_solid_color_tex;
 
-typedef struct s_pic_color_tex
+//use a picture as texture
+typedef struct s_pic_tex
 {
 	t_texture	base;
 	t_color		albedo;
 	t_bump_tex	pic_tex;
 	t_bump_tex	bump_tex;
-}	t_pic_color_tex;
+}	t_pic_tex;
 
-t_pic_color_tex		picture_texture(t_bump_tex tex);
+t_pic_tex			picture_texture(t_bump_tex tex);
 
 typedef struct s_checker_texture
 {
@@ -210,11 +211,10 @@ struct s_material
 
 typedef struct s_tbn
 {
-	t_vec3	T;
-	t_vec3	B;
-	t_vec3	N;
+	t_vec3	ct;
+	t_vec3	cb;
+	t_vec3	cn;
 }	t_tbn;
-
 
 typedef struct s_interval
 {
@@ -404,7 +404,7 @@ typedef struct s_world
 	t_s_light	*lights[MAX_LIGHTS];
 	t_object	*current_obj;
 	t_panel		*panel;
-	t_pic_color_tex	pic_c_tex;
+	t_pic_tex	pic_c_tex;
 }	t_world;
 
 //action_extend.c
@@ -564,7 +564,7 @@ void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
 void				value_min_clamp(double *value, double tob, double min);
 
 //bump.c
-t_vec3 				apply_bump(t_tbn tbn, double u, double v,
+t_vec3				apply_bump(t_tbn tbn, double u, double v,
 						double (*height)(double, double));
 double				sine_bump(double u, double v);
 double				turbulence(double u, double v);
@@ -574,13 +574,13 @@ t_tbn				get_tbn_cylinder(t_vec3 p, t_vec3 axis);
 t_tbn				get_tbn_cone(t_vec3 p, t_vec3 axis);
 void				apply_sphere_bump(t_hit_record *rec, t_sphere *sp);
 t_bump_tex			load_texture(void *mlx, char *path);
-t_vec3 				bump_tangent_normal(t_bump_tex *tex, double u,
+t_vec3				bump_tangent_normal(t_bump_tex *tex, double u,
 						double v, double strength);
 t_vec3				apply_bump_map(t_tbn tbn, t_vec3 Nt);
 
 //texture_picture.c
 t_bump_tex			load_xpm(void *mlx, char *path);
-t_pic_color_tex		picture_texture(t_bump_tex tex);
+t_pic_tex			picture_texture(t_bump_tex tex);
 t_color				texture_map_value(t_texture *self, double u,
 						double v, t_vec3 p);
 #endif
