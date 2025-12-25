@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:58:29 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/18 19:04:46 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:09:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,17 @@ int	solve_cone_quadratic(t_ray *ray, t_cone *cone, double *t1, double *t2)
 	*t1 = (-b - sqrt_disc) / (2 * a);
 	*t2 = (-b + sqrt_disc) / (2 * a);
 	return (1);
+}
+
+void	change_cone_normal_according_bump(t_cone *cone, t_hit_record *rec,
+	t_tex_type tex_type)
+{
+	if (tex_type == BUMP_FUNC)
+		rec->g_norm = apply_bump_f(cone_tbn(rec->p, cone),
+				rec->u, rec->v, sine_bump);
+	else if (tex_type == PICTURE)
+		rec->g_norm = apply_bump_map(cone_tbn(rec->p, cone),
+				bump_tangent_normal(
+					&((t_pic_tex *)cone->mat.data.lamb.tex)->bump_tex,
+					rec->u, rec->v, 0.1));
 }

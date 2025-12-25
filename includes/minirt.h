@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 14:44:49 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:09:54 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,6 @@ struct s_texture
 	t_color			(*value)(t_texture * self, double u, double v, t_vec3 p);
 	t_tex_type		type;
 };
-
-t_color				texture_value(t_texture *tex, double u, double v, t_vec3 p);
 
 typedef struct s_soldid_color_tex
 {
@@ -444,6 +442,7 @@ t_color				blend_colors(t_color c1, t_color c2, double t);
 
 //debug_info.c
 void				output_camera_info(t_camera *c);
+t_color				normal_to_color(t_vec3 n);
 
 //ray.c
 t_ray				rt_ray(t_vec3 origin, t_vec3 direction);
@@ -478,6 +477,8 @@ t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 //cylinder.c
 int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
+void				change_cynormal_according_bump(t_cylinder *c,
+						t_hit_record *rec);
 
 //cylinder_utils.c
 void				cylinder_uv(t_cylinder *c, t_hit_record *rec, int face_hit);
@@ -528,6 +529,10 @@ t_checker_tex		*checker_texture_colors(double scale,
 t_color				checker_texture_value(t_texture *texture,
 						double u, double v, t_vec3 p);
 
+//texture.c
+t_color				texture_value(t_texture *tex, double u, double v, t_vec3 p);
+void				load_default_textures(t_world *wld);
+
 //diffuse_light.c
 t_diffuse_light		new_diffuse_light(t_texture *tex);
 t_diffuse_light		new_diffuse_light_color(t_color color);
@@ -551,6 +556,8 @@ int					cone_hit(t_ray *ray, t_interval ray_t,
 //cone_quadratic.c
 int					solve_cone_quadratic(t_ray *ray, t_cone *cone,
 						double *t1, double *t2);
+void				change_cone_normal_according_bump(t_cone *cone,
+						t_hit_record *rec, t_tex_type tex_type);		
 
 //scene.c
 int					use_test_scene(t_world *wld, int scene_no);
@@ -570,7 +577,7 @@ void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
 void				value_min_clamp(double *value, double tob, double min);
 
 //bump.c
-t_vec3				apply_bump(t_tbn tbn, double u, double v,
+t_vec3				apply_bump_f(t_tbn tbn, double u, double v,
 						double (*height)(double, double));
 double				sine_bump(double u, double v);
 double				turbulence(double u, double v);
@@ -583,10 +590,10 @@ t_vec3				bump_tangent_normal(t_bump_tex *tex, double u,
 t_vec3				apply_bump_map(t_tbn tbn, t_vec3 Nt);
 
 //bump_tbn.c
-t_tbn				get_tbn_sphere(t_vec3 normal);
-t_tbn				get_tbn_plane(t_vec3 normal);
-t_tbn				get_tbn_cylinder(t_vec3 p, t_vec3 axis);
-t_tbn				get_tbn_cone(t_vec3 p, t_cone *cone);
+t_tbn				sphere_tbn(t_vec3 normal);
+t_tbn				plane_tbn(t_vec3 normal);
+t_tbn				cylinder_tbn(t_vec3 p, t_vec3 axis);
+t_tbn				cone_tbn(t_vec3 p, t_cone *cone);
 
 //texture_picture.c
 t_bump_tex			load_xpm(void *mlx, char *path);

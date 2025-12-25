@@ -6,12 +6,11 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 00:41:23 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 03:24:23 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:13:52 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
 
 t_bump_tex	load_xpm(void *mlx, char *path)
 {
@@ -57,7 +56,7 @@ t_color	texture_map_value(t_texture *self, double u, double v, t_vec3 p)
 	return (texture_sample(&texture->pic_tex, u, v));
 }
 
-t_pic_tex		picture_texture(t_bump_tex tex)
+t_pic_tex	picture_texture(t_bump_tex tex)
 {
 	t_pic_tex	texture;
 

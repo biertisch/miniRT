@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:09:31 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:12:01 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 16:34:44 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,14 @@ void	output_camera_info(t_camera *c)
 		c->pix_delta_u.y, c->pix_delta_u.z);
 	printf("  Pixel Delta V:       (%f, %f, %f)\n", c->pix_delta_v.x,
 		c->pix_delta_v.y, c->pix_delta_v.z);
+}
+
+t_color	normal_to_color(t_vec3 n)
+{
+	t_color	c;
+
+	c.r = (n.x + 1.0) * 0.5;
+	c.g = (n.y + 1.0) * 0.5;
+	c.b = (n.z + 1.0) * 0.5;
+	return (c);
 }

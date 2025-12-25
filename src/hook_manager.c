@@ -6,12 +6,11 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 11:27:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 11:34:06 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 16:31:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
 
 int	handle_destroy(void *param)
 {

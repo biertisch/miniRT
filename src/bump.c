@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 22:26:32 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 13:50:28 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 16:50:42 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ double	sine_bump(double u, double v)
 	return (sin(u * freq * 2 * M_PI) * sin(v * freq * 2 * M_PI));
 }
 
-t_vec3	apply_bump(t_tbn tbn, double u, double v,
+t_vec3	apply_bump_f(t_tbn tbn, double u, double v,
 	double (*height)(double, double))
 {
 	double	eps;

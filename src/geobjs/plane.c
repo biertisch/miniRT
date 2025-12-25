@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:55:45 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 15:36:14 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:06:16 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_plane	new_plane(t_vec3 point, t_vec3 normal, t_material mat)
 	return (plane);
 }
 
-static void	get_plane_uv(t_vec3 p2hit, t_tbn tbn, t_hit_record *record)
+static void	plane_uv(t_vec3 p2hit, t_tbn tbn, t_hit_record *record)
 {
 	record->u = vec3_dot(p2hit, tbn.ct);
 	record->v = vec3_dot(p2hit, tbn.cb);
@@ -31,7 +31,20 @@ static void	get_plane_uv(t_vec3 p2hit, t_tbn tbn, t_hit_record *record)
 	record->v -= floor(record->v);
 }
 
-int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
+void	change_plane_normal_according_bump(t_plane *pl, t_hit_record *rec,
+	t_tex_type tex_type)
+{
+	if (tex_type == BUMP_FUNC)
+		rec->g_norm = apply_bump_f(plane_tbn(rec->g_norm), rec->u,
+				rec->v, sine_bump);
+	else if (tex_type == PICTURE)
+		rec->g_norm = apply_bump_map(plane_tbn(rec->g_norm),
+				bump_tangent_normal(
+					&((t_pic_tex *)pl->mat.data.lamb.tex)->bump_tex,
+					rec->u, rec->v, 0.1));
+}
+
+int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 {
 	t_plane		*plane;
 	double		denom;
@@ -44,20 +57,13 @@ int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	t = vec3_dot(vec3_sub(plane->point, ray->origin), plane->normal) / denom;
 	if (!interval_surrounds(&ray_t, t))
 		return (0);
-	record->t = t;
-	record->p = ray_at(ray, t);
-	record->is_d_side = 1;
-	set_face_normal(ray, plane->normal, record);
-	record->g_norm = record->normal;
-	get_plane_uv(vec3_sub(record->p, plane->point), get_tbn_plane(plane->normal), record);
-	if (obj.tex_type == BUMP_FUNC)
-		record->g_norm = apply_bump(get_tbn_plane(record->g_norm), record->u,
-				record->v, sine_bump);
-	else if (obj.tex_type == PICTURE)
-		record->g_norm = apply_bump_map(get_tbn_plane(record->g_norm),
-				bump_tangent_normal(
-					&((t_pic_tex *)plane->mat.data.lamb.tex)->bump_tex,
-					record->u, record->v, 0.1));
-	record->mat = plane->mat;
+	rec->t = t;
+	rec->p = ray_at(ray, t);
+	rec->is_d_side = 1;
+	set_face_normal(ray, plane->normal, rec);
+	rec->g_norm = rec->normal;
+	plane_uv(vec3_sub(rec->p, plane->point), plane_tbn(plane->normal), rec);
+	change_plane_normal_according_bump(plane, rec, obj.tex_type);
+	rec->mat = plane->mat;
 	return (1);
 }

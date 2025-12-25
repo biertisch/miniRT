@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/25 14:03:55 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:15:36 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static t_material	parse_material(const char **s, t_color color)
 	{
 		(*s)++;
 		world()->tex_type = PICTURE;
-		return (get_material_texture(LAMBERTIAN, (t_texture *)&(world()->pic_c_tex), 0));
+		return (get_material_texture(LAMBERTIAN,
+				(t_texture *)&(world()->pic_c_tex), 0));
 	}
 	if (**s == 'b' && (*(*s + 1) == '\0' || ft_isspace(*(*s + 1))
 			|| *(*s + 1) == '#'))

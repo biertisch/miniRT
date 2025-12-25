@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 18:58:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 16:17:58 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 16:59:59 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,5 @@ void	cylinder_uv(t_cylinder *c, t_hit_record *rec, int face)
 		rec->u = 0.5 + vec3_dot(c2hit, v_axis) / (2.0 * c->radius);
 		rec->v = 0.5 + vec3_dot(c2hit, vv_axis) / (2.0 * c->radius);
 	}
-	if (((t_object *)c)->tex_type == BUMP_FUNC)
-		rec->g_norm = apply_bump(get_tbn_cylinder(vec3_sub(rec->p, c->center),
-					c->axis), rec->u, rec->v, sine_bump);
-	else if (((t_object *)c)->tex_type == PICTURE)
-		rec->g_norm = apply_bump_map(get_tbn_cylinder(vec3_sub(rec->p, c->center),
-					c->axis), bump_tangent_normal(
-					&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
-					rec->u, rec->v, 0.1));
+	change_cynormal_according_bump(c, rec);
 }

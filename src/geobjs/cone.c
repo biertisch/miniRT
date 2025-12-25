@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/25 16:21:29 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:12:34 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,19 +92,16 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	t_vec3	c_w;
 	double	t;
 
-	cone->axis = vec3_norm(cone->axis);
 	ap = vec3_sub(rec->p, cone->apex);
 	t = vec3_dot(ap, cone->axis);
 	rec->v = t / cone->height;
 	if (rec->v < 0.0)
 		rec->v += 1.0;
-	// printf("cone v: %f\n", rec->v);
 	x = vec3_sub(ap, vec3_mul_n(cone->axis, t));
 	if ((vec3_dot(x, x)) < 1e-12)
-	{
 		rec->u = 0.0;
+	if ((vec3_dot(x, x)) < 1e-12)
 		return ;
-	}
 	if (fabs(cone->axis.y) < 0.999)
 		c_u = vec3_norm(vec3_cross(cone->axis, (t_vec3){0, 1, 0}));
 	else
@@ -113,14 +110,7 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	rec->u = atan2(vec3_dot(x, c_w), vec3_dot(x, c_u)) / (2 * M_PI);
 	if (rec->u < 0)
 		rec->u += 1.0;
-	if (((t_object *)cone)->tex_type == BUMP_FUNC)
-		rec->g_norm = apply_bump(get_tbn_cone(rec->p, cone),
-				rec->u, rec->v, sine_bump);
-	else if (((t_object *)cone)->tex_type == PICTURE)
-		rec->g_norm = apply_bump_map(get_tbn_cone(rec->p, cone),
-				bump_tangent_normal(
-					&((t_pic_tex *)cone->mat.data.lamb.tex)->bump_tex,
-					rec->u, rec->v, 0.1));
+	change_cone_normal_according_bump(cone, rec, ((t_object *)cone)->tex_type);
 }
 
 int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)

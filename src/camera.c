@@ -6,21 +6,11 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 03:26:56 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 16:34:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-t_color	normal_to_color(t_vec3 n)
-{
-	t_color	c;
-
-	c.r = (n.x + 1.0) * 0.5;
-	c.g = (n.y + 1.0) * 0.5;
-	c.b = (n.z + 1.0) * 0.5;
-	return (c);
-}
 
 // phong_of_light?
 t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
