@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/25 17:22:57 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/25 17:25:16 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static t_material	parse_material(const char **s, t_color color)
 	{
 		(*s)++;
 		world()->tex_type = BUMP_FUNC;
-	}	
+	}
 	return (get_material(LAMBERTIAN, color, 0));
 }
 
