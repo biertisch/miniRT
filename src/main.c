@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 16:39:46 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 14:24:45 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	main(int argc, char **argv)
 	reg_hook(world());
 	camera_render(&(world()->camera), world());
 	setup_controls(world());
+	print_help();
 	mlx_loop(world()->mlx);
 	return (0);
 }
