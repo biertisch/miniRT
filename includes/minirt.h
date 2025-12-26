@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 17:09:54 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 14:24:07 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -557,7 +557,7 @@ int					cone_hit(t_ray *ray, t_interval ray_t,
 int					solve_cone_quadratic(t_ray *ray, t_cone *cone,
 						double *t1, double *t2);
 void				change_cone_normal_according_bump(t_cone *cone,
-						t_hit_record *rec, t_tex_type tex_type);		
+						t_hit_record *rec, t_tex_type tex_type);
 
 //scene.c
 int					use_test_scene(t_world *wld, int scene_no);
@@ -600,4 +600,9 @@ t_bump_tex			load_xpm(void *mlx, char *path);
 t_pic_tex			picture_texture(t_bump_tex tex);
 t_color				texture_map_value(t_texture *self, double u,
 						double v, t_vec3 p);
+
+//info.c
+void				print_info(t_world *wld);
+void				print_help(void);
+
 #endif
