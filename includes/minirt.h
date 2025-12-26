@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 20:55:30 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 21:41:47 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -478,7 +478,7 @@ t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
 void				change_cynormal_according_bump(t_cylinder *c,
-						t_hit_record *rec);
+						t_hit_record *rec, int face_hit);
 
 //cylinder_utils.c
 void				cylinder_uv(t_cylinder *c, t_hit_record *rec, int face_hit);
@@ -592,7 +592,7 @@ t_vec3				apply_bump_map(t_tbn tbn, t_vec3 Nt);
 //bump_tbn.c
 t_tbn				sphere_tbn(t_vec3 normal);
 t_tbn				plane_tbn(t_vec3 normal);
-t_tbn				cylinder_tbn(t_vec3 p, t_vec3 axis);
+t_tbn				cylinder_tbn(t_vec3 p, t_vec3 c, t_vec3 axis);
 t_tbn				cone_tbn(t_vec3 p, t_cone *cone);
 
 //texture_picture.c

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 17:00:10 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 22:53:06 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,16 +111,50 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 	return (hit_any);
 }
 
-void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec)
+t_vec3	apply_bumpf_cylinder(t_tbn tbn, t_hit_record *rec, int face_hit,
+	double (*height)(double, double))
+{
+	double	eps;
+	double	scale;
+	double	du;
+	double	dv;
+	t_vec3	bumped;
+
+	eps = 0.001;
+	scale = 0.1;
+	(void)face_hit;
+	if (face_hit == 1)
+		return (tbn.cb);
+	if (face_hit == 3)
+		return (vec3_mul_n(tbn.cb, -1));
+	du = height(rec->u + eps, rec->v) - height(rec->u - eps, rec->v);
+	dv = height(rec->u, rec->v + eps) - height(rec->u, rec->v - eps);
+	bumped = vec3_add(tbn.cn, vec3_add(
+				vec3_mul_n(tbn.ct, du * scale),
+				vec3_mul_n(tbn.cb, dv * scale)));
+	return (vec3_norm(bumped));
+}
+
+void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec,
+	int face_hit)
 {
 	if (((t_object *)c)->tex_type == BUMP_FUNC)
-		rec->g_norm = apply_bump_f(cylinder_tbn(vec3_sub(rec->p, c->center),
-					c->axis), rec->u, rec->v, sine_bump);
+		rec->g_norm = apply_bumpf_cylinder(cylinder_tbn(rec->p, c->center,
+					c->axis), rec, face_hit, sine_bump);
 	else if (((t_object *)c)->tex_type == PICTURE)
-		rec->g_norm = apply_bump_map(cylinder_tbn(vec3_sub(rec->p, c->center),
-					c->axis), bump_tangent_normal(
-					&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
-					rec->u, rec->v, 0.1));
+	{
+		if (face_hit == 2)
+		{
+			rec->g_norm = apply_bump_map(cylinder_tbn(rec->p, c->center,
+						c->axis), bump_tangent_normal(
+						&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
+						rec->u, rec->v, 0.1));
+		}
+		else if (face_hit == 1)
+			rec->g_norm = c->axis;
+		else if (face_hit == 3)
+			rec->g_norm = vec3_mul_n(c->axis, -1);
+	}
 }
 
 /*
