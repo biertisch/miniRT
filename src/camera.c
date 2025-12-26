@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 16:34:22 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 20:55:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 		return (normal_to_color(rec->g_norm));
 	r2l = rt_ray(rec->p, vec3_norm(vec3_sub(light.position, rec->p)));
 	phong->atn = attenuation(vec3_length(vec3_sub(light.position, rec->p)));
-	value_min_clamp(&phong->cos_nl, vec3_dot(rec->g_norm, r2l.direction), 0.0);
+	min_vl_clamp(&phong->cos_nl, vec3_dot(rec->g_norm, r2l.direction), 0.0);
 	phong->bright = light.brightness * phong->cos_nl;
 	phong->diffuse = color_multi_num(color_mult_color(rec->orig_color,
 				light.color), phong->bright * phong->atn * 16.6);
@@ -33,7 +33,7 @@ t_color	phone_of_light(t_phong *phong, t_hit_record *rec,
 	{
 		reflect_dir = vec3_sub(vec3_mul_n(rec->g_norm, 2.0
 					* vec3_dot(r2l.direction, rec->g_norm)), r2l.direction);
-		value_min_clamp(&phong->cos_rv, vec3_dot(vec3_norm(reflect_dir),
+		min_vl_clamp(&phong->cos_rv, vec3_dot(vec3_norm(reflect_dir),
 				vec3_mul_n(rec->ray_in.direction, -1)), 0.0);
 		phong->specular = color_multi_num(light.color, pow(phong->cos_rv,
 					SPECULAR_FACTOR) * phong->atn * light.brightness);

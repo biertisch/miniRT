@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 09:24:04 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/22 16:01:03 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 20:55:38 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	update_orbit_camera(t_camera *cam, t_cam_auto *o)
 	o->angle += o->speed;
 }
 
-void	value_min_clamp(double *value, double tob, double min)
+void	min_vl_clamp(double *value, double tob, double min)
 {
 	if (tob < min)
 		*value = min;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 14:24:07 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/26 20:55:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -574,7 +574,7 @@ int					is_camera_on_surface(t_camera *cam, t_world *world);
 //camera_animation.c
 void				init_auto_c(t_cam_auto *o, t_camera *c);
 void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
-void				value_min_clamp(double *value, double tob, double min);
+void				min_vl_clamp(double *value, double tob, double min);
 
 //bump.c
 t_vec3				apply_bump_f(t_tbn tbn, double u, double v,
