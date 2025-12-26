@@ -1,5 +1,5 @@
 NAME = miniRT
-SRC = $(addprefix src/, main.c color.c vec3.c vec3_op.c ray.c geobjs/sphere.c hittable_list.c hook_manager.c \
+SRC = $(addprefix src/, main.c color.c color_op.c vec3.c vec3_op.c ray.c geobjs/sphere.c hittable_list.c hook_manager.c \
 						interval.c camera_animation.c camera.c camera_utils.c debug_info.c rt_utils.c material.c \
 						action.c action_extend.c geobjs/quad.c geobjs/plane.c geobjs/cylinder.c geobjs/cylinder_utils.c \
 						geobjs/cone.c geobjs/cone_quadratic.c bump.c bump_tbn.c bump_map.c texture.c texture_solid_color.c texture_checker.c \
