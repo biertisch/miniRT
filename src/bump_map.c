@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 13:48:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 14:31:26 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 09:23:11 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static double	bump_map_height(t_bump_tex *tex, double u, double v)
 	int				y;
 	unsigned int	pixel;
 
-	x = (int)(u * (tex->width - 1));
+	x = (int)((1 - u) * (tex->width - 1));
 	y = (int)((v) * (tex->height - 1));
 	pixel = *(unsigned int *)(tex->addr
 			+ y * tex->line_len
@@ -40,7 +40,7 @@ t_vec3	bump_tangent_normal(t_bump_tex *tex, double u, double v,
 	height_v = bump_map_height((t_bump_tex *)tex, u, v + 0.001);
 	du = (height_u - height) * strength;
 	dv = (height_v - height) * strength;
-	return (vec3_norm((t_vec3){-du, -dv, 1.0}));
+	return (vec3_norm((t_vec3){du, dv, 1.0}));
 }
 
 t_vec3	apply_bump_map(t_tbn tbn, t_vec3 Nt)

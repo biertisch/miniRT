@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 00:41:23 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 17:13:52 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 09:22:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_color	texture_sample(t_bump_tex *tex, double u, double v)
 	unsigned int	pixel;
 	t_color			c;
 
-	x = (int)(u * (tex->width - 1));
+	x = (int)((1 - u) * (tex->width - 1));
 	y = (int)((v) * (tex->height - 1));
 	if (x < 0)
 		x = 0;
