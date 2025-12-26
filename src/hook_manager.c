@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   hook_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 11:27:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 16:31:58 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 15:36:44 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+int	handle_resize(void *param)
+{
+	t_world	*wld;
+
+	wld = (t_world *)param;
+	camera_render(&wld->camera, wld);
+	return (0);
+}
 
 int	handle_destroy(void *param)
 {
@@ -55,6 +64,7 @@ void	reg_hook(t_world *wld)
 {
 	mlx_hook(wld->win, KeyRelease, 1L << 1, handle_pressed, wld);
 	mlx_hook(wld->win, DestroyNotify, 0, handle_destroy, wld);
+	mlx_hook(wld->win, ConfigureNotify, 1L << 18, handle_resize, wld);
 	mlx_mouse_hook(wld->win, mouse_hook, wld);
 	mlx_hook(wld->win, 4, 1L << 2, mouse_press, wld);
 	mlx_loop_hook(wld->mlx, loop, wld);

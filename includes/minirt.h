@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 14:24:07 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/26 15:38:09 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ enum
 	NoExpose = 14,
 	VisibilityNotify = 15,
 	CreateNotify = 16,
-	DestroyNotify = 17
+	DestroyNotify = 17,
+	ConfigureNotify = 22
 };
 
 typedef enum e_direction

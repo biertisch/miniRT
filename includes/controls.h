@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 12:39:52 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/26 15:42:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ int		slider_to_axis(int slider);
 // transform.c
 void	check_button(t_world *scene, int x);
 void	transform_scene(t_panel *panel, t_world *scene);
+int		controls_resize(void *param);
 
 // translation.c
 void	apply_translation(t_slider *sliders, t_vec3 *position);

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:33:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/26 15:02:57 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/26 15:42:09 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,13 @@ void	check_button(t_world *scene, int x)
 		transform_scene(scene->panel, scene);
 	else if (x >= b2_x && x < b2_x + BUTTON_W)
 		reset_scene(scene->panel, scene);
+}
+
+int	controls_resize(void *param)
+{
+	t_world	*scene;
+
+	scene = (t_world *)param;
+	render_controls(scene->panel, scene);
+	return (0);
 }
