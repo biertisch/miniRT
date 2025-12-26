@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 13:48:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 09:23:11 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 16:12:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,15 @@ static double	bump_map_height(t_bump_tex *tex, double u, double v)
 	unsigned int	pixel;
 
 	x = (int)((1 - u) * (tex->width - 1));
+	if (x < 0)
+		x = 0;
+	else if (x >= tex->width)
+		x = tex->width - 1;
 	y = (int)((v) * (tex->height - 1));
+	if (y < 0)
+		y = 0;
+	else if (y >= tex->height)
+		y = tex->height - 1;
 	pixel = *(unsigned int *)(tex->addr
 			+ y * tex->line_len
 			+ x * (tex->bpp / 8));
