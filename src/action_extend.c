@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 15:21:31 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 14:06:39 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 14:29:15 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	extend_action(int keycode, t_world *wld)
 		print_info(wld);
 	else if (keycode == 'h')
 		print_help();
-	else if (keycode == '+')
+	else if (keycode == '=')
 		resize_obj(wld, 1.1f);
 	else if (keycode == '-')
 		resize_obj(wld, 0.9f);
