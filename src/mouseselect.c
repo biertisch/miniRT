@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:09:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/20 17:13:54 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 10:51:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_ray	get_ray_with_screenxy(int pixel_x, int pixel_y, t_camera *camera)
 			vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
 				vec3_mul_n(camera->pix_delta_v, pixel_y)));
 	ray_direction = vec3_sub(pixel_sample, camera->lookfrom);
-	return (rt_ray(camera->lookfrom, ray_direction));
+	return (ray(camera->lookfrom, ray_direction));
 }
 
 int	mouse_press(int button, int x, int y, void *param)

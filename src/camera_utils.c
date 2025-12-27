@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:13:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 00:37:58 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 10:51:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
 			vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
 				vec3_mul_n(camera->pix_delta_v, pixel_y)));
 	ray_direction = vec3_norm(vec3_sub(pixel_point, camera->lookfrom));
-	return (rt_ray(camera->lookfrom, ray_direction));
+	return (ray(camera->lookfrom, ray_direction));
 }
 
 t_vec3	choose_vup(t_vec3 forward)

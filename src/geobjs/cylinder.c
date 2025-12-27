@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 23:28:59 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 11:09:45 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ t_vec3	apply_bumpf_cylinder(t_tbn tbn, t_hit_record *rec, int face_hit,
 	return (vec3_norm(bumped));
 }
 
-
 void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec,
 	int face_hit)
 {
@@ -158,6 +157,9 @@ void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec,
 	}
 }
 
+/*
+
+
 void	change_cynormal_according_bump_old(t_cylinder *c, t_hit_record *rec,
 	int face_hit)
 {
@@ -179,8 +181,6 @@ void	change_cynormal_according_bump_old(t_cylinder *c, t_hit_record *rec,
 			rec->g_norm = vec3_mul_n(c->axis, -1);
 	}
 }
-
-/*
 
 int	cylinder_side_check_v0(t_ray *ray, t_cylinder *cy, t_interval *ray_t,
 	t_hit_record *rec)

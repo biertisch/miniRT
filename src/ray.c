@@ -6,13 +6,13 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 17:02:22 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 23:56:45 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 10:51:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_ray	rt_ray(t_vec3 origin, t_vec3 direction)
+t_ray	ray(t_vec3 origin, t_vec3 direction)
 {
 	t_ray	new_ray;
 
@@ -29,6 +29,7 @@ t_vec3	ray_at(t_ray *ray, double t)
 	return (point);
 }
 
+/*
 // double	hit_sphere(t_vec3 center, double radius, t_ray *ray)
 // {
 // 	t_vec3	oc;
@@ -36,7 +37,6 @@ t_vec3	ray_at(t_ray *ray, double t)
 // 	double	h;
 // 	double	c;
 // 	double	discriminant;
-
 // 	oc = vec3_subtract(center, ray->origin);
 // 	a = vec3_length_squared(ray->direction);
 // 	h = vec3_dot(oc, ray->direction);
@@ -47,7 +47,7 @@ t_vec3	ray_at(t_ray *ray, double t)
 // 	else
 // 		return (h - sqrt(discriminant)) / a;
 // }
-/*
+
 void ray_tracing(void *mlx, void *window, t_scene *scene)
 {
 	int	mlx_x=0;

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 00:40:47 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 10:53:54 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -445,8 +445,12 @@ void				output_camera_info(t_camera *c);
 t_color				normal_to_color(t_vec3 n);
 
 //ray.c
-t_ray				rt_ray(t_vec3 origin, t_vec3 direction);
+t_ray				ray(t_vec3 origin, t_vec3 direction);
 t_vec3				ray_at(t_ray *ray, double t);
+
+//phong.c
+t_color				phong_of_light(t_phong *phong, t_hit_record *rec,
+						t_world *world, t_s_light light);
 
 //hittable_list.c
 void				add_object_to_world(t_world *world, t_geo_type geo_type,

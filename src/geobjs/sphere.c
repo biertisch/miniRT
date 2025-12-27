@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 23:37:41 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 11:04:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 	record->g_norm = vec3_norm(vec3_mul_n(vec3_sub(record->p, s->center),
 				1.0 / s->radius));
 	record->is_d_side = 0;
-	// set_face_normal(ray, record->g_norm, record);
 	get_sphere_uv(record->g_norm, &record->u, &record->v);
 	if (obj.tex_type == BUMP_FUNC)
 		record->g_norm = apply_bump_f(sphere_tbn(record->g_norm),
