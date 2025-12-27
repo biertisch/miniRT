@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 00:46:39 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 01:19:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static t_color	phong_of_light(t_phong *phong, t_hit_record *rec,
 	phong->bright = light.brightness * phong->cos_nl;
 	phong->diffuse = color_multi_num(color_mult_color(rec->orig_color,
 				light.color), phong->bright * phong->atn * 4);
+	phong->specular = color(0.0, 0.0, 0.0);
 	if (phong->cos_nl > 0.0)
 	{
 		reflect_dir = vec3_sub(vec3_mul_n(rec->normal, 2.0
@@ -40,8 +41,6 @@ static t_color	phong_of_light(t_phong *phong, t_hit_record *rec,
 		phong->specular = color_multi_num(light.color, pow(phong->cos_rv,
 					SPECULAR_FACTOR) * phong->atn * light.brightness * 2);
 	}
-	else
-		phong->specular = color(0.0, 0.0, 0.0);
 	return (color_add(phong->diffuse, phong->specular));
 }
 
@@ -55,6 +54,7 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 
 	if (depth <= 0 || world->camera.vfov <= 0.0)
 		return (color(0.0, 0.0, 0.0));
+	phong = (t_phong){0};
 	phong.ambient = color_multi_num(world->ambient, world->ambient_ratio);
 	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 		return (phong.ambient);
