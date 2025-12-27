@@ -1,6 +1,6 @@
 # Scene: Base
 # Ambient light(name:char:A lighting_ratio:double:[0.0,1.0] color:vector:[0-255,0-255,0-255])
-A 0.15 255,255,255
+A 0.35 255,255,255
 # Camera(name:char:C view_point:vector:[x,y,z] normalized_orientation_vector:vector:[-1,1] field_of_view:[0-180])
 C 0,2,-5 0,0,1 60
 # Light source (name:char:L light_position:vector:[x,y,z] brightness_ratio:double:[0.0,1.0] color:vector:[0-255,0-255,0-255])
