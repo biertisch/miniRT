@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 11:09:45 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 12:25:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,29 +35,6 @@ static int	on_cy_side(t_ray *ray, t_cylinder *cy, double t,
 	rec->g_norm = vec3_norm(vec3_sub(p, proj_point));
 	set_face_normal(ray, vec3_norm(vec3_sub(p, proj_point)), rec);
 	return (1);
-}
-
-int	calc_cylinder_side_roots(t_ray *ray, t_cylinder *cy,
-	double *t1, double *t2)
-{
-	t_vec3			d_cross_a;
-	t_vec3			oc_cross_a;
-	t_roots_holder	rh;
-
-	rh = (t_roots_holder){0};
-	d_cross_a = vec3_cross(ray->direction, cy->axis);
-	oc_cross_a = vec3_cross(vec3_sub(ray->origin, cy->center), cy->axis);
-	rh.a = vec3_dot(d_cross_a, d_cross_a);
-	rh.b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
-	rh.c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
-	rh.disc = rh.b * rh.b - 4 * rh.a * rh.c;
-	if (rh.disc >= 0)
-	{
-		rh.sqrt_disc = sqrt(rh.disc);
-		*t1 = (-rh.b - rh.sqrt_disc) / (2 * rh.a);
-		*t2 = (-rh.b + rh.sqrt_disc) / (2 * rh.a);
-	}
-	return (rh.disc >= 0);
 }
 
 int	cylinder_side_check_v1(t_ray *ray, t_cylinder *cy, t_interval *ray_t,

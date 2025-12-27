@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 10:53:54 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 12:31:19 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -488,6 +488,13 @@ void				change_cynormal_according_bump(t_cylinder *c,
 void				cylinder_uv(t_cylinder *c, t_hit_record *rec, int face_hit);
 int					cylinder_cap_check_v1(t_ray *ray, t_interval *ray_t,
 						t_cylinder *cy, t_hit_record *rec);
+
+//root_calc.c
+int					calc_cylinder_side_roots(t_ray *ray, t_cylinder *cy,
+						double *t1, double *t2);
+int					calc_sphere_roots(t_sphere *s, t_ray *ray, t_interval ray_t,
+						double *root);
+
 //interval.c
 t_interval			new_interval(double min, double max);
 int					interval_surrounds(t_interval *interval, double value);

@@ -6,16 +6,11 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/27 10:34:52 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 12:33:28 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-int	next_char_valid(const char *s)
-{
-	return (*s == '\0' || ft_isspace((unsigned char)*s) || *s == '#');
-}
 
 static t_material	parse_material(const char **s, t_color color)
 {
