@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 17:02:22 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 17:03:02 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 23:56:45 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_ray	rt_ray(t_vec3 origin, t_vec3 direction)
 	t_ray	new_ray;
 
 	new_ray.origin = origin;
-	new_ray.direction = direction;
+	new_ray.direction = vec3_norm(direction);
 	return (new_ray);
 }
 

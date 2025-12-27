@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:13:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 22:18:22 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 00:37:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_color	metal_reflection_color(t_phong *phong, t_hit_record *rec,
 	t_vec3	c_r;
 	t_ray	reflect_ray;
 
-	reflected_color = get_color(0, 0, 0);
+	reflected_color = color(0, 0, 0);
 	final_color = color_add(phong->ambient, phong->specular);
 	c_i = vec3_norm(rec->ray_in.direction);
 	c_r = vec3_sub(c_i, vec3_mul_n(rec->normal, 2.0

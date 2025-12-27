@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 21:41:47 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 00:40:47 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define STEP_MOVE 1.1f
 # define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-5
-# define SPECULAR_FACTOR 32.0
+# define SPECULAR_FACTOR 64.0
 # define MAX_OBJS 50
 # define MAX_LIGHTS 5
 # define BUMP_SCALE 0.3
@@ -430,7 +430,7 @@ t_world				*world(void);
 void				free_all_the_world(t_world *wld);
 
 // color.c
-t_color				get_color(double r, double g, double b);
+t_color				color(double r, double g, double b);
 t_color				norm_color(t_color color);
 void				write_color(t_data *img, int x, int y, t_color color);
 t_color				color_add(t_color a, t_color b);

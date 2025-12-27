@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:30:05 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 17:08:40 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 00:03:24 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	write_color(t_data *img, int x, int y, t_color color)
 	my_mlx_pixel_put(img, x, y, (r << 16) | (g << 8) | b);
 }
 
-t_color	get_color(double r, double g, double b)
+t_color	color(double r, double g, double b)
 {
 	t_color	color;
 

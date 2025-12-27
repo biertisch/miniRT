@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_extend.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 15:21:31 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 14:19:15 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/26 23:31:38 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,12 @@ static	void	resize_obj(t_world *wld, float scale)
 
 void	extend_action(int keycode, t_world *wld)
 {
+	printf("Key pressed: %d\n", keycode);
 	if (keycode == 'p')
 		print_info(wld);
 	else if (keycode == 'h')
 		print_help();
-	else if (keycode == '+')
+	else if (keycode == '=')
 		resize_obj(wld, 1.1f);
 	else if (keycode == '-')
 		resize_obj(wld, 0.9f);

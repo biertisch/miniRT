@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:40:37 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 16:41:39 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 00:03:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_color	diffuse_light_emitted(t_material *self, t_ray r_in, t_hit_record *rec)
 {
 	(void)r_in;
 	if (!rec->front_face)
-		return (get_color(0.0, 0.0, 0.0));
+		return (color(0.0, 0.0, 0.0));
 	return (self->data.diffuse_light.tex->value(self->data.diffuse_light.tex,
 			rec->u, rec->v, rec->p));
 }

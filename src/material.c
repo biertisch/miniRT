@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 17:22:50 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/24 02:05:42 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 00:03:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ t_color	default_emitted(t_material *self, t_ray r_in, t_hit_record *rec)
 		return (color_multi_num(self->data.metal.tex->value(
 					self->data.metal.tex, rec->u, rec->v, rec->p), 0.3));
 	else if (self->type == DIELECTRIC)
-		return (get_color(0.0, 0.0, 0.0));
+		return (color(0.0, 0.0, 0.0));
 	else
-		return (get_color(0.0, 0.0, 0.0));
+		return (color(0.0, 0.0, 0.0));
 }
 
 double	lambertian_scattering_pdf(t_ray *ray_in, t_hit_record *rec,

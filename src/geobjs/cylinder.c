@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 22:53:06 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/26 23:28:59 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,30 @@ t_vec3	apply_bumpf_cylinder(t_tbn tbn, t_hit_record *rec, int face_hit,
 	return (vec3_norm(bumped));
 }
 
+
 void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec,
+	int face_hit)
+{
+	if (((t_object *)c)->tex_type == BUMP_FUNC)
+		rec->g_norm = apply_bumpf_cylinder(cylinder_tbn(rec->p, c->center,
+					c->axis), rec, face_hit, sine_bump);
+	else if (((t_object *)c)->tex_type == PICTURE)
+	{
+		if (face_hit == 2)
+		{
+			rec->g_norm = apply_bump_map(cylinder_tbn(rec->p, c->center,
+						c->axis), bump_tangent_normal(
+						&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
+						rec->u, rec->v, 0.1));
+		}
+		else if (face_hit == 1)
+			rec->g_norm = c->axis;
+		else if (face_hit == 3)
+			rec->g_norm = vec3_mul_n(c->axis, -1);
+	}
+}
+
+void	change_cynormal_according_bump_old(t_cylinder *c, t_hit_record *rec,
 	int face_hit)
 {
 	if (((t_object *)c)->tex_type == BUMP_FUNC)
