@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:51:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 12:11:39 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/27 12:34:47 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int				parse_color(t_color *out, const char **s, t_field_rule *field,
 // parse_fields.c
 int				parse_line(t_world *scene, const char *line, t_metadata *meta);
 void			skip_spaces(const char **s);
+int				next_char_valid(const char *s);
 
 // parse_acl_fields.c
 int				parse_ambient_fields(t_world *scene, const char **s,

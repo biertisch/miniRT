@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 15:21:31 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 15:38:25 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/28 10:27:13 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static	void	resize_obj(t_world *wld, float scale)
 
 void	extend_action(int keycode, t_world *wld)
 {
+	printf("Key pressed: %d\n", keycode);
 	if (keycode == 'p')
 		print_info(wld);
 	else if (keycode == 'h')

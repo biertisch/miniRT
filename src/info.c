@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 13:07:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/26 15:00:55 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/28 10:34:19 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,6 @@ void	print_help(void)
 		"rotate camera\t\t↑ / ↓ / ← / →\n"
 		"rotate scene\t\tr\n"
 		"scale object\t\t+ / -\n"
-		"help\t\t\th\n");
+		"help\t\t\th\n"
+		"quit\t\t\tesc\n");
 }

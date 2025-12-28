@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 14:24:45 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/27 12:09:05 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ int	main(int argc, char **argv)
 	world()->mlx = mlx_init();
 	load_default_textures(world());
 	if (!parser(world(), argv[1]))
+	{
+		free_all_the_world(world());
 		return (1);
+	}
 	camera_light_initialize(world());
 	world()->win = mlx_new_window(world()->mlx, world()->camera.img_w,
 		world()->camera.img_h, "MiniRT");

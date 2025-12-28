@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 15:38:09 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/28 10:26:55 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define STEP_MOVE 1.1f
 # define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-5
-# define SPECULAR_FACTOR 32.0
+# define SPECULAR_FACTOR 64.0
 # define MAX_OBJS 50
 # define MAX_LIGHTS 5
 # define BUMP_SCALE 0.3
@@ -431,7 +431,7 @@ t_world				*world(void);
 void				free_all_the_world(t_world *wld);
 
 // color.c
-t_color				get_color(double r, double g, double b);
+t_color				color(double r, double g, double b);
 t_color				norm_color(t_color color);
 void				write_color(t_data *img, int x, int y, t_color color);
 t_color				color_add(t_color a, t_color b);
@@ -446,8 +446,12 @@ void				output_camera_info(t_camera *c);
 t_color				normal_to_color(t_vec3 n);
 
 //ray.c
-t_ray				rt_ray(t_vec3 origin, t_vec3 direction);
+t_ray				ray(t_vec3 origin, t_vec3 direction);
 t_vec3				ray_at(t_ray *ray, double t);
+
+//phong.c
+t_color				phong_of_light(t_phong *phong, t_hit_record *rec,
+						t_world *world, t_s_light light);
 
 //hittable_list.c
 void				add_object_to_world(t_world *world, t_geo_type geo_type,
@@ -479,12 +483,19 @@ t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
 void				change_cynormal_according_bump(t_cylinder *c,
-						t_hit_record *rec);
+						t_hit_record *rec, int face_hit);
 
 //cylinder_utils.c
 void				cylinder_uv(t_cylinder *c, t_hit_record *rec, int face_hit);
 int					cylinder_cap_check_v1(t_ray *ray, t_interval *ray_t,
 						t_cylinder *cy, t_hit_record *rec);
+
+//root_calc.c
+int					calc_cylinder_side_roots(t_ray *ray, t_cylinder *cy,
+						double *t1, double *t2);
+int					calc_sphere_roots(t_sphere *s, t_ray *ray, t_interval ray_t,
+						double *root);
+
 //interval.c
 t_interval			new_interval(double min, double max);
 int					interval_surrounds(t_interval *interval, double value);
@@ -575,7 +586,7 @@ int					is_camera_on_surface(t_camera *cam, t_world *world);
 //camera_animation.c
 void				init_auto_c(t_cam_auto *o, t_camera *c);
 void				update_orbit_camera(t_camera *cam, t_cam_auto *o);
-void				value_min_clamp(double *value, double tob, double min);
+void				min_vl_clamp(double *value, double tob, double min);
 
 //bump.c
 t_vec3				apply_bump_f(t_tbn tbn, double u, double v,
@@ -593,7 +604,7 @@ t_vec3				apply_bump_map(t_tbn tbn, t_vec3 Nt);
 //bump_tbn.c
 t_tbn				sphere_tbn(t_vec3 normal);
 t_tbn				plane_tbn(t_vec3 normal);
-t_tbn				cylinder_tbn(t_vec3 p, t_vec3 axis);
+t_tbn				cylinder_tbn(t_vec3 p, t_vec3 c, t_vec3 axis);
 t_tbn				cone_tbn(t_vec3 p, t_cone *cone);
 
 //texture_picture.c
