@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   info.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 13:07:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/28 10:34:19 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 11:14:21 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	print_help(void)
 		"move camera\t\tw / s / a / d\n"
 		"rotate camera\t\t↑ / ↓ / ← / →\n"
 		"rotate scene\t\tr\n"
-		"scale object\t\t+ / -\n"
 		"help\t\t\th\n"
 		"quit\t\t\tesc\n");
 }
