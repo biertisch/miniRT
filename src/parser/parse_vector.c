@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_vector.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 21:56:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 14:06:06 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 16:38:06 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	parse_vec3(t_vec3 *out, const char **s, t_field_rule *field,
 		return (report_error(ERR_RANGE, meta, field, tmp.z));
 	if (!validate_normal(&tmp, field))
 	{
-		printf("current length: %f\n", vec3_length(tmp));
+		printf("Current length: %f\n", vec3_length(tmp));
 		return (report_error(ERR_NORMAL, meta, field, -1));
 	}
 	*out = tmp;
