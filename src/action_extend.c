@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_extend.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 15:21:31 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/28 10:27:13 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 14:56:20 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	extend_action(int keycode, t_world *wld)
 		print_info(wld);
 	else if (keycode == 'h')
 		print_help();
-	else if (keycode == '+')
+	else if (keycode == '=')
 		resize_obj(wld, 1.1f);
 	else if (keycode == '-')
 		resize_obj(wld, 0.9f);
