@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 10:52:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 14:19:35 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 14:21:05 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	count_error_message(char *buffer, t_error_type code, t_metadata *meta)
 	if (code == ERR_AMBIENT_COUNT)
 	{
 		value = meta->ambient_count;
-		ft_strlcat(buffer, "ambient light 'L' must appear exactly once (found ",
+		ft_strlcat(buffer, "ambient light 'A' must appear exactly once (found ",
 			ERR_BUFFER_SIZE);
 	}
 	else if (code == ERR_CAMERA_COUNT)
