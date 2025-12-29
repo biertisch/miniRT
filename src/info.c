@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   info.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 13:07:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/29 15:41:46 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 21:45:47 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ static void	print_object_info(t_object *object, int index)
 			object->geo.plane.normal.x, object->geo.plane.normal.y,
 			object->geo.plane.normal.z);
 	else if (object->type == SPHERE)
-		printf("Sphere:\nCenter\t\t%.2f, %.2f, %.2f\nDiameter\t\t%.2f\n",
+		printf("Sphere:\nCenter\t\t%.2f, %.2f, %.2f\nDiameter\t%.2f\n",
 			object->geo.sphere.center.x, object->geo.sphere.center.y,
 			object->geo.sphere.center.z, object->geo.sphere.radius * 2);
 	else if (object->type == CYLINDER)
 		printf("Cylinder:\nCenter\t\t%.2f, %.2f, %.2f\n"
-			"Axis\t\t%.4f, %.4f, %.4f\nDiameter\t\t%.2f\nHeight\t\t%.2f\n",
+			"Axis\t\t%.4f, %.4f, %.4f\nDiameter\t%.2f\nHeight\t\t%.2f\n",
 			object->geo.cylinder.center.x, object->geo.cylinder.center.y,
 			object->geo.cylinder.center.z, object->geo.cylinder.axis.x,
 			object->geo.cylinder.axis.y, object->geo.cylinder.axis.z,
 			object->geo.cylinder.radius * 2, object->geo.cylinder.height);
 	else if (object->type == CONE)
 		printf("Cone:\nApex\t\t%.2f, %.2f, %.2f\nAxis\t\t%.4f, %.4f, %.4f\n"
-			"Diameter\t\t%.2f\nHeight\t\t%.2f\n", object->geo.cone.apex.x,
+			"Diameter\t%.2f\nHeight\t\t%.2f\n", object->geo.cone.apex.x,
 			object->geo.cone.apex.y, object->geo.cone.apex.z,
 			object->geo.cone.axis.x, object->geo.cone.axis.y,
 			object->geo.cone.axis.z, object->geo.cone.radius * 2,
