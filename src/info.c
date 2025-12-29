@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 13:07:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/29 12:27:06 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 13:12:20 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,10 @@ void	print_info(t_world *wld)
 		"\t\tINFO\n"
 		"----------------------------------------\n"
 		"Camera:\nOrigin\t\t%.2f, %.2f, %.2f\n"
-		"Direction\t%.2f, %.2f, %.2f\n"
-		"VFOV\t\t%.2f\n",
+		"Direction\t%.2f, %.2f, %.2f\n",
 		wld->camera.lookfrom.x, wld->camera.lookfrom.y,
 		wld->camera.lookfrom.z, wld->camera.forword.x,
-		wld->camera.forword.y, wld->camera.forword.z,wld->camera.vfov);
+		wld->camera.forword.y, wld->camera.forword.z);
 	i = 0;
 	while (i < wld->num_lights)
 	{
