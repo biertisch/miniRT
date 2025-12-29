@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parse_fields.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:05:44 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/13 17:31:33 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/27 12:33:49 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+int	next_char_valid(const char *s)
+{
+	return (*s == '\0' || ft_isspace((unsigned char)*s) || *s == '#');
+}
 
 void	skip_spaces(const char **s)
 {

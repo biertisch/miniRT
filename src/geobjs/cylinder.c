@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:12:47 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 17:00:10 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 12:25:30 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,29 +35,6 @@ static int	on_cy_side(t_ray *ray, t_cylinder *cy, double t,
 	rec->g_norm = vec3_norm(vec3_sub(p, proj_point));
 	set_face_normal(ray, vec3_norm(vec3_sub(p, proj_point)), rec);
 	return (1);
-}
-
-int	calc_cylinder_side_roots(t_ray *ray, t_cylinder *cy,
-	double *t1, double *t2)
-{
-	t_vec3			d_cross_a;
-	t_vec3			oc_cross_a;
-	t_roots_holder	rh;
-
-	rh = (t_roots_holder){0};
-	d_cross_a = vec3_cross(ray->direction, cy->axis);
-	oc_cross_a = vec3_cross(vec3_sub(ray->origin, cy->center), cy->axis);
-	rh.a = vec3_dot(d_cross_a, d_cross_a);
-	rh.b = 2.0 * vec3_dot(d_cross_a, oc_cross_a);
-	rh.c = vec3_dot(oc_cross_a, oc_cross_a) - cy->radius * cy->radius;
-	rh.disc = rh.b * rh.b - 4 * rh.a * rh.c;
-	if (rh.disc >= 0)
-	{
-		rh.sqrt_disc = sqrt(rh.disc);
-		*t1 = (-rh.b - rh.sqrt_disc) / (2 * rh.a);
-		*t2 = (-rh.b + rh.sqrt_disc) / (2 * rh.a);
-	}
-	return (rh.disc >= 0);
 }
 
 int	cylinder_side_check_v1(t_ray *ray, t_cylinder *cy, t_interval *ray_t,
@@ -111,19 +88,76 @@ int	cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 	return (hit_any);
 }
 
-void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec)
+t_vec3	apply_bumpf_cylinder(t_tbn tbn, t_hit_record *rec, int face_hit,
+	double (*height)(double, double))
+{
+	double	eps;
+	double	scale;
+	double	du;
+	double	dv;
+	t_vec3	bumped;
+
+	eps = 0.001;
+	scale = 0.1;
+	(void)face_hit;
+	if (face_hit == 1)
+		return (tbn.cb);
+	if (face_hit == 3)
+		return (vec3_mul_n(tbn.cb, -1));
+	du = height(rec->u + eps, rec->v) - height(rec->u - eps, rec->v);
+	dv = height(rec->u, rec->v + eps) - height(rec->u, rec->v - eps);
+	bumped = vec3_add(tbn.cn, vec3_add(
+				vec3_mul_n(tbn.ct, du * scale),
+				vec3_mul_n(tbn.cb, dv * scale)));
+	return (vec3_norm(bumped));
+}
+
+void	change_cynormal_according_bump(t_cylinder *c, t_hit_record *rec,
+	int face_hit)
 {
 	if (((t_object *)c)->tex_type == BUMP_FUNC)
-		rec->g_norm = apply_bump_f(cylinder_tbn(vec3_sub(rec->p, c->center),
-					c->axis), rec->u, rec->v, sine_bump);
+		rec->g_norm = apply_bumpf_cylinder(cylinder_tbn(rec->p, c->center,
+					c->axis), rec, face_hit, sine_bump);
 	else if (((t_object *)c)->tex_type == PICTURE)
-		rec->g_norm = apply_bump_map(cylinder_tbn(vec3_sub(rec->p, c->center),
-					c->axis), bump_tangent_normal(
-					&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
-					rec->u, rec->v, 0.1));
+	{
+		if (face_hit == 2)
+		{
+			rec->g_norm = apply_bump_map(cylinder_tbn(rec->p, c->center,
+						c->axis), bump_tangent_normal(
+						&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
+						rec->u, rec->v, 0.1));
+		}
+		else if (face_hit == 1)
+			rec->g_norm = c->axis;
+		else if (face_hit == 3)
+			rec->g_norm = vec3_mul_n(c->axis, -1);
+	}
 }
 
 /*
+
+
+void	change_cynormal_according_bump_old(t_cylinder *c, t_hit_record *rec,
+	int face_hit)
+{
+	if (((t_object *)c)->tex_type == BUMP_FUNC)
+		rec->g_norm = apply_bumpf_cylinder(cylinder_tbn(rec->p, c->center,
+					c->axis), rec, face_hit, sine_bump);
+	else if (((t_object *)c)->tex_type == PICTURE)
+	{
+		if (face_hit == 2)
+		{
+			rec->g_norm = apply_bump_map(cylinder_tbn(rec->p, c->center,
+						c->axis), bump_tangent_normal(
+						&((t_pic_tex *)c->mat.data.lamb.tex)->bump_tex,
+						rec->u, rec->v, 0.1));
+		}
+		else if (face_hit == 1)
+			rec->g_norm = c->axis;
+		else if (face_hit == 3)
+			rec->g_norm = vec3_mul_n(c->axis, -1);
+	}
+}
 
 int	cylinder_side_check_v0(t_ray *ray, t_cylinder *cy, t_interval *ray_t,
 	t_hit_record *rec)

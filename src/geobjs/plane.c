@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:55:45 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 17:06:16 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 11:57:42 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ int	plane_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 	rec->t = t;
 	rec->p = ray_at(ray, t);
 	rec->is_d_side = 1;
-	set_face_normal(ray, plane->normal, rec);
-	rec->g_norm = rec->normal;
+	rec->g_norm = plane->normal;
 	plane_uv(vec3_sub(rec->p, plane->point), plane_tbn(plane->normal), rec);
 	change_plane_normal_according_bump(plane, rec, obj.tex_type);
 	rec->mat = plane->mat;

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:13:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/23 22:18:22 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 10:51:58 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_ray	get_ray(int pixel_x, int pixel_y, t_camera *camera)
 			vec3_add(vec3_mul_n(camera->pix_delta_u, pixel_x),
 				vec3_mul_n(camera->pix_delta_v, pixel_y)));
 	ray_direction = vec3_norm(vec3_sub(pixel_point, camera->lookfrom));
-	return (rt_ray(camera->lookfrom, ray_direction));
+	return (ray(camera->lookfrom, ray_direction));
 }
 
 t_vec3	choose_vup(t_vec3 forward)
@@ -55,7 +55,7 @@ t_color	metal_reflection_color(t_phong *phong, t_hit_record *rec,
 	t_vec3	c_r;
 	t_ray	reflect_ray;
 
-	reflected_color = get_color(0, 0, 0);
+	reflected_color = color(0, 0, 0);
 	final_color = color_add(phong->ambient, phong->specular);
 	c_i = vec3_norm(rec->ray_in.direction);
 	c_r = vec3_sub(c_i, vec3_mul_n(rec->normal, 2.0

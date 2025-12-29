@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 13:49:32 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 16:54:21 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/27 11:03:44 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,20 @@ t_tbn	plane_tbn(t_vec3 normal)
 	return (tbn);
 }
 
-t_tbn	cylinder_tbn(t_vec3 P, t_vec3 axis)
+t_tbn	cylinder_tbn(t_vec3 p, t_vec3 c, t_vec3 axis)
 {
 	t_tbn	tbn;
+	t_vec3	cp;
+	double	h;
+	t_vec3	q;
 
-	tbn.cn = vec3_norm((t_vec3){P.x, 0, P.z});
-	tbn.ct = vec3_norm((t_vec3){-P.z, 0, P.x});
+	cp = vec3_sub(p, c);
+	h = vec3_dot(cp, axis);
+	q = vec3_add(c, vec3_mul_n(axis, h));
+	tbn.cn = vec3_norm(vec3_sub(p, q));
 	tbn.cb = axis;
+	tbn.ct = vec3_norm(vec3_cross(tbn.cb, tbn.cn));
+	tbn.cn = vec3_norm(vec3_cross(tbn.ct, tbn.cb));
 	return (tbn);
 }
 
