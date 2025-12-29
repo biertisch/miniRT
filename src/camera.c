@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 10:49:07 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 19:41:39 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 	light_sum = color(0.0, 0.0, 0.0);
 	i = -1;
 	phong.ambient = color_mult_color(phong.ambient, rec.orig_color);
-	while (++i < world->num_lights)
+	while (++i < world->num_lights && world->lights[i]->is_skipped == 0)
 		light_sum = color_add(light_sum,
 				phong_of_light(&phong, &rec, world, *world->lights[i]));
 	final_color = color_add(phong.ambient, light_sum);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_acl_fields.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:28:11 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 10:05:14 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 19:44:33 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	add_light_to_world(t_world *world, t_s_light *light)
 	new_light->position = light->position;
 	new_light->brightness = light->brightness;
 	new_light->color = light->color;
+	new_light->is_skipped = light->is_skipped;
 	world->lights[world->num_lights] = new_light;
 	world->num_lights++;
 }
@@ -73,6 +74,7 @@ int	parse_light_fields(t_world *scene, const char **s, t_metadata *meta)
 	if (!parse_color(&light.color, s, &fields[2], meta))
 		return (0);
 	light.color = norm_color(light.color);
+	light.is_skipped = 0;
 	add_light_to_world(scene, &light);
 	return (1);
 }

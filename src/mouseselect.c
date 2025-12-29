@@ -6,13 +6,13 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:09:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/29 16:15:37 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 19:50:22 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int	has_object_was_clicked(t_world *world, t_ray *ray,
+int	object_clicked(t_world *world, t_ray *ray,
 	t_interval ray_t, t_hit_record *rec)
 {
 	t_hit_record	temp_rec;
@@ -61,13 +61,6 @@ int	mouse_press(int button, int x, int y, void *param)
 	(void)button;
 	wld = (t_world *)param;
 	ray = get_ray_with_screenxy(x, y, &wld->camera);
-	has_object_was_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec);
-	// if (has_object_was_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec))
-	// {
-	// 	if (wld->current_obj)
-	// 		printf("hit ojb type:%d\n", wld->current_obj->type);
-	// 	else
-	// 		printf("hit obj is NULL\n");
-	// }
+	object_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/25 17:12:34 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 19:57:36 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
 	rec->mat = cone->mat;
 	rec->g_norm = vec3_mul_n(axis, -1);
 	rec->is_d_side = 0;
-	set_face_normal(ray, axis, rec);
+	set_face_normal(ray, rec->g_norm, rec);
 	ray_t->max = t;
 	return (1);
 }

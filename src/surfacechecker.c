@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 20:09:27 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/21 17:17:31 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 20:08:14 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	point_on_cylinder(t_vec3 p, t_cylinder *c)
 		printf("Camera on cylinder surface\n");
 	return (on_surface);
 }
-
+/*
 int	point_on_sphere(t_vec3 p, t_sphere *s)
 {
 	double	dist;
@@ -73,20 +73,28 @@ int	point_on_sphere(t_vec3 p, t_sphere *s)
 		printf("Camera on sphere surface\n");
 	return (fabs(dist - s->radius) < SURFACE_EPS);
 }
+*/
 
 int	camera_on_object_surface(t_vec3 p, t_object *obj)
 {
-	double	d;
+	int		on_surface;
 
 	if (obj->type == PLANE)
 	{
-		d = vec3_dot(vec3_sub(p, obj->geo.plane.point), obj->geo.plane.normal);
-		if (fabs(d) < SURFACE_EPS)
+		on_surface = (fabs(vec3_dot(vec3_sub(p, obj->geo.plane.point),
+						obj->geo.plane.normal)) < SURFACE_EPS);
+		if (on_surface)
 			printf("Camera on plane surface\n");
-		return (fabs(d) < SURFACE_EPS);
+		return (on_surface);
 	}
 	if (obj->type == SPHERE)
-		return (point_on_sphere(p, &obj->geo.sphere));
+	{
+		on_surface = (fabs(vec3_length(vec3_sub(p, obj->geo.sphere.center))
+					- obj->geo.sphere.radius) < SURFACE_EPS);
+		if (on_surface)
+			printf("Camera on sphere surface\n");
+		return (on_surface);
+	}
 	if (obj->type == CYLINDER)
 		return (point_on_cylinder(p, &obj->geo.cylinder));
 	if (obj->type == CONE)
@@ -94,16 +102,39 @@ int	camera_on_object_surface(t_vec3 p, t_object *obj)
 	return (0);
 }
 
+void	check_light_position(t_world *w, int i_obj)
+{
+	int		i;
+
+	i = 0;
+	while (i < w->num_lights)
+	{
+		if (w->lights[i]->is_skipped == 0)
+		{
+			if (w->objects[i_obj]->type == CONE)
+			{
+				if (vec3_length(vec3_sub(w->lights[i]->position,
+							w->objects[i_obj]->geo.cone.apex)) < SURFACE_EPS)
+					w->lights[i]->is_skipped = 1;
+			}
+		}
+		i++;
+	}
+}
+
 int	is_camera_on_surface(t_camera *cam, t_world *world)
 {
 	int	i;
+	int	on_surface;
 
 	i = 0;
+	on_surface = 0;
 	while (i < world->num_objects)
 	{
 		if (camera_on_object_surface(cam->lookfrom, world->objects[i]))
-			return (1);
+			on_surface = 1;
+		check_light_position(world, i);
 		i++;
 	}
-	return (0);
+	return (on_surface);
 }

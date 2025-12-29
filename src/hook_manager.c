@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 11:27:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/29 16:14:18 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 19:49:14 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	reg_hook(t_world *wld)
 	mlx_hook(wld->win, KeyRelease, 1L << 1, handle_pressed, wld);
 	mlx_hook(wld->win, DestroyNotify, 0, handle_destroy, wld);
 	mlx_hook(wld->win, ConfigureNotify, 1L << 18, handle_resize, wld);
-	// mlx_mouse_hook(wld->win, mouse_hook, wld);
 	mlx_hook(wld->win, 4, 1L << 2, mouse_press, wld);
 	mlx_loop_hook(wld->mlx, loop, wld);
 }
