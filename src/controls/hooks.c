@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:16:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 12:39:42 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/26 15:41:55 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ void	setup_controls_hooks(t_panel *panel, t_world *scene)
 	mlx_hook(panel->win, DestroyNotify, 0, handle_destroy, scene);
 	mlx_hook(panel->win, MotionNotify, 1L << 6, controls_mouse_move, scene);
 	mlx_hook(panel->win, ButtonRelease, 1L << 3, controls_mouse_release, scene);
+	mlx_hook(panel->win, ConfigureNotify, 1L << 18, controls_resize, scene);
 	mlx_mouse_hook(panel->win, controls_mouse_hook, scene);
 }

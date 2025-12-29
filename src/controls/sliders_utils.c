@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sliders_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:36:30 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/19 18:11:36 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/28 12:37:03 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,9 @@ void	reset_sliders(t_slider **sliders, int size)
 		j = 0;
 		while (j < SLIDER_COUNT)
 		{
-			if (j >= ROTATE_X && j <= ROTATE_Z)
-				sliders[i][j].base_value = 0;
-			else
-				sliders[i][j].base_value = sliders[i][j].initial_value;
+			if (j == ROTATE_X)
+				sliders[i][j].rotation = mat3_identity();
+			sliders[i][j].base_value = sliders[i][j].initial_value;
 			sliders[i][j].knob_pos = 0.5;
 			j++;
 		}
@@ -100,10 +99,9 @@ void	init_sliders(t_slider **sliders, int size, t_world *scene)
 		{
 			sliders[i][j].type = j;
 			sliders[i][j].initial_value = get_initial_value(scene, i, j);
-			if (j >= ROTATE_X && j <= ROTATE_Z)
-				sliders[i][j].base_value = 0;
-			else
-				sliders[i][j].base_value = sliders[i][j].initial_value;
+			sliders[i][j].base_value = sliders[i][j].initial_value;
+			if (j == ROTATE_X)
+				sliders[i][j].rotation = mat3_identity();
 			sliders[i][j].x = (PANEL_W - SLIDER_W) / 2;
 			sliders[i][j].knob_pos = 0.5;
 			j++;

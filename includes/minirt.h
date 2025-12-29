@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
+/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 12:31:19 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 11:05:56 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ enum
 	NoExpose = 14,
 	VisibilityNotify = 15,
 	CreateNotify = 16,
-	DestroyNotify = 17
+	DestroyNotify = 17,
+	ConfigureNotify = 22
 };
 
 typedef enum e_direction
@@ -71,11 +72,6 @@ typedef enum e_direction
 }	t_direction;
 
 typedef struct s_panel		t_panel;
-
-typedef struct s_mat3
-{
-	double	m[3][3];
-}	t_mat3;
 
 typedef struct s_data
 {

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 13:07:03 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/27 14:29:52 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 12:23:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	print_help(void)
 		"print scene info\tp\n"
 		"move camera\t\tw / s / a / d\n"
 		"rotate camera\t\t↑ / ↓ / ← / →\n"
-		// "rotate scene\t\tr\n"
-		// "scale object\t\t= / -\n"
-		"help\t\t\th\n");
+		"rotate scene\t\tr\n"
+		"help\t\t\th\n"
+		"quit\t\t\tesc\n");
 }

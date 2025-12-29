@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:56:02 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 12:39:52 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/28 12:27:25 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,11 @@ typedef struct s_point
 	int	y;
 }	t_point;
 
+typedef struct s_mat3
+{
+	double	m[3][3];
+}	t_mat3;
+
 typedef struct s_rect
 {
 	int	x;
@@ -96,6 +101,7 @@ typedef struct s_rect
 typedef struct s_slider
 {
 	t_slider_type	type;
+	t_mat3			rotation;
 	double			base_value;
 	double			initial_value;
 	double			knob_pos;
@@ -147,6 +153,11 @@ int		controls_mouse_move(int x, int y, void *param);
 int		controls_mouse_release(int button, int x, int y, void *param);
 int		controls_mouse_scroll(int button, int x, int y, void *param);
 
+// matrix.c
+t_mat3	mat3_identity(void);
+t_mat3	mat3_mult(t_mat3 a, t_mat3 b);
+t_vec3	mat3_mult_vec3(t_mat3 m, t_vec3 v);
+
 // render.c
 void	render_controls(t_panel *panel, t_world *scene);
 
@@ -190,6 +201,7 @@ int		slider_to_axis(int slider);
 // transform.c
 void	check_button(t_world *scene, int x);
 void	transform_scene(t_panel *panel, t_world *scene);
+int		controls_resize(void *param);
 
 // translation.c
 void	apply_translation(t_slider *sliders, t_vec3 *position);

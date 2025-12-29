@@ -10,7 +10,7 @@ SRC = $(addprefix src/, main.c color.c color_op.c vec3.c vec3_op.c ray.c geobjs/
 						parser/ft_ftoa.c controls/controls.c controls/drag.c controls/hooks.c\
 						controls/render_objects.c controls/render_sliders.c controls/render_text.c\
 						controls/bitmaps.c controls/render_utils.c controls/render.c controls/scroll.c\
-						controls/sliders_utils.c controls/values.c controls/transform.c\
+						controls/sliders_utils.c controls/values.c controls/transform.c controls/matrix.c\
 						controls/rotation.c controls/translation.c controls/resize.c controls/reset.c\
 						mouseselect.c scene.c worldfree.c surfacechecker.c texture_picture.c info.c)
 LIBFT_DIR = ./libft
