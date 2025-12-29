@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hook_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 11:27:54 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/26 15:36:44 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/29 16:14:18 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	handle_destroy(void *param)
 	exit(0);
 	return (0);
 }
-
+/*
 static int	mouse_hook(int keycode, void *param)
 {
 	t_world	*wld;
@@ -41,6 +41,7 @@ static int	mouse_hook(int keycode, void *param)
 	printf("Hello from key_hook![%d]\n", keycode);
 	return (0);
 }
+*/
 
 static int	handle_pressed(int keycode, void *param)
 {
@@ -65,7 +66,7 @@ void	reg_hook(t_world *wld)
 	mlx_hook(wld->win, KeyRelease, 1L << 1, handle_pressed, wld);
 	mlx_hook(wld->win, DestroyNotify, 0, handle_destroy, wld);
 	mlx_hook(wld->win, ConfigureNotify, 1L << 18, handle_resize, wld);
-	mlx_mouse_hook(wld->win, mouse_hook, wld);
+	// mlx_mouse_hook(wld->win, mouse_hook, wld);
 	mlx_hook(wld->win, 4, 1L << 2, mouse_press, wld);
 	mlx_loop_hook(wld->mlx, loop, wld);
 }

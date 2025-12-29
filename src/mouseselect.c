@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:09:14 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/27 10:51:58 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/29 16:15:37 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,13 @@ int	mouse_press(int button, int x, int y, void *param)
 	(void)button;
 	wld = (t_world *)param;
 	ray = get_ray_with_screenxy(x, y, &wld->camera);
-	if (has_object_was_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec))
-	{
-		if (wld->current_obj)
-			printf("hit ojb type:%d\n", wld->current_obj->type);
-		else
-			printf("hit obj is NULL\n");
-	}
+	has_object_was_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec);
+	// if (has_object_was_clicked(wld, &ray, (t_interval){0.001, INFINITY}, &rec))
+	// {
+	// 	if (wld->current_obj)
+	// 		printf("hit ojb type:%d\n", wld->current_obj->type);
+	// 	else
+	// 		printf("hit obj is NULL\n");
+	// }
 	return (0);
 }
