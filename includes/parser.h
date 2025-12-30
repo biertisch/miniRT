@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:51:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/27 12:34:47 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 01:09:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ int				parse_cylinder_fields(t_world *scene, const char **s,
 					t_metadata *meta);
 int				parse_cone_fields(t_world *scene, const char **s,
 					t_metadata *meta);
+int				parse_triangle_fields(t_world *scene, const char **s,
+					t_metadata *meta);
 
 // parse_vector.c
 int				parse_vec3(t_vec3 *out, const char **s, t_field_rule *field,
@@ -145,6 +147,7 @@ t_field_rule	*get_sphere_fields(void);
 t_field_rule	*get_plane_fields(void);
 t_field_rule	*get_cylinder_fields(void);
 t_field_rule	*get_cone_fields(void);
+t_field_rule	*get_triangle_fields(void);
 
 // ft_atof.c
 double			ft_atof_count(const char *str, int *read);

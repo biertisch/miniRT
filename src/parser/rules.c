@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rules.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:45:26 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/12 20:31:27 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/30 01:08:08 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ t_object_rule	*find_rule(const char *keyword)
 		return (init_rule(&rule, "cy", get_cylinder_fields(), 5));
 	else if (ft_strcmp(keyword, "co") == 0)
 		return (init_rule(&rule, "co", get_cone_fields(), 5));
+	else if (ft_strcmp(keyword, "tr") == 0)
+		return (init_rule(&rule, "tr", get_triangle_fields(), 4));
 	return (NULL);
 }

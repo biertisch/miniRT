@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:05:44 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/27 12:33:49 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 00:51:55 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static int	parse_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (parse_cylinder_fields(scene, s, meta));
 	if (ft_strcmp(meta->rule->keyword, "co") == 0)
 		return (parse_cone_fields(scene, s, meta));
+	if (ft_strcmp(meta->rule->keyword, "tr") == 0)
+		return (parse_triangle_fields(scene, s, meta));
 	return (0);
 }
 

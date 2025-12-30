@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 22:36:25 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/27 12:33:28 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 01:15:39 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,26 @@ int	parse_cone_fields(t_world *scene, const char **s, t_metadata *meta)
 		return (0);
 	cone.mat = parse_material(s, color);
 	add_object_to_world(scene, CONE, &cone);
+	return (1);
+}
+
+int	parse_triangle_fields(t_world *scene, const char **s, t_metadata *meta)
+{
+	t_triangle	triangle;
+	t_color		color;
+
+	if (!parse_vec3(&triangle.p1, s, &meta->rule->fields[0], meta))
+		return (0);
+	if (!parse_vec3(&triangle.p2, s, &meta->rule->fields[1], meta))
+		return (0);
+	if (!parse_vec3(&triangle.p3, s, &meta->rule->fields[2], meta))
+		return (0);
+	if (!parse_color(&color, s, &meta->rule->fields[3], meta))
+		return (0);
+	triangle.mat = parse_material(s, color);
+	triangle.normal = vec3_norm(vec3_cross(
+				vec3_sub(triangle.p2, triangle.p1),
+				vec3_sub(triangle.p3, triangle.p1)));
+	add_object_to_world(scene, TRIANGLE, &triangle);
 	return (1);
 }

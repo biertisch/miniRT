@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/29 19:29:37 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 02:15:19 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-5
 # define SPECULAR_FACTOR 64.0
-# define MAX_OBJS 50
+# define MAX_OBJS 25000
 # define MAX_LIGHTS 5
 # define BUMP_SCALE 0.3
 
@@ -253,7 +253,8 @@ typedef enum e_geometry_type
 	CYLINDER,
 	BVH_NODE,
 	QUAD,
-	CONE
+	CONE,
+	TRIANGLE
 }	t_geo_type;
 
 typedef struct s_quad
@@ -300,6 +301,16 @@ typedef struct s_cone
 	t_material	mat;
 }	t_cone;
 
+typedef struct s_triangle
+{
+	t_vec3		p1;
+	t_vec3		p2;
+	t_vec3		p3;
+	t_vec3		normal;
+	t_material	mat;
+}	t_triangle;
+
+
 typedef struct s_object		t_object;
 
 typedef union u_geo_data
@@ -309,6 +320,7 @@ typedef union u_geo_data
 	t_cylinder	cylinder;
 	t_quad		quad;
 	t_cone		cone;
+	t_triangle	triangle;
 }	t_geo_data;
 
 typedef struct s_hitable_pdf
@@ -474,6 +486,10 @@ void				set_face_normal(t_ray *ray, t_vec3 outward_normal,
 int					plane_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
 t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
+
+//trinagle.c
+int					triangle_hit(t_ray *ray, t_interval ray_t, t_object obj,
+						t_hit_record *record);
 
 //cylinder.c
 int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,

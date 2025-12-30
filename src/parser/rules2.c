@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rules2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:48:06 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 12:35:32 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/30 01:08:23 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,18 @@ t_field_rule	*get_cone_fields(void)
 	{"axis", FIELD_VEC3, -1, 1, 2},
 	{"diameter", FIELD_FLOAT, 0.0001, 1e6, 4},
 	{"height", FIELD_FLOAT, 0.0001, 1e6, 4},
+	{"color", FIELD_COLOR, 0, 255, 0}
+	};
+
+	return (fields);
+}
+
+t_field_rule	*get_triangle_fields(void)
+{
+	static t_field_rule	fields[] = {
+	{"point1", FIELD_VEC3, 0, 0, 2},
+	{"point2", FIELD_VEC3, 0, 0, 2},
+	{"point3", FIELD_VEC3, 0, 0, 2},
 	{"color", FIELD_COLOR, 0, 255, 0}
 	};
 

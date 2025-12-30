@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_objects.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 15:24:16 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/22 10:03:33 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/30 01:36:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static char	*get_type_name(t_geo_type type)
 {
 	static char	*type_names[] = {
-		"sphere", "plane", "cylinder", "bvh_node", "quad", "cone"
+		"sphere", "plane", "cylinder", "bvh_node", "quad", "cone", "triangle"
 	};
 
 	return (type_names[type]);

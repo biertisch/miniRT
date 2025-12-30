@@ -2,7 +2,7 @@ NAME = miniRT
 SRC = $(addprefix src/, main.c color.c color_op.c vec3.c vec3_op.c ray.c geobjs/sphere.c hittable_list.c hook_manager.c \
 						interval.c camera_animation.c camera.c phong.c camera_utils.c debug_info.c rt_utils.c material.c \
 						action.c action_extend.c geobjs/quad.c geobjs/plane.c geobjs/cylinder.c geobjs/cylinder_utils.c \
-						geobjs/cone.c geobjs/cone_quadratic.c geobjs/root_calc.c bump.c bump_tbn.c bump_map.c texture.c \
+						geobjs/cone.c geobjs/cone_quadratic.c geobjs/root_calc.c geobjs/triangle.c bump.c bump_tbn.c bump_map.c texture.c \
 						texture_solid_color.c texture_checker.c diffuse_light.c onb.c pdf.c parser/error.c parser/error_message.c \
 						parser/error_utils.c parser/keyword.c parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
 						parser/parse_object_fields.c parser/parse_scalar.c parser/parse_vector.c\

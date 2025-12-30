@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:42:05 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/25 11:41:46 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 00:55:31 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static int	assign_hit(t_object *new_object)
 		new_object->hit = quad_hit;
 	else if (new_object->type == CONE)
 		new_object->hit = cone_hit;
+	else if (new_object->type == TRIANGLE)
+		new_object->hit = triangle_hit;
 	else
 		return (0);
 	return (1);
@@ -41,6 +43,8 @@ static int	assign_geometry(t_object *new_object, void *geo)
 		new_object->geo.quad = *(t_quad *)geo;
 	else if (new_object->type == CONE)
 		new_object->geo.cone = *(t_cone *)geo;
+	else if (new_object->type == TRIANGLE)
+		new_object->geo.triangle = *(t_triangle *)geo;
 	else
 		return (0);
 	return (1);

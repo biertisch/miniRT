@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keyword.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beatde-a <beatde-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:30:31 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/23 11:43:04 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/12/30 01:12:26 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ static int	check_keyword_object(const char *p, char *key)
 		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
 	{
 		ft_strlcpy(key, "co", 4);
+		return (1);
+	}
+	else if (!ft_strncmp(p, "tr", 2)
+		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
+	{
+		ft_strlcpy(key, "tr", 4);
 		return (1);
 	}
 	return (0);
