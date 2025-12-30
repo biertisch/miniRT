@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 20:09:27 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/29 20:08:14 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 16:39:25 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ int	is_camera_on_surface(t_camera *cam, t_world *world)
 	{
 		if (camera_on_object_surface(cam->lookfrom, world->objects[i]))
 			on_surface = 1;
-		check_light_position(world, i);
 		i++;
 	}
 	return (on_surface);
