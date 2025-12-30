@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 12:18:24 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/30 16:37:51 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 16:53:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	check_cone_base(t_ray *ray, t_interval *ray_t, t_cone *cone,
 	return (1);
 }
 
-static int	check_cone_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
+static int	check_side(t_ray *ray, t_cone *cone, t_hit_record *rec,
 	double t)
 {
 	t_vec3	p;
@@ -113,7 +113,6 @@ void	set_cone_uv(t_cone *cone, t_hit_record *rec)
 	change_cone_normal_according_bump(cone, rec, ((t_object *)cone)->tex_type);
 }
 
-
 int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 {
 	t_cone	*c;
@@ -125,44 +124,16 @@ int	cone_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
 	hit_any = 0;
 	if (solve_cone_quadratic(ray, c, &t1, &t2))
 	{
-		if (t1 >= ray_t.min && t1 <= ray_t.max && check_cone_side(ray, c, rec, t1))
+		if (t1 >= ray_t.min && t1 <= ray_t.max && check_side(ray, c, rec, t1))
 		{
 			ray_t.max = t1;
 			hit_any = 1;
 		}
-		if (t2 >= ray_t.min && t2 <= ray_t.max && check_cone_side(ray, c, rec, t2))
+		if (t2 >= ray_t.min && t2 <= ray_t.max && check_side(ray, c, rec, t2))
 		{
 			ray_t.max = t2;
 			hit_any = 1;
 		}
-	}
-	if (check_cone_base(ray, &ray_t, c, rec))
-		hit_any = 1;
-	if (hit_any)
-		set_cone_uv(c, rec);
-	return (hit_any);
-}
-
-int	cone_hit_old(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *rec)
-{
-	t_cone	*c;
-	double	t1;
-	double	t2;
-	int		hit_any;
-
-	c = &obj.geo.cone;
-	if (!solve_cone_quadratic(ray, c, &t1, &t2))
-		return (0);
-	hit_any = 0;
-	if (t1 >= ray_t.min && t1 <= ray_t.max && check_cone_side(ray, c, rec, t1))
-	{
-		ray_t.max = t1;
-		hit_any = 1;
-	}
-	if (t2 >= ray_t.min && t2 <= ray_t.max && check_cone_side(ray, c, rec, t2))
-	{
-		ray_t.max = t2;
-		hit_any = 1;
 	}
 	if (check_cone_base(ray, &ray_t, c, rec))
 		hit_any = 1;

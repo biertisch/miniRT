@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:13:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 16:34:48 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 16:52:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	in_shadow(t_vec3 point, t_world *world, t_vec3 light_pos)
 	shadow_r.origin = vec3_add(point, vec3_mul_n(shadow_r.direction, 1e-6));
 	if (world_hit(world, &shadow_r, new_interval(0.001,
 				distance_to_light - 1e-6), &temp_rec)
-		&& vec3_length(vec3_sub(temp_rec.p,light_pos)) > 1e-6)
+		&& vec3_length(vec3_sub(temp_rec.p, light_pos)) > 1e-6)
 		return (1);
 	return (0);
 }
