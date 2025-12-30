@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:30:31 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/30 01:12:26 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 13:20:26 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,38 +35,29 @@ static int	check_keyword_acl(const char *p, char *key, t_metadata *meta)
 	return (0);
 }
 
+static int	cpy_key_return(char *key, const char *kw, int l)
+{
+	ft_strlcpy(key, kw, l);
+	return (1);
+}
+
 static int	check_keyword_object(const char *p, char *key)
 {
 	if (!ft_strncmp(p, "sp", 2)
 		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
-	{
-		ft_strlcpy(key, "sp", 4);
-		return (1);
-	}
+		return (cpy_key_return(key, "sp", 4));
 	else if (!ft_strncmp(p, "pl", 2)
 		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
-	{
-		ft_strlcpy(key, "pl", 4);
-		return (1);
-	}
+		return (cpy_key_return(key, "pl", 4));
 	else if (!ft_strncmp(p, "cy", 2)
 		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
-	{
-		ft_strlcpy(key, "cy", 4);
-		return (1);
-	}
+		return (cpy_key_return(key, "cy", 4));
 	else if (!ft_strncmp(p, "co", 2)
 		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
-	{
-		ft_strlcpy(key, "co", 4);
-		return (1);
-	}
+		return (cpy_key_return(key, "co", 4));
 	else if (!ft_strncmp(p, "tr", 2)
 		&& (ft_isspace((unsigned char)p[2]) || p[2] == '#'))
-	{
-		ft_strlcpy(key, "tr", 4);
-		return (1);
-	}
+		return (cpy_key_return(key, "tr", 4));
 	return (0);
 }
 

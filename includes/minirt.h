@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 02:15:19 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 13:27:48 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,15 +301,23 @@ typedef struct s_cone
 	t_material	mat;
 }	t_cone;
 
+typedef struct s_aabb
+{
+	t_vec3	min;
+	t_vec3	max;
+}	t_aabb;
+
 typedef struct s_triangle
 {
 	t_vec3		p1;
 	t_vec3		p2;
 	t_vec3		p3;
+	t_vec3		e1;
+	t_vec3		e2;
 	t_vec3		normal;
 	t_material	mat;
+	t_aabb		bbox;
 }	t_triangle;
-
 
 typedef struct s_object		t_object;
 
@@ -490,6 +498,7 @@ t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 //trinagle.c
 int					triangle_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
+t_aabb				triangle_get_aabb(t_triangle *tri);
 
 //cylinder.c
 int					cylinder_hit(t_ray *ray, t_interval ray_t, t_object obj,

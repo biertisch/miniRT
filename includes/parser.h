@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:51:22 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/12/30 01:09:03 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 13:26:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int				parse_light_fields(t_world *scene, const char **s,
 void			add_light_to_world(t_world *world, t_s_light *light);
 
 // parse_object_fields.c
+// t_material		parse_material(const char **s, t_color color);
 int				parse_sphere_fields(t_world *scene, const char **s,
 					t_metadata *meta);
 int				parse_plane_fields(t_world *scene, const char **s,
