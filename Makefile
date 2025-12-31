@@ -6,7 +6,7 @@ SRC = $(addprefix src/, main.c color.c color_op.c vec3.c vec3_op.c ray.c geobjs/
 						texture_solid_color.c texture_checker.c diffuse_light.c onb.c pdf.c parser/error.c parser/error_message.c \
 						parser/error_utils.c parser/keyword.c parser/parse_color.c parser/parse_fields.c parser/parse_acl_fields.c\
 						parser/parse_object_fields.c parser/parse_object_fields2.c parser/parse_scalar.c parser/parse_vector.c\
-						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c\
+						parser/parser.c parser/rules.c parser/rules2.c parser/ft_atof.c bvh.c \
 						parser/ft_ftoa.c controls/controls.c controls/drag.c controls/hooks.c\
 						controls/render_objects.c controls/render_sliders.c controls/render_text.c\
 						controls/bitmaps.c controls/render_utils.c controls/render.c controls/scroll.c\

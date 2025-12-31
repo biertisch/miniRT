@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/29 19:41:39 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 20:48:50 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,13 @@ void	camera_render(t_camera *cam, t_world *wld)
 			write_color(&img, i, j, pix_c);
 			i++;
 		}
+		if (j % 10 == 0)
+			printf("Rendering progress: %.2f%%\n",
+				((double)(j + 1) / (double)cam->img_h) * 100.0);
 		j++;
 	}
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
+	printf("Image painted to window\n");
 	mlx_destroy_image(wld->mlx, img.img);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:42:05 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 12:08:57 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 22:33:44 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,23 @@ int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 		current = world->objects[i];
 		ray_t.max = closest_so_far;
 		temp_rec = (t_hit_record){0};
-		if (current->hit && current->hit(ray, ray_t, *current, &temp_rec))
+		if (current->hit && current->type != TRIANGLE && current->hit(ray, ray_t, *current, &temp_rec))
 		{
 			hit_anything = 1;
 			closest_so_far = temp_rec.t;
 			*rec = temp_rec;
+		}
+		if (world->bvh_triangle_root)
+		{
+			double hit_t = closest_so_far;
+			t_triangle *hit_tri = hit_bvh(world->bvh_triangle_root, ray, ray_t.min, ray_t.max, &hit_t);
+			if (hit_tri)
+			{
+				hit_anything = 1;
+				closest_so_far = hit_t;
+				triangle_hit(ray, (t_interval){ray_t.min, closest_so_far},
+					(t_object){.geo.triangle = *hit_tri, .type = TRIANGLE}, rec);
+			}
 		}
 		i++;
 	}

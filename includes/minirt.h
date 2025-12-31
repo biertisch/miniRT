@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 13:27:48 by bliu             ###   ########.fr       */
+/*   Updated: 2025/12/30 22:34:46 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include "parser.h"
 # include "controls.h"
 
-# define WIDTH 800
+# define WIDTH 200
 # define DEPTH 5
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.11f
@@ -35,7 +35,7 @@
 # define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-5
 # define SPECULAR_FACTOR 64.0
-# define MAX_OBJS 25000
+# define MAX_OBJS 250000
 # define MAX_LIGHTS 5
 # define BUMP_SCALE 0.3
 
@@ -406,12 +406,22 @@ typedef struct s_phong
 	double		atn;
 }	t_phong;
 
+typedef struct s_bvh_node
+{
+	t_aabb				box;
+	struct s_bvh_node	*left;
+	struct s_bvh_node	*right;
+	t_triangle			*triangles;
+	int					tri_count;
+}	t_bvh_node;
+
 typedef struct s_world
 {
 	void		*mlx;
 	void		*win;
 	t_object	*objects[MAX_OBJS];
 	t_object	*bvh_root;
+	t_bvh_node	*bvh_triangle_root;
 	int			num_objects;
 	int			num_lights;
 	t_camera	camera;
@@ -637,5 +647,10 @@ t_color				texture_map_value(t_texture *self, double u,
 //info.c
 void				print_info(t_world *wld);
 void				print_help(void);
+
+//bvh.c
+void				init_wld_bvh(t_world *wld);
+t_triangle 			*hit_bvh(t_bvh_node *node, t_ray *ray, double t_min,
+						double t_max, double *hit_t);
 
 #endif
