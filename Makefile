@@ -16,9 +16,12 @@ SRC = $(addprefix src/, main.c color.c color_op.c vec3.c vec3_op.c ray.c geobjs/
 LIBFT_DIR = ./libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
 
+MLX_DIR = minilibx-linux
+MLX_LIB = -L$(MLX_DIR) -lmlx
+MLX_INC = -I$(MLX_DIR)
+
 CC = cc
-CCFLAGS = -Wextra -Wall -Werror -MMD --std=gnu11 -g
-# CCFLAGS = -Werror -MMD --std=gnu11 -g
+CCFLAGS = -Wextra -Wall -Werror -MMD -g
 
 D ?= 0
 
@@ -34,12 +37,12 @@ OBJ  = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(MLX) $(LIBFT_A)
-	$(CC) $(CCFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $@
+$(NAME): $(MLX_DIR)/libmlx.a $(LIBFT_A) $(OBJ)
+	$(CC) $(CCFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft $(MLX_LIB) -lXext -lX11 -lm -lz -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CCFLAGS) -g -I/usr/include -Iincludes -Ilibft -Imlx_linux -O0 -c $< -o $@
+	$(CC) $(CCFLAGS) -g -Iincludes -I$(LIBFT_DIR) $(MLX_INC) -O0 -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -47,11 +50,11 @@ $(OBJ_DIR):
 $(LIBFT_A):
 	@$(MAKE) -C $(LIBFT_DIR) DEBUG=$(D)
 
-$(MLX):
-	@$(MAKE) -C $(MLX_PATH)
+$(MLX_DIR)/libmlx.a:
+	@$(MAKE) -C $(MLX_DIR)
 
 MLX_URL = https://cdn.intra.42.fr/document/document/40913/minilibx-linux.tgz
-MLX_DIR = mlx_linux
+#MLX_DIR = mlx_linux
 MLX_TGZ = $(MLX_DIR).tgz
 
 dmlx:
