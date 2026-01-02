@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 12:02:48 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 21:51:49 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/02 01:36:12 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int argc, char **argv)
 		world()->camera.img_h, "MiniRT");
 	reg_hook(world());
 	camera_render(&(world()->camera), world());
-	// setup_controls(world());
+	setup_controls(world());
 	print_help();
 	mlx_loop(world()->mlx);
 	return (0);
