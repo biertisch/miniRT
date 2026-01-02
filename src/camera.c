@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2026/01/02 00:17:28 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/02 11:15:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,10 @@ void	camera_render(t_camera *cam, t_world *wld)
 	t_ray	r;
 	int		i;
 	int		j;
+	double 	start_time;
+	double 	end_time;
 
+	start_time = get_time_ms();
 	img.img = mlx_new_image(wld->mlx, cam->img_w, cam->img_h);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
 			&img.line_length, &img.endian);
@@ -119,7 +122,8 @@ void	camera_render(t_camera *cam, t_world *wld)
 		j++;
 	}
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
-	// printf("Image painted to window\n");
+	end_time = get_time_ms();
+	printf("Image painted to window, spend %f ms\n",end_time - start_time);
 	mlx_destroy_image(wld->mlx, img.img);
 }
 

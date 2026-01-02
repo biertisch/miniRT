@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2026/01/02 00:58:32 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/02 11:12:03 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -486,6 +486,7 @@ void				add_object_to_world(t_world *world, t_geo_type geo_type,
 						void *sphere);
 int					world_hit(t_world *world, t_ray *ray, t_interval ray_t,
 						t_hit_record *rec);
+double				get_time_ms(void);
 //hook_manager.c
 void				reg_hook(t_world *wld);
 int					handle_destroy(void *param);
