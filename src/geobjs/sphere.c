@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 17:27:57 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/29 11:28:46 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/01 20:45:35 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	sphere_hit(t_ray *ray, t_interval ray_t, t_object obj, t_hit_record *record)
 		return (0);
 	record->t = root;
 	record->p = ray_at(ray, record->t);
-	record->g_norm = vec3_norm(vec3_mul_n(vec3_sub(record->p, s->center),
+	record->g_norm = (vec3_mul_n(vec3_sub(record->p, s->center),
 				1.0 / s->radius));
 	record->is_d_side = 0;
 	get_sphere_uv(record->g_norm, &record->u, &record->v);

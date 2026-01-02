@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/21 16:42:05 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 22:33:44 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/02 00:26:48 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,45 @@ void	add_object_to_world(t_world *world, t_geo_type geo_type, void *geo)
 	world->objects[world->num_objects] = new_object;
 	world->num_objects++;
 }
+double	get_time_ms(void)
+{
+	struct timespec	ts;
+
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return ((double)ts.tv_sec * 1000.0
+		+ (double)ts.tv_nsec / 1e6);
+}
+
 
 int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
+{
+	// t_hit_record	temp_rec;
+	int				hit_anything;
+	double			closest_so_far;
+	// t_object		*current;
+	// int				i;
+
+	*rec = (t_hit_record){0};
+	hit_anything = 0;
+	closest_so_far = ray_t.max;
+	// i = 0;
+	t_triangle	*hit_tri = NULL;
+	double		hit_t = closest_so_far;
+	if (world->bvh_triangle_root)
+		hit_tri = hit_bvh(world->bvh_triangle_root, ray, ray_t.min, ray_t.max, &hit_t);
+	if (hit_tri)
+	{
+		if (triangle_hit2(ray, (t_interval){ray_t.min, closest_so_far},
+			hit_tri, rec))
+		{
+			hit_anything = 1;
+			closest_so_far = rec->t;
+		}
+	}
+	return (hit_anything);
+}
+
+int	world_hit_old(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 {
 	t_hit_record	temp_rec;
 	int				hit_anything;
@@ -100,13 +137,16 @@ int	world_hit(t_world *world, t_ray *ray, t_interval ray_t, t_hit_record *rec)
 		if (world->bvh_triangle_root)
 		{
 			double hit_t = closest_so_far;
+			double start_time = get_time_ms();
 			t_triangle *hit_tri = hit_bvh(world->bvh_triangle_root, ray, ray_t.min, ray_t.max, &hit_t);
+			double end_time = get_time_ms();
+			printf("BVH hit time: %.3f ms;ray origin:(%.2f, %.2f, %.2f) direction:(%.2f, %.2f, %.2f)\n", end_time - start_time,ray->origin.x,ray->origin.y,ray->origin.z,ray->direction.x,ray->direction.y,ray->direction.z);
 			if (hit_tri)
 			{
 				hit_anything = 1;
 				closest_so_far = hit_t;
-				triangle_hit(ray, (t_interval){ray_t.min, closest_so_far},
-					(t_object){.geo.triangle = *hit_tri, .type = TRIANGLE}, rec);
+				triangle_hit2(ray, (t_interval){ray_t.min, closest_so_far},
+					hit_tri, rec);
 			}
 		}
 		i++;

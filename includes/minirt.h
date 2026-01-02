@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 18:01:34 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 22:34:46 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/02 00:58:32 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@
 # include "color.h"
 # include "parser.h"
 # include "controls.h"
+# include <time.h>
 
-# define WIDTH 200
+# define WIDTH 400
 # define DEPTH 5
 # define RT_INFINITY 1e8
 # define ROT_SPEED 0.11f
@@ -35,7 +36,7 @@
 # define MAX_PITCH_ANGLE 89.0f
 # define SURFACE_EPS 1e-5
 # define SPECULAR_FACTOR 64.0
-# define MAX_OBJS 250000
+# define MAX_OBJS 350000
 # define MAX_LIGHTS 5
 # define BUMP_SCALE 0.3
 
@@ -314,6 +315,7 @@ typedef struct s_triangle
 	t_vec3		p3;
 	t_vec3		e1;
 	t_vec3		e2;
+	t_vec3		centroid;
 	t_vec3		normal;
 	t_material	mat;
 	t_aabb		bbox;
@@ -508,6 +510,8 @@ t_plane				new_plane(t_vec3 point, t_vec3 normal, t_material mat);
 //trinagle.c
 int					triangle_hit(t_ray *ray, t_interval ray_t, t_object obj,
 						t_hit_record *record);
+int					triangle_hit2(t_ray *ray, t_interval ray_t, t_triangle *obj,
+						t_hit_record *h_rec);
 t_aabb				triangle_get_aabb(t_triangle *tri);
 
 //cylinder.c

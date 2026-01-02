@@ -6,7 +6,7 @@
 /*   By: bliu <bliu@student.42lisboa.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:13:09 by bliu              #+#    #+#             */
-/*   Updated: 2025/12/30 20:48:50 by bliu             ###   ########.fr       */
+/*   Updated: 2026/01/02 00:17:28 by bliu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ t_color	ray_color_v3(t_ray *ray, int depth, t_world *world)
 	phong.ambient = color_multi_num(world->ambient, world->ambient_ratio);
 	if (!world_hit(world, ray, new_interval(0.001, RT_INFINITY), &rec))
 		return (phong.ambient);
-	rec.orig_color = rec.mat.emitted(&rec.mat, *ray, &rec);
+	if (rec.mat.emitted)
+		rec.orig_color = rec.mat.emitted(&rec.mat, *ray, &rec);
+	else
+		rec.orig_color = color(1.0, 0, 1.0);
 	rec.ray_in = *ray;
 	light_sum = color(0.0, 0.0, 0.0);
 	i = -1;
@@ -113,13 +116,10 @@ void	camera_render(t_camera *cam, t_world *wld)
 			write_color(&img, i, j, pix_c);
 			i++;
 		}
-		if (j % 10 == 0)
-			printf("Rendering progress: %.2f%%\n",
-				((double)(j + 1) / (double)cam->img_h) * 100.0);
 		j++;
 	}
 	mlx_put_image_to_window(wld->mlx, wld->win, img.img, 0, 0);
-	printf("Image painted to window\n");
+	// printf("Image painted to window\n");
 	mlx_destroy_image(wld->mlx, img.img);
 }
 
