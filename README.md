@@ -4,11 +4,11 @@
 
 ### Overview
 
-miniRT is a **minimal ray tracer** developed by [biertisch](https://github.com/biertisch) and [HL-PT](https://github.com/HL-PT). It renders 3D scenes by casting rays from a virtual camera and computing object intersections, lighting, and shading. 
+miniRT is a **minimal ray tracer** developed by [biertisch](https://github.com/biertisch) and [HL-PT](https://github.com/HL-PT). It renders 3D scenes by casting rays from a virtual camera and computing object intersections, lighting, and shading.
 
-The programme is written in C using the **MiniLibX** graphics library. It supports several geometric primitives — **plane**, **sphere**, **cylinder**, **cone**, and **triangle** —, as well as visual enhancements such as **checkerboard patterns** and **bump mapping**. Lighting is handled using a **Phong reflection model**, combining ambient, diffuse, and specular components, with support for **colored and multiple light sources**. 
+The programme is written in C using the **MiniLibX** graphics library. It supports multiple geometric primitives — **plane**, **sphere**, **cylinder**, **cone**, and **triangle** —, along with visual enhancements such as **checkerboard patterns** and **bump mapping**. Lighting is implemented using a **Phong reflection model**, combining ambient, diffuse, and specular components, with support for **colored and multiple light sources**.
 
-The renderer includes **interactive scene manipulation** through keyboard controls and a custom control panel, allowing real-time transformations of camera, lights, and objects.
+The renderer features **interactive scene manipulation** via keyboard controls and a custom control panel, enabling real-time transformations of the camera, lights, and objects.
 
 The project is part of the 42 curriculum, serving as an introduction to **computer graphics** and fundamental **ray-tracing principles**.
 
@@ -16,7 +16,7 @@ The project is part of the 42 curriculum, serving as an introduction to **comput
 ### Features
 
 * **Ray tracing engine**
-	* Ray-object intersections with planes, spheres, cylinders, cones, and triangles
+	* Ray-object intersections for planes, spheres, cylinders, cones, and triangles
 	* Correct handling of object interiors
 * **Lighting**
 	* Phong reflection model: ambient, diffuse, and specular lighting
@@ -24,15 +24,15 @@ The project is part of the 42 curriculum, serving as an introduction to **comput
 	* Colored and multiple spot lights
 * **Scene parsing**
 	* `rt` scene description file
-	* Strict validation based on metadata
-	* Detailed error reporting, with line by line information
+	* Strict validation based on scene metadata
+	* Detailed error reporting with precise line-level diagnostics
 * **Transformations**
 	* Translation of camera, lights, and objects
 	* Rotation of camera and objects
-	* Resizing of objects
+	* Dynamic resizing of object properties
 * **Interactivity**
 	* Keyboard controls for camera movement and rotation
-	* Custom control panel to apply light and object transformations
+	* Custom control panel for light and object transformations
 * **Visual enhancements**
 	* Checkerboard patterns
 	* Bump map textures
@@ -67,7 +67,7 @@ Example:
 
 
 #### Configuration file
-* **Camera**: 
+* **Camera**:
 	* Format: name:char:C origin:vector:[x,y,z] orientation_vector:vector:[-1,1] field_of_view:[0-180]
 	* Example: `C 0,0,-5 0,0,1 70`
 * **Ambient light**:
@@ -94,13 +94,14 @@ Example:
 * **General rules**:
 	* The scene must contain exactly one camera
 	* The scene must contain exactly one ambient light
-	* The scene must contain at least one localized light
+	* The scene must contain at least one spot light
+	* All orientation vectors must be normalized (length = 1)
 
 
 #### Controls
 * `p` - print scene info
 * `W`/`A`/`S`/`D` - move camera
-* `↑`/`←`/`↓`/`→` - rotate camera 
+* `↑`/`←`/`↓`/`→` - rotate camera
 * `r` - rotate scene
 * `h` - help
 * `esc` - quit
